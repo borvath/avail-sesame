@@ -15,8 +15,8 @@ extern crate rustc_span;
 extern crate rustc_trait_selection;
 
 use scrutils::{
-    dump_mir_and_borrowck_facts, substituted_mir, precheck, run_analysis, select_functions,
-    select_pprs, Collector, ImportantLocals, PurityAnalysisResult,
+    dump_mir_and_borrowck_facts, precheck, run_analysis, select_functions, select_pprs,
+    substituted_mir, Collector, ImportantLocals, PurityAnalysisResult,
 };
 
 use chrono::offset::Local;
@@ -33,6 +33,7 @@ use std::env;
 use std::fs;
 use std::fs::File;
 use std::io::Write;
+use std::path::{Path, PathBuf};
 use std::process::{exit, Command};
 use std::time::Instant;
 
@@ -46,7 +47,7 @@ pub struct ScrutinizerPluginArgs {
 }
 
 fn default_mode() -> String {
-    "functions".to_string()
+    "function".to_string()
 }
 
 fn default_only_inconsistent() -> bool {
@@ -158,7 +159,7 @@ impl RustcPlugin for ScrutinizerPlugin {
             panic!("Bad output");
         }
 
-        // Add -Zalways-encode-mir to RUSTFLAGS
+        // Add the MIR/borrowck flags needed by the analysis driver.
         let mut old_rustflags = String::from("");
         for (key, val) in cargo.get_envs() {
             if key == "RUSTFLAGS" {
@@ -169,11 +170,48 @@ impl RustcPlugin for ScrutinizerPlugin {
         }
         cargo.env(
             "RUSTFLAGS",
-            format!("-Zalways-encode-mir {}", old_rustflags),
+            format!("-Zalways-encode-mir -Zthreads=1 {}", old_rustflags),
         );
+        if let Some(ld_library_path) = toolchain_library_path(&target) {
+            cargo.env("LD_LIBRARY_PATH", ld_library_path);
+        }
+        cargo.env("RUSTC", "rustc");
+        cargo.env("CARGO_INCREMENTAL", "0");
         cargo.arg("-Zbuild-std=std,core,alloc,proc_macro");
         cargo.arg(format!("--target={}", target));
     }
+}
+
+fn toolchain_library_path(target: &str) -> Option<String> {
+    let output = Command::new("rustup")
+        .args(["which", "rustc"])
+        .output()
+        .ok()?;
+    if !output.status.success() {
+        return None;
+    }
+
+    let rustc_path = String::from_utf8(output.stdout).ok()?;
+    let toolchain_root = PathBuf::from(rustc_path.trim())
+        .parent()
+        .and_then(Path::parent)?
+        .to_path_buf();
+
+    let mut library_paths = vec![
+        toolchain_root.join("lib"),
+        toolchain_root
+            .join("lib")
+            .join("rustlib")
+            .join(target)
+            .join("lib"),
+    ];
+    if let Some(existing) = env::var_os("LD_LIBRARY_PATH") {
+        library_paths.extend(env::split_paths(&existing));
+    }
+
+    env::join_paths(library_paths)
+        .ok()
+        .and_then(|paths| paths.into_string().ok())
 }
 
 struct NoopCallbacks;

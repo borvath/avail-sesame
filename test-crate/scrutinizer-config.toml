@@ -1,4 +1,4 @@
-mode = "function"
+mode = "ppr"
 only_inconsistent = true
 output_file = "inconsistent.result.json"
 allowlist = [

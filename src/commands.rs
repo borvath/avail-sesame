@@ -170,7 +170,7 @@ pub async fn refresh_calendars(db: Store, cfg: &AvailConfig) -> anyhow::Result<(
             ))
             .interact()?;
 
-        for (i, mut cal) in calendars.iter_mut().enumerate() {
+        for (i, cal) in calendars.iter_mut().enumerate() {
             cal.selected = selected_calendars_idx.contains(&i);
         }
 
@@ -221,7 +221,7 @@ pub async fn refresh_calendars(db: Store, cfg: &AvailConfig) -> anyhow::Result<(
         .with_prompt("Which calendar would you like to use to create hold events?")
         .interact()?;
 
-    let mut selected_calendar = all_calendars.get_mut(selected_calendar_idx).unwrap();
+    let selected_calendar = all_calendars.get_mut(selected_calendar_idx).unwrap();
     selected_calendar.selected = true;
 
     let update_calendar = CalendarModel {

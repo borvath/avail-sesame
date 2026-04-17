@@ -1,5 +1,0 @@
-[package]
-name = "dependency"
-authors = ["corinn_tiffany@brown.edu"]
-version = "0.2.0"
-edition = "2021"

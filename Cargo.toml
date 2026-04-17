@@ -1,24 +1,10 @@
 [workspace]
 resolver = "2"
 members = [
-    "sesame/build",
-    "sesame/core",
-    "sesame/derive",
-    "sesame/mysql",
-    "sesame/orm",
-    "sesame/rocket",
-    "sesame/sandbox",
-    "examples/sandbox/sandbox_bin",
-    "examples/sandbox/sandbox_lib",
-    "applications/youchat",
-    "applications/voltron/server"
-]
-
-exclude = [
-    "applicatons/portfolio/**",
-    "applicatons/websubmit/**",
-    "sesame/lints/",
-    "examples/pcr_examples/**",
+    "build",
+    "core",
+    "lints",
+    "sandbox"
 ]
 
 [patch.crates-io]

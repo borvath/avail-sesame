@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::{collections::BTreeSet, sync::Arc};
 
 use chrono::{prelude::*, Duration};
 use colored::Colorize;
@@ -15,7 +15,11 @@ use crate::datetime::{
     },
     finder::AvailabilityFinder,
 };
-use crate::events::{google, microsoft, Calendar, Event, GetResources};
+use crate::events::{google, microsoft, Calendar, GetResources};
+use crate::ifc::{
+    compute_availability, owners_from_availability, protect_calendar, protect_event, reveal,
+    rewrap_availability, ProtectedAvailability, ProtectedEvent,
+};
 use crate::store::{AccountModel, CalendarModel, Platform, Store, PLATFORMS};
 use crate::util::AvailConfig;
 
@@ -125,11 +129,11 @@ pub async fn refresh_calendars(db: Store, cfg: &AvailConfig) -> anyhow::Result<(
         )));
     }
 
-    for account in accounts {
+    for account in &accounts {
         let refresh_token = crate::store::get_token(&account.name)?;
 
         let account_id = account.id.unwrap().to_owned();
-        let mut calendars = match account.platform.unwrap() {
+        let calendars = match account.platform.unwrap() {
             Platform::Microsoft => {
                 let access_token = microsoft::refresh_access_token(
                     &cfg.microsoft.to_owned().unwrap_or_default(),
@@ -148,6 +152,13 @@ pub async fn refresh_calendars(db: Store, cfg: &AvailConfig) -> anyhow::Result<(
             }
             _ => return Err(anyhow::anyhow!("Unsupported platform")),
         };
+
+        let authorized_owners = BTreeSet::from([account.name.clone()]);
+        let mut calendars: Vec<Calendar> = calendars
+            .into_iter()
+            .map(|calendar| protect_calendar(calendar, &account.name))
+            .map(|calendar| reveal("refresh_calendars.prompt", &calendar, &authorized_owners))
+            .collect::<anyhow::Result<_>>()?;
 
         let mut prev_unselected_calendars = db
             .execute(Box::new(move |conn| {
@@ -193,16 +204,36 @@ pub async fn refresh_calendars(db: Store, cfg: &AvailConfig) -> anyhow::Result<(
         }))??;
     }
 
+    let all_owners: BTreeSet<String> = accounts
+        .iter()
+        .map(|account| account.name.clone())
+        .collect();
+
     let mut all_calendars: Vec<Calendar> = db
         .execute(Box::new(CalendarModel::get_all))??
         .into_iter()
-        .map(|c| Calendar {
-            account_id: c.account_id.unwrap(),
-            id: c.id,
-            name: c.name,
-            selected: false,
+        .map(|c| {
+            let owner = accounts
+                .iter()
+                .find(|account| account.id == c.account_id)
+                .map(|account| account.name.as_str())
+                .expect("calendar owner must exist");
+
+            reveal(
+                "refresh_calendars.hold_event_target",
+                &protect_calendar(
+                    Calendar {
+                        account_id: c.account_id.unwrap(),
+                        id: c.id,
+                        name: c.name,
+                        selected: false,
+                    },
+                    owner,
+                ),
+                &all_owners,
+            )
         })
-        .collect_vec();
+        .collect::<anyhow::Result<_>>()?;
 
     let previous_selected = db.execute(Box::new(move |conn| {
         CalendarModel::get_hold_event_calendar(conn)
@@ -247,12 +278,19 @@ pub fn print_and_copy_availability(avails: &[Availability<Local>]) {
     }
 }
 
+pub fn print_and_copy_protected_availability(avails: &ProtectedAvailability) -> anyhow::Result<()> {
+    let authorized_owners = owners_from_availability(avails)?;
+    let revealed = reveal("availability.output", avails, &authorized_owners)?;
+    print_and_copy_availability(&revealed);
+    Ok(())
+}
+
 pub(crate) async fn find_availability(
     db: &Store,
     cfg: &AvailConfig,
     finder: AvailabilityFinder,
     m: &ProgressIndicator,
-) -> anyhow::Result<Vec<Availability<Local>>> {
+) -> anyhow::Result<Option<ProtectedAvailability>> {
     let accounts = db.execute(Box::new(AccountModel::get))??;
 
     if accounts.is_empty() {
@@ -277,17 +315,22 @@ pub(crate) async fn find_availability(
 
     // Microsoft Graph has 4 concurrent requests limit
     let semaphore = Arc::new(Semaphore::new(4));
-    let mut tasks: Vec<JoinHandle<anyhow::Result<Vec<Event>>>> = vec![];
+    let mut tasks: Vec<JoinHandle<anyhow::Result<Vec<ProtectedEvent>>>> = vec![];
+    let mut authorized_owners = BTreeSet::new();
 
     for account in accounts {
         let account_id = account.id.unwrap().to_owned();
-        let selected_calendars: Vec<String> = db
+        let owner = account.name.clone();
+        let selected_calendars = db
             .execute(Box::new(move |conn| {
                 CalendarModel::get_all_selected(conn, &account_id, true)
             }))??
             .into_iter()
-            .map(|c| c.id)
-            .collect();
+            .collect_vec();
+
+        if !selected_calendars.is_empty() {
+            authorized_owners.insert(owner.clone());
+        }
 
         match account.platform.unwrap() {
             Platform::Microsoft => {
@@ -298,8 +341,10 @@ pub(crate) async fn find_availability(
                 )
                 .await?;
 
-                for cal_id in selected_calendars {
+                for calendar in selected_calendars {
                     let token = access_token.clone();
+                    let cal_id = calendar.id;
+                    let owner = owner.clone();
                     let permit = semaphore
                         .clone()
                         .acquire_owned()
@@ -314,7 +359,10 @@ pub(crate) async fn find_availability(
                         )
                         .await?;
                         drop(permit);
-                        Ok(res)
+                        Ok(res
+                            .into_iter()
+                            .map(|event| protect_event(event, &owner))
+                            .collect_vec())
                     }));
                 }
             }
@@ -326,8 +374,10 @@ pub(crate) async fn find_availability(
                 )
                 .await?;
 
-                for cal_id in selected_calendars {
+                for calendar in selected_calendars {
                     let token = access_token.clone();
+                    let cal_id = calendar.id;
+                    let owner = owner.clone();
                     tasks.push(tokio::task::spawn(async move {
                         let res = google::GoogleAPI::get_calendar_events(
                             &token,
@@ -336,7 +386,10 @@ pub(crate) async fn find_availability(
                             finder.end,
                         )
                         .await?;
-                        Ok(res)
+                        Ok(res
+                            .into_iter()
+                            .map(|event| protect_event(event, &owner))
+                            .collect_vec())
                     }));
                 }
             }
@@ -344,12 +397,19 @@ pub(crate) async fn find_availability(
         }
     }
 
-    let events: Vec<Event> = futures::future::join_all(tasks)
+    if authorized_owners.is_empty() {
+        return Err(anyhow::anyhow!(
+            "No calendars are selected. Run the \"{}\" command to choose calendars first.",
+            "calendars".bold().italic()
+        ));
+    }
+
+    let protected_events = futures::future::join_all(tasks)
         .await
         .into_iter()
         .filter_map(|r| r.ok())
         .flat_map(Result::unwrap)
-        .collect();
+        .collect_vec();
 
     pb.finish_with_message("Retrieved events.");
 
@@ -357,13 +417,17 @@ pub(crate) async fn find_availability(
     pb.set_message("Computing availabilities...");
     pb.enable_steady_tick(Duration::milliseconds(250).to_std().unwrap());
 
-    let availability = finder.get_availability(events)?;
-    let slots: Vec<Availability<Local>> = availability.into_iter().flat_map(|(_d, a)| a).collect();
+    let protected_slots = compute_availability(&finder, &authorized_owners, protected_events)?;
+    let slots = reveal(
+        "availability.selection",
+        &protected_slots,
+        &authorized_owners,
+    )?;
 
     pb.finish_with_message("Computed availabilities.");
 
     if slots.is_empty() {
-        return Ok(vec![]);
+        return Ok(None);
     }
 
     // TODO: add multi-level multiselect
@@ -413,16 +477,18 @@ pub(crate) async fn find_availability(
     }
 
     let merged = merge_overlapping_avails(selected);
-    Ok(merged)
+    Ok(Some(rewrap_availability(merged, &protected_slots)))
 }
 
 pub(crate) async fn create_hold_events(
     db: Store,
     cfg: &AvailConfig,
-    merged: &[Availability<Local>],
+    merged: &ProtectedAvailability,
     m: &ProgressIndicator,
 ) -> anyhow::Result<()> {
     let accounts = db.execute(Box::new(AccountModel::get))??;
+    let authorized_owners = owners_from_availability(merged)?;
+    let merged = reveal("hold_events.schedule", merged, &authorized_owners)?;
 
     let event_title: String = Input::with_theme(&ColorfulTheme::default())
         .with_prompt("What's the name of your event?")
@@ -454,6 +520,20 @@ pub(crate) async fn create_hold_events(
         .unwrap()
         .name
         .to_owned();
+    let protected_hold_calendar = protect_calendar(
+        Calendar {
+            account_id: cal.account_id.unwrap(),
+            id: cal.id.clone(),
+            name: cal.name.clone(),
+            selected: true,
+        },
+        &account_name,
+    );
+    let hold_calendar = reveal(
+        "hold_events.target_calendar",
+        &protected_hold_calendar,
+        &authorized_owners,
+    )?;
 
     match Platform::from(&platform) {
         Platform::Microsoft => {
@@ -469,7 +549,7 @@ pub(crate) async fn create_hold_events(
                     .acquire_owned()
                     .await
                     .expect("unable to acquire permit"); // Acquire a permit
-                let calendar_id = cal.id.to_owned();
+                let calendar_id = hold_calendar.id.to_owned();
                 let title = format!("HOLD - {}", event_title);
                 let start = avail.start;
                 let end = avail.end;
@@ -498,7 +578,7 @@ pub(crate) async fn create_hold_events(
                 )
                 .await?;
 
-                let calendar_id = cal.id.to_owned();
+                let calendar_id = hold_calendar.id.to_owned();
                 let title = format!("HOLD - {}", event_title);
                 let start = avail.start;
                 let end = avail.end;

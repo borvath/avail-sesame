@@ -4,6 +4,7 @@ pub mod microsoft;
 use async_trait::async_trait;
 use chrono::prelude::*;
 
+#[derive(Clone)]
 pub struct Calendar {
     pub account_id: u32,
     pub id: String,
@@ -17,6 +18,7 @@ impl std::fmt::Display for Calendar {
     }
 }
 
+#[derive(Clone)]
 pub struct Event {
     pub id: String,
     pub name: Option<String>,

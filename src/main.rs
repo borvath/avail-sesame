@@ -2,6 +2,7 @@ mod cli;
 mod commands;
 mod datetime;
 mod events;
+mod ifc;
 mod oauth;
 mod store;
 mod util;
@@ -92,18 +93,18 @@ async fn main() -> anyhow::Result<()> {
 
             progress.clear();
 
-            if avails.is_empty() {
+            let Some(avails) = avails else {
                 println!("No availability found.");
                 return Ok(());
-            }
+            };
 
             if !cli.create_hold_event {
-                commands::print_and_copy_availability(&avails);
+                commands::print_and_copy_protected_availability(&avails)?;
                 return Ok(());
             }
 
             commands::create_hold_events(db, &cfg, &avails, &progress).await?;
-            commands::print_and_copy_availability(&avails);
+            commands::print_and_copy_protected_availability(&avails)?;
         }
     }
 

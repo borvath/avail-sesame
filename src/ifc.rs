@@ -7,6 +7,7 @@ use sesame::{
     critical::{CriticalRegion, Signature},
     pcon::PCon,
     policy::{AnyPolicyClone, Reason, SimplePolicy},
+    verified::VerifiedRegion,
 };
 
 use crate::{
@@ -95,19 +96,41 @@ pub fn compute_availability(
     events: Vec<ProtectedEvent>,
 ) -> anyhow::Result<ProtectedAvailability> {
     let protected_events: PCon<Vec<Event>, _> = events.into();
-    let events = reveal("availability.compute", &protected_events, authorized_owners)?;
-    let slots = finder
-        .get_availability(events)?
-        .into_iter()
-        .flat_map(|(_day, slots)| slots)
-        .collect::<Vec<_>>();
-
-    Ok(PCon::new(
-        slots,
-        AnyPolicyClone::new(CalendarSecrecyPolicy {
-            owners: authorized_owners.clone(),
-        }),
-    ))
+    protected_events
+        .into_verified(VerifiedRegion::new(|events| {
+            finder
+                .get_availability(events)
+                .map(|availability| {
+                    availability
+                        .into_iter()
+                        .flat_map(|(_day, slots)| slots)
+                        .collect::<Vec<_>>()
+                })
+        }))
+        .fold_in()
+        .map_err(|err| anyhow!("failed to compute availability: {}", err))?
+        .into_critical(
+            Context::new(
+                String::from("availability.compute"),
+                authorized_owners.iter().cloned().collect::<Vec<_>>(),
+            ),
+            CriticalRegion::new(
+                |slots, _| {
+                    PCon::new(
+                        slots,
+                        AnyPolicyClone::new(CalendarSecrecyPolicy {
+                            owners: authorized_owners.clone(),
+                        }),
+                    )
+                },
+                Signature {
+                    username: "avail",
+                    signature: "sesame-ifc-eval",
+                },
+            ),
+            (),
+        )
+        .map_err(|_| anyhow!("Sesame blocked policy-preserving availability.compute"))
 }
 
 pub fn owners_from_availability(

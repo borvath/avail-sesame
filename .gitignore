@@ -3,3 +3,7 @@ db.db3
 .idea
 
 .DS_Store
+/mir_dump
+/mir_dumps
+*.json
+/scrutinizer.log

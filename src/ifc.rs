@@ -1,7 +1,7 @@
 use std::collections::BTreeSet;
 
 use anyhow::anyhow;
-use chrono::Local;
+use chrono::{FixedOffset, Local};
 use sesame::{
     context::{Context, UnprotectedContext},
     critical::{CriticalRegion, Signature},
@@ -59,6 +59,18 @@ pub type ProtectedCalendar = PCon<Calendar, CalendarSecrecyPolicy>;
 pub type ProtectedEvent = PCon<Event, CalendarSecrecyPolicy>;
 pub type ProtectedAvailability = PCon<Vec<Availability<Local>>, AnyPolicyClone>;
 
+fn localize_availability(
+    slots: Vec<Availability<FixedOffset>>,
+) -> Vec<Availability<Local>> {
+    slots
+        .into_iter()
+        .map(|slot| Availability {
+            start: slot.start.with_timezone(&Local),
+            end: slot.end.with_timezone(&Local),
+        })
+        .collect()
+}
+
 pub fn protect_calendar(calendar: Calendar, owner: &str) -> ProtectedCalendar {
     PCon::new(calendar, CalendarSecrecyPolicy::for_owner(owner))
 }
@@ -99,16 +111,11 @@ pub fn compute_availability(
     protected_events
         .into_verified(VerifiedRegion::new(|events| {
             finder
-                .get_availability(events)
-                .map(|availability| {
-                    availability
-                        .into_iter()
-                        .flat_map(|(_day, slots)| slots)
-                        .collect::<Vec<_>>()
-                })
+                .get_availability_fixed(events)
+                .into_iter()
+                .flat_map(|(_day, slots)| slots)
+                .collect::<Vec<_>>()
         }))
-        .fold_in()
-        .map_err(|err| anyhow!("failed to compute availability: {}", err))?
         .into_critical(
             Context::new(
                 String::from("availability.compute"),
@@ -117,7 +124,7 @@ pub fn compute_availability(
             CriticalRegion::new(
                 |slots, _| {
                     PCon::new(
-                        slots,
+                        localize_availability(slots),
                         AnyPolicyClone::new(CalendarSecrecyPolicy {
                             owners: authorized_owners.clone(),
                         }),

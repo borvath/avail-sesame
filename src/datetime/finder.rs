@@ -1,5 +1,4 @@
-use chrono::{prelude::*, Duration};
-use itertools::Itertools;
+use chrono::{offset::Offset, prelude::*, Duration, FixedOffset};
 
 use crate::events::Event;
 
@@ -18,130 +17,147 @@ fn is_weekend(weekday: Weekday) -> bool {
     weekday == Weekday::Sat || weekday == Weekday::Sun
 }
 
+#[derive(Clone)]
+struct TimedEvent<T: TimeZone>
+where
+    <T as TimeZone>::Offset: Copy,
+{
+    start: DateTime<T>,
+    end: DateTime<T>,
+}
+
 #[allow(clippy::type_complexity)]
 impl AvailabilityFinder {
     pub fn get_availability(
         &self,
-        mut events: Vec<Event>,
-    ) -> anyhow::Result<Vec<(Date<Local>, Vec<Availability<Local>>)>> {
-        let mut avail: Vec<(Date<Local>, Vec<Availability<Local>>)> = vec![];
+        events: Vec<Event>,
+    ) -> Vec<(Date<Local>, Vec<Availability<Local>>)> {
+        get_availability_impl(
+            self.start,
+            self.end,
+            self.min,
+            self.max,
+            self.duration,
+            self.include_weekends,
+            local_events(events),
+        )
+    }
 
-        events.sort_by_key(|e| e.start);
+    pub(crate) fn get_availability_fixed(
+        &self,
+        events: Vec<Event>,
+    ) -> Vec<(Date<FixedOffset>, Vec<Availability<FixedOffset>>)> {
+        get_availability_impl(
+            self.start.with_timezone(&self.start.offset().fix()),
+            self.end.with_timezone(&self.end.offset().fix()),
+            self.min,
+            self.max,
+            self.duration,
+            self.include_weekends,
+            fixed_events(events),
+        )
+    }
+}
 
-        let days = events.into_iter().group_by(|e| (e.start.date()));
+fn local_events(events: Vec<Event>) -> Vec<TimedEvent<Local>> {
+    let mut timed_events = Vec::with_capacity(events.len());
 
-        let mut iter = days.into_iter();
+    for event in events {
+        timed_events.push(TimedEvent {
+            start: event.start,
+            end: event.end,
+        });
+    }
 
-        // Start at start day and min time
-        let mut curr = self
-            .start
-            .date()
-            .and_hms(self.min.hour(), self.min.minute(), 0);
+    timed_events
+}
 
-        // Set curr to be max of now and curr.
-        curr = DateTime::max(curr, self.start);
-        curr = curr.ceil();
+fn fixed_events(events: Vec<Event>) -> Vec<TimedEvent<FixedOffset>> {
+    let mut timed_events = Vec::with_capacity(events.len());
 
-        while curr < self.end {
-            let day = iter.next();
+    for event in events {
+        timed_events.push(TimedEvent {
+            start: event.start.with_timezone(&event.start.offset().fix()),
+            end: event.end.with_timezone(&event.end.offset().fix()),
+        });
+    }
 
-            // Have another day of events to process
-            if let Some((date, events)) = day {
-                // Add days that are entirely free
-                //
-                // If curr.date < date and curr.time < max, then we advance to the start of the next day
-                while curr.date() < date {
-                    if curr.time() < self.max {
-                        // Whole day till max
-                        let end = curr.date().and_hms(self.max.hour(), self.max.minute(), 0);
+    timed_events
+}
 
-                        if self.include_weekends || !is_weekend(curr.weekday()) {
-                            avail.push((
-                                curr.date(),
-                                vec![Availability {
-                                    start: curr.date().and_hms(
-                                        self.min.hour(),
-                                        self.max.minute(),
-                                        0,
-                                    ),
-                                    end,
-                                }],
-                            ));
-                        }
+fn get_availability_impl<T: TimeZone>(
+    start: DateTime<T>,
+    end: DateTime<T>,
+    min: NaiveTime,
+    max: NaiveTime,
+    duration: Duration,
+    include_weekends: bool,
+    events: Vec<TimedEvent<T>>,
+) -> Vec<(Date<T>, Vec<Availability<T>>)>
+where
+    <T as TimeZone>::Offset: Copy,
+{
+    let mut avail: Vec<(Date<T>, Vec<Availability<T>>)> = vec![];
+    let days = group_events_by_date(events);
+    let mut iter = days.into_iter();
+
+    let mut curr = start.date().and_hms(min.hour(), min.minute(), 0);
+    curr = DateTime::max(curr, start);
+    curr = curr.ceil();
+
+    while curr < end {
+        let day = iter.next();
+
+        if let Some((date, events)) = day {
+            while curr.date() < date {
+                if curr.time() < max {
+                    let day_end = curr.date().and_hms(max.hour(), max.minute(), 0);
+
+                    if include_weekends || !is_weekend(curr.weekday()) {
+                        avail.push((
+                            curr.date(),
+                            vec![Availability {
+                                start: curr.date().and_hms(min.hour(), max.minute(), 0),
+                                end: day_end,
+                            }],
+                        ));
                     }
-
-                    // min next day
-                    curr = (curr + Duration::days(1)).date().and_hms(
-                        self.min.hour(),
-                        self.min.minute(),
-                        0,
-                    );
                 }
 
-                // events is guaranteed to be non-empty because of the GroupBy
+                curr = (curr + Duration::days(1))
+                    .date()
+                    .and_hms(min.hour(), min.minute(), 0);
+            }
 
-                // Check for availabilities within the day
-
-                if !self.include_weekends && is_weekend(date.weekday()) {
-                    // Advance date if we haven't already
-                    if curr.date() == date {
-                        // min next day
-                        curr = (curr + Duration::days(1)).date().and_hms(
-                            self.min.hour(),
-                            self.min.minute(),
-                            0,
-                        );
-                    }
-
-                    continue;
+            if !include_weekends && is_weekend(date.weekday()) {
+                if curr.date() == date {
+                    curr = (curr + Duration::days(1))
+                        .date()
+                        .and_hms(min.hour(), min.minute(), 0);
                 }
 
-                let mut day_avail = vec![];
-                let mut curr_time = self.min;
+                continue;
+            }
 
-                for event in events {
-                    let start = event.start;
-                    let end = event.end;
+            let mut day_avail = vec![];
+            let mut curr_time = min;
 
-                    // Have time before event
-                    if curr_time < start.time() {
-                        // Round datetime here so that the availability doesn't start at an awkward time
-                        let avail_start = start
-                            .date()
-                            .and_hms(curr_time.hour(), curr_time.minute(), 0)
-                            .ceil();
+            for event in events {
+                let event_start = event.start;
+                let event_end = event.end;
 
-                        let avail_end = DateTime::min(
-                            start,
-                            curr.date().and_hms(self.max.hour(), self.max.minute(), 0),
-                        )
-                        .floor();
-
-                        // Meets requirement of minimum duration
-                        if avail_end.time() - avail_start.time() >= self.duration
-                            && avail_start.time() < self.max
-                        {
-                            day_avail.push(Availability {
-                                start: avail_start,
-                                end: avail_end,
-                            });
-                        }
-                    }
-                    // Not available until end of this event
-                    // max to only go forwards
-                    curr_time = NaiveTime::max(end.time(), curr_time);
-                }
-
-                // Still have time left over today.
-                // TODO: combine with logic in the else below
-                if curr_time < self.max {
-                    let avail_start = curr
+                if curr_time < event_start.time() {
+                    let avail_start = event_start
                         .date()
                         .and_hms(curr_time.hour(), curr_time.minute(), 0)
                         .ceil();
-                    let avail_end = curr.date().and_hms(self.max.hour(), self.max.minute(), 0);
+                    let avail_end =
+                        DateTime::min(event_start, curr.date().and_hms(max.hour(), max.minute(), 0))
+                            .floor();
 
-                    if avail_end - avail_start >= self.duration {
+                    if avail_end.time() - avail_start.time() >= duration
+                        && avail_start.time() < max
+                    {
                         day_avail.push(Availability {
                             start: avail_start,
                             end: avail_end,
@@ -149,43 +165,98 @@ impl AvailabilityFinder {
                     }
                 }
 
-                avail.push((curr.date(), day_avail));
+                curr_time = NaiveTime::max(event_end.time(), curr_time);
+            }
 
-                // 12AM next day
-                curr = (curr + Duration::days(1)).date().and_hms(
-                    self.min.hour(),
-                    self.min.minute(),
-                    0,
-                );
-            } else {
-                // Add days that are entirely free
-                // Either before end date or on the end date but before the max time
-                while curr.date() < self.end.date()
-                    || (curr.date() == self.end.date() && curr < self.end)
-                {
-                    if !is_weekend(curr.weekday()) || self.include_weekends {
-                        let start = curr.ceil();
+            if curr_time < max {
+                let avail_start = curr
+                    .date()
+                    .and_hms(curr_time.hour(), curr_time.minute(), 0)
+                    .ceil();
+                let avail_end = curr.date().and_hms(max.hour(), max.minute(), 0);
 
-                        // Whole day
-                        let end = curr + (self.max - start.time());
-
-                        if start.time() <= self.max && end - start >= self.duration {
-                            avail.push((curr.date(), vec![Availability { start, end }]));
-                        }
-                    }
-
-                    // min next day
-                    curr = (curr + Duration::days(1)).date().and_hms(
-                        self.min.hour(),
-                        self.min.minute(),
-                        0,
-                    );
+                if avail_end - avail_start >= duration {
+                    day_avail.push(Availability {
+                        start: avail_start,
+                        end: avail_end,
+                    });
                 }
             }
-        }
 
-        Ok(avail)
+            avail.push((curr.date(), day_avail));
+            curr = (curr + Duration::days(1))
+                .date()
+                .and_hms(min.hour(), min.minute(), 0);
+        } else {
+            while curr.date() < end.date() || (curr.date() == end.date() && curr < end) {
+                if !is_weekend(curr.weekday()) || include_weekends {
+                    let slot_start = curr.ceil();
+                    let slot_end = curr + (max - slot_start.time());
+
+                    if slot_start.time() <= max && slot_end - slot_start >= duration {
+                        avail.push((curr.date(), vec![Availability {
+                            start: slot_start,
+                            end: slot_end,
+                        }]));
+                    }
+                }
+
+                curr = (curr + Duration::days(1))
+                    .date()
+                    .and_hms(min.hour(), min.minute(), 0);
+            }
+        }
     }
+
+    avail
+}
+
+fn group_events_by_date<T: TimeZone>(events: Vec<TimedEvent<T>>) -> Vec<(Date<T>, Vec<TimedEvent<T>>)>
+where
+    <T as TimeZone>::Offset: Copy,
+{
+    let mut days: Vec<(Date<T>, Vec<TimedEvent<T>>)> = Vec::new();
+
+    for event in events {
+        insert_event_by_date(&mut days, event);
+    }
+
+    days
+}
+
+fn insert_event_by_date<T: TimeZone>(
+    days: &mut Vec<(Date<T>, Vec<TimedEvent<T>>)>,
+    event: TimedEvent<T>,
+)
+where
+    <T as TimeZone>::Offset: Copy,
+{
+    let date = event.start.date();
+    let mut day_idx = 0;
+
+    while day_idx < days.len() && days[day_idx].0 < date {
+        day_idx += 1;
+    }
+
+    if day_idx < days.len() && days[day_idx].0 == date {
+        insert_event_by_start(&mut days[day_idx].1, event);
+    } else {
+        days.insert(day_idx, (date, vec![event]));
+    }
+}
+
+fn insert_event_by_start<T: TimeZone>(events: &mut Vec<TimedEvent<T>>, event: TimedEvent<T>)
+where
+    <T as TimeZone>::Offset: Copy,
+{
+    let event_start = event.start;
+    let mut event_idx = 0;
+
+    while event_idx < events.len() && events[event_idx].start <= event_start {
+        event_idx += 1;
+    }
+
+    events.insert(event_idx, event);
 }
 
 pub trait Round {
@@ -314,7 +385,7 @@ mod tests {
             duration: Duration::minutes(30),
             include_weekends: true,
         };
-        let avails = finder.get_availability(events).unwrap();
+        let avails = finder.get_availability(events);
 
         assert_eq!(avails.len(), 2);
         let mut day_avails = &avails.get(0).unwrap().1;
@@ -369,7 +440,7 @@ mod tests {
             duration: Duration::minutes(30),
             include_weekends: false,
         };
-        let avails = finder.get_availability(events).unwrap();
+        let avails = finder.get_availability(events);
 
         assert_eq!(avails.len(), 2);
         let mut day_avails = &avails.get(0).unwrap().1;
@@ -426,7 +497,7 @@ mod tests {
             duration: Duration::minutes(30),
             include_weekends: true,
         };
-        let avails = finder.get_availability(events).unwrap();
+        let avails = finder.get_availability(events);
 
         assert_eq!(avails.len(), 1);
         let day_avails = &avails.get(0).unwrap().1;
@@ -472,7 +543,7 @@ mod tests {
             duration: Duration::minutes(30),
             include_weekends: true,
         };
-        let avails = finder.get_availability(vec![]).unwrap();
+        let avails = finder.get_availability(vec![]);
 
         assert_eq!(avails.len(), 2);
         let mut day_avails = &avails.get(0).unwrap().1;
@@ -514,7 +585,7 @@ mod tests {
             duration: Duration::minutes(30),
             include_weekends: true,
         };
-        let avails = finder.get_availability(events).unwrap();
+        let avails = finder.get_availability(events);
 
         assert_eq!(avails.len(), 2);
         let mut day_avails = &avails.get(0).unwrap().1;

@@ -9,6 +9,11 @@ struct PPRCollector<'tcx> {
     pprs: Vec<Ty<'tcx>>,
 }
 
+fn is_ppr_constructor(path: &str) -> bool {
+    path.ends_with("::pure::PrivacyPureRegion::<F>::new")
+        || path.ends_with("::verified::VerifiedRegion::<F>::new")
+}
+
 pub trait CollectPPRs<'tcx> {
     fn collect_pprs(&self, tcx: TyCtxt<'tcx>) -> Vec<Ty<'tcx>>;
 }
@@ -31,7 +36,7 @@ impl<'tcx> Visitor<'tcx> for PPRCollector<'tcx> {
             let func_ty = func.ty(&self.body, self.tcx);
             if let ty::TyKind::FnDef(def_id, ..) = func_ty.kind() {
                 let ppr_str = self.tcx.def_path_str(def_id.to_owned());
-                if ppr_str == "alohomora::pure::PrivacyPureRegion::<F>::new" {
+                if is_ppr_constructor(&ppr_str) {
                     self.pprs.push(args[0].ty(&self.body, self.tcx));
                 }
             }

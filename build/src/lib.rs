@@ -92,9 +92,9 @@ impl SesameBuilder {
     }
 
     /// If build.rs invokes this function, then Sesame will run the lints during release builds.
-    pub fn lints(&mut self) {
+    pub fn linter(&mut self) {
         if self.env.target != "wasm32-rlbox" {
-            //dylints::run_lints(&self.env);
+            dylints::lint(self);
         }
     }
 

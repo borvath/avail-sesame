@@ -1,29 +1,40 @@
 mod metadata;
 
-/*
-pub fn run_lints(env: &Env) {
-    let profile = &env.profile;
-    if profile == "release" {
-        warn!("\x1b[97m    Running Sesame lints...\x1b[0m");
+use crate::SesameBuilder;
 
-        let dylint_libraries = metadata::get_dylinting_libraries(&env.cargo_toml);
-        if dylint_libraries.len() > 0 {
-          let lint_res = Command::new(&env.cargo)
-              .arg("+nightly-2023-10-06")
-              .arg("dylint")
-              .arg("--lib")
-              .arg("sesame_lints")
-              .status()
-              .expect("cargo dylint failed");
+const SCRUTINIZER_TOOLCHAIN: &str = "+nightly-2023-08-25";
 
-          if !lint_res.success() {
-              panic!("\x1b[91merror: \x1b[97mSesame lints failed! See above for manual implementations to replace.\x1b[0m");
-          } else {
-              warn!("\x1b[92m    Sesame lints passed!\x1b[0m");
-          }
+pub fn run_lints(builder: &SesameBuilder) {
+    if metadata::get_dylinting_libraries(&builder.env.cargo_toml).len() > 0 {
+        let mut command = builder.command("Sesame Lints", "rustup");
+        command
+            .arg("run")
+            .arg(SCRUTINIZER_TOOLCHAIN.trim_start_matches('+'))
+            .arg("cargo")
+            .arg("dylint")
+            .arg("--all")
+            .arg("--workspace")
+            .env("RUST_BACKTRACE", "full")
+            .env("RUST_LOG", "dylint=trace,dylint_utils=trace");
+
+        let output = command
+            .execute()
+            .expect("cargo dylint failed");
+
+        if !output.status.success() {
+            panic!("Sesame lints failed! See above for manual implementations to replace.");
         }
-    } else {
-        warn!("\x1b[96mnote: \x1b[97min {} mode without Sesame lints\x1b[0m", profile);
     }
 }
-*/
+
+pub fn lint(builder: &SesameBuilder) {
+    let profile = &builder.env.profile;
+    if profile != "release" {
+        builder.logger.info("Sesame lints", &format!("Skipping dylints in {} profile", profile));
+        return;
+    }
+
+    builder.logger.warn("Sesame lints", "Running dylints");
+    run_lints(builder);
+    builder.logger.success("Sesame lints", "Sesame lints completed");
+}

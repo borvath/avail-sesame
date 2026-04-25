@@ -150,8 +150,8 @@ pub fn reveal<T: Clone, P: sesame::policy::Policy>(
             CriticalRegion::new(
                 |data: &T, _| data.clone(),
                 Signature {
-                    username: "avail",
-                    signature: "sesame-ifc-eval",
+                    username: "borvath",
+                    signature: "7b2b6956200133e4a821c84a043aa53e0e84ece2971a2f8022a106394e9297b1",
                 },
             ),
             (),
@@ -200,8 +200,8 @@ pub fn compute_availability(
                     )
                 },
                 Signature {
-                    username: "avail",
-                    signature: "sesame-ifc-eval",
+                    username: "borvath",
+                    signature: "93a0b9a04c351bb2492b2eadde802d125434f60906b7ed57eec941efeecbaeb0",
                 },
             ),
             (),

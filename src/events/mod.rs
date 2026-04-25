@@ -4,6 +4,8 @@ pub mod microsoft;
 use async_trait::async_trait;
 use chrono::prelude::*;
 
+use crate::ifc::ProtectedEvents;
+
 #[derive(Clone)]
 pub struct Calendar {
     pub account_id: u32,
@@ -32,9 +34,10 @@ pub trait GetResources {
     async fn get_calendar_events(
         token: &str,
         calendar_id: &str,
+        owner: &str,
         start_time: DateTime<Local>,
         end_time: DateTime<Local>,
-    ) -> anyhow::Result<Vec<Event>>;
+    ) -> anyhow::Result<ProtectedEvents>;
     async fn create_event(
         token: &str,
         calendar_id: &str,

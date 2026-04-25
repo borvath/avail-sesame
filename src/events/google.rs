@@ -6,6 +6,7 @@ use serde_json;
 
 use super::{Calendar, Event, GetResources};
 use crate::{oauth::google, util::OAuthConfig};
+use crate::{ifc::{protect_events, ProtectedEvents}};
 
 #[derive(serde::Deserialize, Clone)]
 struct GoogleCalendar {
@@ -108,9 +109,10 @@ impl GetResources for GoogleAPI {
     async fn get_calendar_events(
         token: &str,
         calendar_id: &str,
+        owner: &str,
         start_time: DateTime<Local>,
         end_time: DateTime<Local>,
-    ) -> anyhow::Result<Vec<Event>> {
+    ) -> anyhow::Result<ProtectedEvents> {
         let start_time_str = str::replace(&start_time.format("%+").to_string(), "+", "-");
         let end_time_str = str::replace(&end_time.format("%+").to_string(), "+", "-");
 
@@ -147,14 +149,14 @@ impl GetResources for GoogleAPI {
                     })
                     .collect();
 
-                Ok(events)
+                Ok(protect_events(events, owner))
             }
             Err(e) => {
                 println!(
                     "Failed to parse JSON response of calendar events for {}, {}",
                     calendar_id, e
                 );
-                return Ok(vec![]);
+                return Ok(protect_events(vec![], owner));
             }
         }
     }

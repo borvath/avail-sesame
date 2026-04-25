@@ -17,8 +17,8 @@ use crate::datetime::{
 };
 use crate::events::{google, microsoft, Calendar, GetResources};
 use crate::ifc::{
-    compute_availability, owners_from_availability, protect_calendar, protect_event, reveal,
-    rewrap_availability, ProtectedAvailability, ProtectedEvent,
+    compute_availability, owners_from_availability, protect_calendar, reveal, rewrap_availability,
+    ProtectedAvailability, ProtectedEvents, RevealRoute,
 };
 use crate::store::{AccountModel, CalendarModel, Platform, Store, PLATFORMS};
 use crate::util::AvailConfig;
@@ -157,7 +157,7 @@ pub async fn refresh_calendars(db: Store, cfg: &AvailConfig) -> anyhow::Result<(
         let mut calendars: Vec<Calendar> = calendars
             .into_iter()
             .map(|calendar| protect_calendar(calendar, &account.name))
-            .map(|calendar| reveal("refresh_calendars.prompt", &calendar, &authorized_owners))
+            .map(|calendar| reveal(RevealRoute::RefreshCalendarsPrompt, &calendar, &authorized_owners))
             .collect::<anyhow::Result<_>>()?;
 
         let mut prev_unselected_calendars = db
@@ -220,7 +220,7 @@ pub async fn refresh_calendars(db: Store, cfg: &AvailConfig) -> anyhow::Result<(
                 .expect("calendar owner must exist");
 
             reveal(
-                "refresh_calendars.hold_event_target",
+                RevealRoute::RefreshCalendarsHoldEventTarget,
                 &protect_calendar(
                     Calendar {
                         account_id: c.account_id.unwrap(),
@@ -280,7 +280,7 @@ pub fn print_and_copy_availability(avails: &[Availability<Local>]) {
 
 pub fn print_and_copy_protected_availability(avails: &ProtectedAvailability) -> anyhow::Result<()> {
     let authorized_owners = owners_from_availability(avails)?;
-    let revealed = reveal("availability.output", avails, &authorized_owners)?;
+    let revealed = reveal(RevealRoute::AvailabilityOutput, avails, &authorized_owners)?;
     print_and_copy_availability(&revealed);
     Ok(())
 }
@@ -315,7 +315,7 @@ pub(crate) async fn find_availability(
 
     // Microsoft Graph has 4 concurrent requests limit
     let semaphore = Arc::new(Semaphore::new(4));
-    let mut tasks: Vec<JoinHandle<anyhow::Result<Vec<ProtectedEvent>>>> = vec![];
+    let mut tasks: Vec<JoinHandle<anyhow::Result<ProtectedEvents>>> = vec![];
     let mut authorized_owners = BTreeSet::new();
 
     for account in accounts {
@@ -354,15 +354,13 @@ pub(crate) async fn find_availability(
                         let res = microsoft::MicrosoftGraph::get_calendar_events(
                             &token,
                             &cal_id,
+                            &owner,
                             finder.start,
                             finder.end,
                         )
                         .await?;
                         drop(permit);
-                        Ok(res
-                            .into_iter()
-                            .map(|event| protect_event(event, &owner))
-                            .collect_vec())
+                        Ok(res)
                     }));
                 }
             }
@@ -382,14 +380,12 @@ pub(crate) async fn find_availability(
                         let res = google::GoogleAPI::get_calendar_events(
                             &token,
                             &cal_id,
+                            &owner,
                             finder.start,
                             finder.end,
                         )
                         .await?;
-                        Ok(res
-                            .into_iter()
-                            .map(|event| protect_event(event, &owner))
-                            .collect_vec())
+                        Ok(res)
                     }));
                 }
             }
@@ -408,8 +404,7 @@ pub(crate) async fn find_availability(
         .await
         .into_iter()
         .filter_map(|r| r.ok())
-        .flat_map(Result::unwrap)
-        .collect_vec();
+        .collect::<anyhow::Result<Vec<_>>>()?;
 
     pb.finish_with_message("Retrieved events.");
 
@@ -417,12 +412,9 @@ pub(crate) async fn find_availability(
     pb.set_message("Computing availabilities...");
     pb.enable_steady_tick(Duration::milliseconds(250).to_std().unwrap());
 
-    let protected_slots = compute_availability(&finder, &authorized_owners, protected_events)?;
-    let slots = reveal(
-        "availability.selection",
-        &protected_slots,
-        &authorized_owners,
-    )?;
+    let protected_slots = compute_availability(&finder, protected_events)?;
+    let authorized_owners = owners_from_availability(&protected_slots)?;
+    let slots = reveal(RevealRoute::AvailabilitySelection, &protected_slots, &authorized_owners)?;
 
     pb.finish_with_message("Computed availabilities.");
 
@@ -488,7 +480,7 @@ pub(crate) async fn create_hold_events(
 ) -> anyhow::Result<()> {
     let accounts = db.execute(Box::new(AccountModel::get))??;
     let authorized_owners = owners_from_availability(merged)?;
-    let merged = reveal("hold_events.schedule", merged, &authorized_owners)?;
+    let merged = reveal(RevealRoute::HoldEventsSchedule, merged, &authorized_owners)?;
 
     let event_title: String = Input::with_theme(&ColorfulTheme::default())
         .with_prompt("What's the name of your event?")
@@ -530,7 +522,7 @@ pub(crate) async fn create_hold_events(
         &account_name,
     );
     let hold_calendar = reveal(
-        "hold_events.target_calendar",
+        RevealRoute::HoldEventsTargetCalendar,
         &protected_hold_calendar,
         &authorized_owners,
     )?;

@@ -1,4 +1,5 @@
 #![feature(specialization)]
+#![feature(type_privacy_lints)]
 #![feature(negative_impls)]
 #![feature(auto_traits)]
 

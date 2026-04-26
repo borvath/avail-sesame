@@ -10,11 +10,13 @@ use rustc_middle::{
 };
 
 pub fn is_mir_available<'tcx>(def_id: DefId, tcx: TyCtxt<'tcx>) -> bool {
-    load_body_and_facts(tcx, def_id).is_ok()
+    load_body_and_facts(tcx, def_id).is_ok() || tcx.is_mir_available(def_id)
 }
 
 pub fn num_args_in_body<'tcx>(def_id: DefId, tcx: TyCtxt<'tcx>) -> usize {
-    load_body_and_facts(tcx, def_id).unwrap().owned_body().arg_count
+    load_body_and_facts(tcx, def_id)
+        .map(|cached_body| cached_body.owned_body().arg_count)
+        .unwrap_or_else(|_| tcx.instance_mir(ty::InstanceDef::Item(def_id)).arg_count)
 }
 
 pub fn substituted_mir<'tcx>(instance: &Instance<'tcx>, tcx: TyCtxt<'tcx>) -> Body<'tcx> {
@@ -28,11 +30,10 @@ pub fn substituted_mir<'tcx>(instance: &Instance<'tcx>, tcx: TyCtxt<'tcx>) -> Bo
                 | DefKind::Ctor(..)
                 | DefKind::AnonConst
                 | DefKind::InlineConst => tcx.mir_for_ctfe(def).clone(),
-                _ => {
-                    let def_id = instance.def_id();
-                    let cached_body = load_body_and_facts(tcx, def_id).unwrap();
-                    tcx.erase_regions(cached_body.owned_body())
-                }
+                _ => match load_body_and_facts(tcx, instance.def_id()) {
+                    Ok(cached_body) => tcx.erase_regions(cached_body.owned_body()),
+                    Err(_) => tcx.instance_mir(instance.def).clone(),
+                },
             }
         }
         ty::InstanceDef::VTableShim(..)

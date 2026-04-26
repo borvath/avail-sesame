@@ -15,7 +15,7 @@ use rustc_hir::def::Res;
 use rustc_hir::Expr;
 use rustc_hir::ExprKind;
 
-use rustc_middle::ty::{subst::InternalSubsts, Instance, ParamEnv, TyCtxt};
+use rustc_middle::ty::{GenericArgs, Instance, ParamEnv, TyCtxt};
 
 use sha2::{Sha256, Digest};
 use base64::{engine::general_purpose, Engine as _};
@@ -28,8 +28,8 @@ use std::collections::HashSet;
 use syn::{self, parse_str};
 use quote::ToTokens; 
 
-use scrutils::{Collector, FunctionInfo, 
-    compute_deps_for_body, compute_dep_strings_for_crates}; 
+use scrutils::{Collector, FunctionInfo,
+    compute_deps_for_body, compute_dep_strings_for_crates, substituted_mir};
 
 declare_sesame_lint! {
     /// ### What it does
@@ -67,8 +67,8 @@ declare_sesame_lint! {
 fn check_expr<'tcx>(cx: &rustc_lint::LateContext<'tcx>, expr: &'_ rustc_hir::Expr<'_>) {
     let target_fn_path: Vec<Symbol> = vec![
         sym!(sesame), //TODO swap for `sesame`
-        sym!(pcr),
-        sym!(PrivacyCriticalRegion),
+        sym!(critical),
+        sym!(CriticalRegion),
         sym!(new),
     ];
 
@@ -186,7 +186,7 @@ fn get_pcr_hash<'a>(tcx: TyCtxt, closure: &rustc_hir::Closure) -> String {
         tcx,
         ParamEnv::reveal_all(),
         def_id,
-        InternalSubsts::identity_for_item(tcx, def_id),
+        GenericArgs::identity_for_item(tcx, def_id),
     )
     .unwrap()
     .unwrap();
@@ -206,12 +206,7 @@ fn get_pcr_hash<'a>(tcx: TyCtxt, closure: &rustc_hir::Closure) -> String {
                 panic!("this PCR calls into an unresolvable item at {:?}", tcx.def_path_debug_str(*def_id)),
         }; 
     
-        let body: rustc_middle::mir::Body = instance
-            .subst_mir_and_normalize_erasing_regions(
-                tcx,
-                ParamEnv::reveal_all(),
-                tcx.instance_mir(function_info.instance().unwrap().def).to_owned(),
-            );
+        let body = substituted_mir(&instance, tcx);
 
         let src_snippet = tcx.sess
                             .source_map()

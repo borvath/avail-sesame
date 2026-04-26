@@ -8,6 +8,14 @@ description = "Lints for ensuring Sesame applications respect Sesame's' static r
 edition = "2021"
 publish = false
 
+[workspace]
+resolver = "2"
+
+[patch.crates-io]
+funty = { git = "https://github.com/bitvecto-rs/funty/", rev = "7ef0d890fbcd8b3def1635ac1a877fc298488446" }
+rustc_utils = { git = "https://github.com/JustusAdam/rustc_plugin", rev = "e413907b2ae9a03d2c8e9aca3b72dd451a16b1db" }
+rustc_plugin = { git = "https://github.com/JustusAdam/rustc_plugin", rev = "e413907b2ae9a03d2c8e9aca3b72dd451a16b1db" }
+
 [lib]
 crate-type = ["cdylib"]
 
@@ -46,7 +54,7 @@ path = "examples/sesame_pcr_illegal.rs"
 [dependencies]
 base64 = "0.22.0"
 paste = "1.0"
-clippy_utils = { git = "https://github.com/rust-lang/rust-clippy", rev = "6410606815c64946d93ad51d5de968a960364961" }
+clippy_utils = { path = "vendor/clippy_utils" }
 dylint_linting = "=2.5.0"
 if_chain = "1.0.2"
 reqwest = { version = "0.12.2", features = ["blocking"] }

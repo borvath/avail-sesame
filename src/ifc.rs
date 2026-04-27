@@ -151,7 +151,7 @@ pub fn reveal<T: Clone, P: sesame::policy::Policy>(
                 |data: &T, _| data.clone(),
                 Signature {
                     username: "borvath",
-                    signature: "7b2b6956200133e4a821c84a043aa53e0e84ece2971a2f8022a106394e9297b1",
+                    signature: "LS0tLS1CRUdJTiBTU0ggU0lHTkFUVVJFLS0tLS0KVTFOSVUwbEhBQUFBQVFBQUFETUFBQUFMYzNOb0xXVmtNalUxTVRrQUFBQWd1S1hiSjdkTFFLaHEvMWFmbkwwQUhHVlNzSgp6UnFndUVVcHl2b2Y3TkdrTUFBQUFFWm1sc1pRQUFBQUFBQUFBR2MyaGhOVEV5QUFBQVV3QUFBQXR6YzJndFpXUXlOVFV4Ck9RQUFBRUJQVCsyT3o2RlVUM0o1MWV3cEt1NVlFWFdtYTRhOVFkS2M4c2NSOGV3OWRaSWlxdVBtMVh6RTVhaGJyM1MwWFgKL2ptb1hXSWx6R0pnM2tkZlJQRGRJSAotLS0tLUVORCBTU0ggU0lHTkFUVVJFLS0tLS0K",
                 },
             ),
             (),
@@ -201,7 +201,7 @@ pub fn compute_availability(
                 },
                 Signature {
                     username: "borvath",
-                    signature: "93a0b9a04c351bb2492b2eadde802d125434f60906b7ed57eec941efeecbaeb0",
+                    signature: "LS0tLS1CRUdJTiBTU0ggU0lHTkFUVVJFLS0tLS0KVTFOSVUwbEhBQUFBQVFBQUFETUFBQUFMYzNOb0xXVmtNalUxTVRrQUFBQWd1S1hiSjdkTFFLaHEvMWFmbkwwQUhHVlNzSgp6UnFndUVVcHl2b2Y3TkdrTUFBQUFFWm1sc1pRQUFBQUFBQUFBR2MyaGhOVEV5QUFBQVV3QUFBQXR6YzJndFpXUXlOVFV4Ck9RQUFBRUN3UTZpTTNUaDcxeFpJSndjeVJVU25uZ01YbGZTVGdTYnNhdFA3Zk9wcCtzMWE2Z0pCUTgyMFRacHJ0V2gwcisKWXQ5am1HZWdVY25Bcnh1Vlk2ZzZZRAotLS0tLUVORCBTU0ggU0lHTkFUVVJFLS0tLS0K",
                 },
             ),
             (),

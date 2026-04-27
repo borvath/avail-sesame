@@ -1,0 +1,19 @@
+[package]
+name = "scrutils"
+version = "0.1.0"
+edition = "2021"
+
+[package.metadata.rust-analyzer]
+rustc_private = true
+
+[dependencies]
+rustc_utils = { workspace = true }
+flowistry = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+
+# miscellaneous
+itertools = "=0.12"
+regex = "=1.10"
+toml = "=0.8.12"
+log = "=0.4"

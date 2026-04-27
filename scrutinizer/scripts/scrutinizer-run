@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
+TOOLCHAIN="$(
+    sed -n 's/^channel = "\(.*\)"/\1/p' "${REPO_ROOT}/rust-toolchain.toml" | head -n1
+)"
+
+if [[ -z "${TOOLCHAIN}" ]]; then
+    echo "Could not determine Scrutinizer toolchain from ${REPO_ROOT}/rust-toolchain.toml" >&2
+    exit 1
+fi
+
+RUSTC_BIN="$(rustup which --toolchain "${TOOLCHAIN}" rustc)"
+TOOLCHAIN_CARGO="$(rustup which --toolchain "${TOOLCHAIN}" cargo)"
+TOOLCHAIN_ROOT="$(cd "$(dirname "${RUSTC_BIN}")/.." && pwd)"
+HOST_TRIPLE="$("${RUSTC_BIN}" -vV | sed -n 's/^host: //p')"
+LOCAL_BIN_DIR="${REPO_ROOT}/target/debug"
+
+if [[ -z "${HOST_TRIPLE}" ]]; then
+    echo "Could not determine host triple for toolchain ${TOOLCHAIN}" >&2
+    exit 1
+fi
+
+"${TOOLCHAIN_CARGO}" build --locked -p scrutinizer
+
+export LD_LIBRARY_PATH="${TOOLCHAIN_ROOT}/lib:${TOOLCHAIN_ROOT}/lib/rustlib/${HOST_TRIPLE}/lib${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
+export RUSTUP_TOOLCHAIN="${TOOLCHAIN}"
+export PATH="${LOCAL_BIN_DIR}:${PATH}"
+export RUST_BACKTRACE=1
+export RUST_LOG=warn
+
+cd "$1"
+"${LOCAL_BIN_DIR}/cargo-scrutinizer" --config-path="$2"

@@ -1,0 +1,22 @@
+[package]
+name = "scrutinizer"
+version = "0.1.0"
+edition = "2021"
+
+[package.metadata.rust-analyzer]
+rustc_private = true
+
+[dependencies]
+scrutils = { version = "0.1.0", path = "../scrutils" }
+rustc_plugin = { workspace = true }
+rustc_utils = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+
+# miscellaneous
+chrono = "=0.4.38"
+clap = { version = "=4.3.24", features = ["derive"] }
+env_logger = "=0.10"
+log = "=0.4"
+regex = "=1.10"
+toml = "=0.8.12"

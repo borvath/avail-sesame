@@ -1,5 +1,5 @@
 mode = "ppr"
-only_inconsistent = false
+only_inconsistent = true
 shallow = false
 output_file = "scrutinizer.result.json"
 

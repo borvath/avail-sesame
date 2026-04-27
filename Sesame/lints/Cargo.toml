@@ -1,0 +1,76 @@
+[package]
+name = "sesame_lints"
+version = "0.1.0"
+authors = ["corinn_tiffany@brown.edu",
+           "alexander_portland@brown.edu",
+           "kinan_dak_albab@brown.edu"]
+description = "Lints for ensuring Sesame applications respect Sesame's' static requirements"
+edition = "2021"
+publish = false
+
+[workspace]
+resolver = "2"
+
+[patch.crates-io]
+funty = { git = "https://github.com/bitvecto-rs/funty/", rev = "7ef0d890fbcd8b3def1635ac1a877fc298488446" }
+rustc_utils = { git = "https://github.com/JustusAdam/rustc_plugin", rev = "e413907b2ae9a03d2c8e9aca3b72dd451a16b1db" }
+rustc_plugin = { git = "https://github.com/JustusAdam/rustc_plugin", rev = "e413907b2ae9a03d2c8e9aca3b72dd451a16b1db" }
+
+[lib]
+crate-type = ["cdylib"]
+
+[[example]]
+name = "sesame_type_illegal"
+path = "examples/sesame_type_illegal.rs"
+
+[[example]]
+name = "sesame_type_legal"
+path = "examples/sesame_type_legal.rs"
+
+[[example]]
+name = "sesame_sandbox_illegal"
+path = "examples/sesame_sandbox_illegal.rs"
+
+[[example]]
+name = "sesame_sandbox_legal"
+path = "examples/sesame_sandbox_legal.rs"
+
+[[example]]
+name = "sesame_sandbox_transfer_legal"
+path = "examples/sesame_sandbox_transfer_legal.rs"
+
+[[example]]
+name = "sesame_sandbox_transfer_illegal"
+path = "examples/sesame_sandbox_transfer_illegal.rs"
+
+[[example]]
+name = "sesame_pcr_legal"
+path = "examples/sesame_pcr_legal.rs"
+
+[[example]]
+name = "sesame_pcr_illegal"
+path = "examples/sesame_pcr_illegal.rs"
+
+[dependencies]
+base64 = "0.22.0"
+paste = "1.0"
+clippy_utils = { path = "vendor/clippy_utils" }
+dylint_linting = "=2.5.0"
+if_chain = "1.0.2"
+reqwest = { version = "0.12.2", features = ["blocking"] }
+scrutils = { path = "../../scrutinizer/scrutils" }
+syn = { version = "2.0.58", features = ["full"]}
+quote = "1.0.37"
+proc-macro2 = "1.0.86"
+cargo-platform = "=0.1.8"
+time-macros = "=0.2.9"
+sha2 = "0.10.8"
+hex = "0.4.3"
+
+[dev-dependencies]
+dylint_testing = "=2.5.0"
+sesame = { path = "../core" }
+sesame_sandbox = { path = "../sandbox" }
+
+[package.metadata.rust-analyzer]
+rustc_private = true

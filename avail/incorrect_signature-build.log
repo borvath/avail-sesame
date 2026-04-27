@@ -1,0 +1,2868 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.84kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1.7
+#2 DONE 0.7s
+
+#3 docker-image://docker.io/docker/dockerfile:1.7@sha256:a57df69d0ea827fb7266491f2813635de6f17269be881f696fbfdf2d83dda33e
+#3 resolve docker.io/docker/dockerfile:1.7@sha256:a57df69d0ea827fb7266491f2813635de6f17269be881f696fbfdf2d83dda33e 0.0s done
+#3 CACHED
+
+#4 [context sesame] load .dockerignore
+#4 transferring sesame: 2B done
+#4 DONE 0.0s
+
+#5 [context scrutinizer] load .dockerignore
+#5 transferring scrutinizer: 2B done
+#5 DONE 0.0s
+
+#6 [internal] load metadata for docker.io/library/rust:1-bookworm
+#6 ...
+
+#7 [internal] load metadata for docker.io/library/debian:bookworm-slim
+#7 DONE 0.4s
+
+#6 [internal] load metadata for docker.io/library/rust:1-bookworm
+#6 DONE 0.4s
+
+#8 [internal] load .dockerignore
+#8 transferring context: 110B done
+#8 DONE 0.0s
+
+#9 [runtime 1/4] FROM docker.io/library/debian:bookworm-slim@sha256:f9c6a2fd2ddbc23e336b6257a5245e31f996953ef06cd13a59fa0a1df2d5c252
+#9 resolve docker.io/library/debian:bookworm-slim@sha256:f9c6a2fd2ddbc23e336b6257a5245e31f996953ef06cd13a59fa0a1df2d5c252 0.0s done
+#9 DONE 0.0s
+
+#10 [tooling  1/11] FROM docker.io/library/rust:1-bookworm@sha256:adab7941580c74513aa3347f2d2a1f975498280743d29ec62978ba12e3540d3a
+#10 resolve docker.io/library/rust:1-bookworm@sha256:adab7941580c74513aa3347f2d2a1f975498280743d29ec62978ba12e3540d3a 0.0s done
+#10 DONE 0.0s
+
+#11 [internal] load build context
+#11 transferring context: 2.64kB 0.0s done
+#11 DONE 0.1s
+
+#12 [context sesame] load from client
+#12 transferring sesame: 9.58kB 0.0s done
+#12 DONE 0.1s
+
+#13 [context scrutinizer] load from client
+#13 transferring scrutinizer: 4.54kB 0.0s done
+#13 DONE 0.1s
+
+#14 [tooling  3/11] RUN rustup toolchain install nightly-2023-08-25         --profile minimal         --component llvm-tools-preview         --component rust-src         --component rustc-dev
+#14 CACHED
+
+#15 [tooling  4/11] RUN cargo +nightly-2023-08-25 install cargo-dylint --version 2.5.0 --locked     && cargo +nightly-2023-08-25 install dylint-link --version 2.5.0 --locked
+#15 CACHED
+
+#16 [tooling  2/11] RUN apt-get update     && apt-get install -y --no-install-recommends         build-essential         ca-certificates         clang         cmake         git         libdbus-1-dev         libssl-dev         libx11-dev         libxcb-render0-dev         libxcb-shape0-dev         libxcb-xfixes0-dev         libxcb1-dev         pkg-config     && rm -rf /var/lib/apt/lists/*
+#16 CACHED
+
+#17 [tooling  5/11] WORKDIR /workspace
+#17 CACHED
+
+#18 [tooling  6/11] COPY . /workspace/avail
+#18 DONE 0.1s
+
+#19 [tooling  7/11] COPY --from=sesame . /workspace/Sesame
+#19 DONE 0.1s
+
+#20 [tooling  8/11] COPY --from=scrutinizer . /workspace/scrutinizer
+#20 DONE 0.1s
+
+#21 [tooling  9/11] RUN cargo +nightly-2023-08-25 install --locked --path /workspace/scrutinizer/scrutinizer
+#21 0.809   Installing scrutinizer v0.1.0 (/workspace/scrutinizer/scrutinizer)
+#21 0.814     Updating git repository `https://github.com/brownsys/flowistry`
+#21 3.149 From https://github.com/brownsys/flowistry
+#21 3.149  * [new ref]         08c4ad9587b3251a8f7c64aa60be31404e6e04c0 -> refs/commit/08c4ad9587b3251a8f7c64aa60be31404e6e04c0
+#21 3.169  * [new tag]         pldi-eval       -> pldi-eval
+#21 3.169  * [new tag]         popl-submission -> popl-submission
+#21 3.169  * [new tag]         v0.1.0          -> v0.1.0
+#21 3.169  * [new tag]         v0.1.1          -> v0.1.1
+#21 3.169  * [new tag]         v0.1.2          -> v0.1.2
+#21 3.170  * [new tag]         v0.1.3          -> v0.1.3
+#21 3.170  * [new tag]         v0.1.4          -> v0.1.4
+#21 3.170  * [new tag]         v0.2.0          -> v0.2.0
+#21 3.170  * [new tag]         v0.2.1          -> v0.2.1
+#21 3.171  * [new tag]         v0.3.0          -> v0.3.0
+#21 3.171  * [new tag]         v0.3.10         -> v0.3.10
+#21 3.171  * [new tag]         v0.3.11         -> v0.3.11
+#21 3.171  * [new tag]         v0.3.12         -> v0.3.12
+#21 3.172  * [new tag]         v0.3.14         -> v0.3.14
+#21 3.172  * [new tag]         v0.3.15         -> v0.3.15
+#21 3.172  * [new tag]         v0.3.16         -> v0.3.16
+#21 3.172  * [new tag]         v0.3.17         -> v0.3.17
+#21 3.172  * [new tag]         v0.3.18         -> v0.3.18
+#21 3.173  * [new tag]         v0.3.19         -> v0.3.19
+#21 3.173  * [new tag]         v0.3.2          -> v0.3.2
+#21 3.173  * [new tag]         v0.3.20         -> v0.3.20
+#21 3.173  * [new tag]         v0.3.3          -> v0.3.3
+#21 3.173  * [new tag]         v0.3.4          -> v0.3.4
+#21 3.174  * [new tag]         v0.3.5          -> v0.3.5
+#21 3.174  * [new tag]         v0.3.6          -> v0.3.6
+#21 3.174  * [new tag]         v0.3.7          -> v0.3.7
+#21 3.174  * [new tag]         v0.3.8          -> v0.3.8
+#21 3.175  * [new tag]         v0.3.9          -> v0.3.9
+#21 3.175  * [new tag]         v0.4.0          -> v0.4.0
+#21 3.175  * [new tag]         v0.4.1          -> v0.4.1
+#21 3.175  * [new tag]         v0.5.0          -> v0.5.0
+#21 3.175  * [new tag]         v0.5.1          -> v0.5.1
+#21 3.175  * [new tag]         v0.5.10         -> v0.5.10
+#21 3.176  * [new tag]         v0.5.11         -> v0.5.11
+#21 3.176  * [new tag]         v0.5.12         -> v0.5.12
+#21 3.176  * [new tag]         v0.5.13         -> v0.5.13
+#21 3.176  * [new tag]         v0.5.14         -> v0.5.14
+#21 3.177  * [new tag]         v0.5.15         -> v0.5.15
+#21 3.177  * [new tag]         v0.5.16         -> v0.5.16
+#21 3.177  * [new tag]         v0.5.17         -> v0.5.17
+#21 3.177  * [new tag]         v0.5.18         -> v0.5.18
+#21 3.177  * [new tag]         v0.5.19         -> v0.5.19
+#21 3.178  * [new tag]         v0.5.2          -> v0.5.2
+#21 3.178  * [new tag]         v0.5.20         -> v0.5.20
+#21 3.178  * [new tag]         v0.5.21         -> v0.5.21
+#21 3.178  * [new tag]         v0.5.22         -> v0.5.22
+#21 3.178  * [new tag]         v0.5.23         -> v0.5.23
+#21 3.178  * [new tag]         v0.5.3          -> v0.5.3
+#21 3.179  * [new tag]         v0.5.4          -> v0.5.4
+#21 3.179  * [new tag]         v0.5.5          -> v0.5.5
+#21 3.179  * [new tag]         v0.5.6          -> v0.5.6
+#21 3.179  * [new tag]         v0.5.7          -> v0.5.7
+#21 3.180  * [new tag]         v0.5.8          -> v0.5.8
+#21 3.180  * [new tag]         v0.5.9          -> v0.5.9
+#21 3.296     Updating crates.io index
+#21 3.872     Updating git repository `https://github.com/JustusAdam/rustc_plugin`
+#21 5.253 From https://github.com/JustusAdam/rustc_plugin
+#21 5.253  * [new ref]         e413907b2ae9a03d2c8e9aca3b72dd451a16b1db -> refs/commit/e413907b2ae9a03d2c8e9aca3b72dd451a16b1db
+#21 6.394  Downloading crates ...
+#21 6.726   Downloaded colorchoice v1.0.5
+#21 6.792   Downloaded cargo-platform v0.1.7
+#21 6.806   Downloaded equivalent v1.0.2
+#21 6.814   Downloaded cfg-if v1.0.4
+#21 6.886   Downloaded fluid-let v1.0.0
+#21 6.897   Downloaded is-terminal v0.4.17
+#21 6.897   Downloaded indexical v0.3.1
+#21 6.924   Downloaded anstyle-query v1.1.5
+#21 6.931   Downloaded itoa v1.0.18
+#21 6.939   Downloaded fxhash v0.2.1
+#21 6.942   Downloaded rustc_tools_util v0.1.1
+#21 6.943   Downloaded intervaltree v0.2.7
+#21 7.007   Downloaded toml_datetime v0.6.11
+#21 7.010   Downloaded splitmut v0.2.1
+#21 7.019   Downloaded autocfg v1.5.0
+#21 7.058   Downloaded serde_spanned v0.6.9
+#21 7.071   Downloaded clap_derive v4.3.12
+#21 7.077   Downloaded clap_lex v0.5.1
+#21 7.081   Downloaded index_vec v0.1.4
+#21 7.090   Downloaded ppv-lite86 v0.2.21
+#21 7.095   Downloaded quote v1.0.45
+#21 7.100   Downloaded utf8parse v0.2.2
+#21 7.101   Downloaded termcolor v1.4.1
+#21 7.103   Downloaded humantime v2.3.0
+#21 7.106   Downloaded cargo_metadata v0.14.2
+#21 7.108   Downloaded byteorder v1.5.0
+#21 7.110   Downloaded anstyle-parse v0.2.7
+#21 7.114   Downloaded anstyle v1.0.14
+#21 7.129   Downloaded env_logger v0.10.2
+#21 7.139   Downloaded once_cell v1.21.4
+#21 7.147   Downloaded iana-time-zone v0.1.65
+#21 7.158   Downloaded smallvec v1.15.1
+#21 7.170   Downloaded unicode-ident v1.0.24
+#21 7.177   Downloaded toml v0.8.12
+#21 7.184   Downloaded serde v1.0.197
+#21 7.194   Downloaded serde_derive v1.0.197
+#21 7.205   Downloaded memchr v2.8.0
+#21 7.232   Downloaded winnow v0.6.26
+#21 7.255   Downloaded regex v1.10.6
+#21 7.284   Downloaded zerocopy v0.8.48
+#21 7.333   Downloaded syn v2.0.117
+#21 7.350   Downloaded regex-syntax v0.8.10
+#21 7.360   Downloaded chrono v0.4.38
+#21 7.372   Downloaded winnow v0.5.40
+#21 7.387   Downloaded toml_edit v0.22.20
+#21 7.432   Downloaded serde_json v1.0.107
+#21 7.443   Downloaded regex-automata v0.4.14
+#21 7.466   Downloaded libc v0.2.184
+#21 7.538   Downloaded itertools v0.12.0
+#21 7.551   Downloaded hashbrown v0.14.5
+#21 7.560   Downloaded clap_builder v4.3.24
+#21 7.571   Downloaded aho-corasick v1.1.4
+#21 7.579   Downloaded indexmap v2.2.6
+#21 7.585   Downloaded ryu v1.0.23
+#21 7.590   Downloaded proc-macro2 v1.0.106
+#21 7.596   Downloaded num-traits v0.2.19
+#21 7.602   Downloaded log v0.4.29
+#21 7.607   Downloaded getrandom v0.2.17
+#21 7.611   Downloaded clap v4.3.24
+#21 7.624   Downloaded anyhow v1.0.102
+#21 7.630   Downloaded either v1.15.0
+#21 7.632   Downloaded anstream v0.3.2
+#21 7.634   Downloaded camino v1.1.12
+#21 7.682    Compiling proc-macro2 v1.0.106
+#21 7.683    Compiling quote v1.0.45
+#21 7.684    Compiling unicode-ident v1.0.24
+#21 7.684    Compiling libc v0.2.184
+#21 7.685    Compiling serde v1.0.197
+#21 8.017    Compiling zerocopy v0.8.48
+#21 8.290    Compiling cfg-if v1.0.4
+#21 8.372    Compiling equivalent v1.0.2
+#21 8.480    Compiling hashbrown v0.14.5
+#21 8.589    Compiling memchr v2.8.0
+#21 10.03    Compiling syn v2.0.117
+#21 10.27    Compiling indexmap v2.2.6
+#21 11.31    Compiling getrandom v0.2.17
+#21 11.73    Compiling rand_core v0.6.4
+#21 11.91    Compiling winnow v0.5.40
+#21 12.32    Compiling serde_spanned v0.6.9
+#21 12.46    Compiling toml_datetime v0.6.11
+#21 12.53    Compiling serde_json v1.0.107
+#21 12.68    Compiling byteorder v1.5.0
+#21 12.84    Compiling log v0.4.29
+#21 12.92    Compiling anyhow v1.0.102
+#21 12.98    Compiling fxhash v0.2.1
+#21 13.17    Compiling is-terminal v0.4.17
+#21 13.24    Compiling aho-corasick v1.1.4
+#21 13.36    Compiling camino v1.1.12
+#21 13.63    Compiling index_vec v0.1.4
+#21 14.36    Compiling utf8parse v0.2.2
+#21 14.48    Compiling regex-syntax v0.8.10
+#21 14.50    Compiling splitmut v0.2.1
+#21 14.88    Compiling ryu v1.0.23
+#21 15.59    Compiling autocfg v1.5.0
+#21 15.82    Compiling toml_edit v0.19.15
+#21 16.24    Compiling itoa v1.0.18
+#21 16.73    Compiling smallvec v1.15.1
+#21 16.96    Compiling semver v1.0.20
+#21 18.47    Compiling ppv-lite86 v0.2.21
+#21 18.68    Compiling serde_derive v1.0.197
+#21 19.20    Compiling rand_chacha v0.3.1
+#21 20.18    Compiling rand v0.8.5
+#21 20.33    Compiling toml v0.7.8
+#21 21.40    Compiling regex-automata v0.4.14
+#21 22.05    Compiling intervaltree v0.2.7
+#21 22.05    Compiling num-traits v0.2.19
+#21 22.21    Compiling indexical v0.3.1
+#21 22.53    Compiling anstyle-parse v0.2.7
+#21 23.09    Compiling winnow v0.6.26
+#21 24.69    Compiling anstyle v1.0.14
+#21 25.56    Compiling colorchoice v1.0.5
+#21 25.76    Compiling either v1.15.0
+#21 26.25    Compiling anstyle-query v1.1.5
+#21 26.37    Compiling anstream v0.3.2
+#21 27.00    Compiling itertools v0.12.0
+#21 27.72    Compiling regex v1.10.6
+#21 27.76    Compiling rustc_utils v0.7.4-nightly-2023-08-25 (https://github.com/JustusAdam/rustc_plugin?rev=e413907b2ae9a03d2c8e9aca3b72dd451a16b1db#e413907b)
+#21 30.66    Compiling rustc_plugin v0.7.4-nightly-2023-08-25 (https://github.com/JustusAdam/rustc_plugin?rev=e413907b2ae9a03d2c8e9aca3b72dd451a16b1db#e413907b)
+#21 32.61    Compiling toml_edit v0.22.20
+#21 33.29    Compiling cargo-platform v0.1.7
+#21 33.58    Compiling heck v0.4.1
+#21 33.94    Compiling clap_lex v0.5.1
+#21 34.24    Compiling strsim v0.10.0
+#21 34.83    Compiling fluid-let v1.0.0
+#21 34.92    Compiling flowistry v0.5.41 (https://github.com/brownsys/flowistry?rev=08c4ad9587b3251a8f7c64aa60be31404e6e04c0#08c4ad95)
+#21 36.20    Compiling toml v0.8.12
+#21 36.82    Compiling clap_builder v4.3.24
+#21 43.17    Compiling clap_derive v4.3.12
+#21 48.07    Compiling cargo_metadata v0.14.2
+#21 51.44    Compiling once_cell v1.21.4
+#21 51.88    Compiling rustc_tools_util v0.1.1
+#21 52.60    Compiling termcolor v1.4.1
+#21 53.37    Compiling humantime v2.3.0
+#21 53.53    Compiling iana-time-zone v0.1.65
+#21 53.82    Compiling chrono v0.4.38
+#21 54.96    Compiling env_logger v0.10.2
+#21 55.25    Compiling clap v4.3.24
+#21 55.29    Compiling scrutils v0.1.0 (/workspace/scrutinizer/scrutils)
+#21 55.43 warning: unused imports: `debug`, `warn`
+#21 55.43  --> scrutils/src/collector/collector_domain.rs:2:11
+#21 55.43   |
+#21 55.43 2 | use log::{debug, trace, warn};
+#21 55.43   |           ^^^^^         ^^^^
+#21 55.43   |
+#21 55.43   = note: `#[warn(unused_imports)]` on by default
+#21 55.43 
+#21 57.00    Compiling scrutinizer v0.1.0 (/workspace/scrutinizer/scrutinizer)
+#21 71.14 warning: `scrutils` (lib) generated 1 warning (run `cargo fix --lib -p scrutils` to apply 1 suggestion)
+#21 73.38     Finished release [optimized] target(s) in 1m 12s
+#21 73.40   Installing /usr/local/cargo/bin/cargo-scrutinizer
+#21 73.40   Installing /usr/local/cargo/bin/scrutinizer-driver
+#21 73.40    Installed package `scrutinizer v0.1.0 (/workspace/scrutinizer/scrutinizer)` (executables `cargo-scrutinizer`, `scrutinizer-driver`)
+#21 DONE 73.8s
+
+#22 [tooling 10/11] WORKDIR /workspace/avail
+#22 DONE 0.1s
+
+#23 [tooling 11/11] RUN cargo +nightly-2023-08-25 build --release
+#23 0.377     Updating git repository `https://github.com/bitvecto-rs/funty/`
+#23 1.459 From https://github.com/bitvecto-rs/funty
+#23 1.459  * [new branch]      main       -> origin/main
+#23 1.459  * [new branch]      master     -> origin/master
+#23 1.459  * [new ref]                    -> origin/HEAD
+#23 1.474     Updating crates.io index
+#23 3.810  Downloading crates ...
+#23 4.299   Downloaded block-padding v0.2.1
+#23 4.310   Downloaded block-buffer v0.9.0
+#23 4.321   Downloaded copypasta v0.8.1
+#23 4.373   Downloaded atty v0.2.14
+#23 4.383   Downloaded enumflags2 v0.6.4
+#23 4.391   Downloaded bytecheck v0.6.12
+#23 4.396   Downloaded dirs v4.0.0
+#23 4.435   Downloaded cfg_aliases v0.2.1
+#23 4.437   Downloaded bytecheck_derive v0.6.12
+#23 4.444   Downloaded clap_lex v0.3.3
+#23 4.454   Downloaded downcast-rs v1.2.1
+#23 4.458   Downloaded cpufeatures v0.2.17
+#23 4.460   Downloaded const_fn v0.4.12
+#23 4.464   Downloaded dlib v0.5.3
+#23 4.466   Downloaded strsim v0.8.0
+#23 4.469   Downloaded funty v2.0.0
+#23 4.471   Downloaded dirs-sys v0.3.7
+#23 4.474   Downloaded fastrand v1.9.0
+#23 4.476   Downloaded ctrlc v3.2.3
+#23 4.490   Downloaded spin v0.5.2
+#23 4.494   Downloaded terminal_size v0.1.17
+#23 4.501   Downloaded tap v1.0.1
+#23 4.503   Downloaded event-listener v2.5.3
+#23 4.515   Downloaded frunk_proc_macro_helpers v0.1.4
+#23 4.518   Downloaded futures-sink v0.3.32
+#23 4.520   Downloaded enumflags2_derive v0.6.4
+#23 4.528   Downloaded form_urlencoded v1.2.2
+#23 4.540   Downloaded subtle v2.4.1
+#23 4.541   Downloaded digest v0.9.0
+#23 4.549   Downloaded try-lock v0.2.5
+#23 4.551   Downloaded toml_write v0.1.2
+#23 4.553   Downloaded http-body v0.4.6
+#23 4.558   Downloaded time-macros-impl v0.1.2
+#23 4.561   Downloaded time-macros v0.1.1
+#23 4.562   Downloaded httpdate v1.0.3
+#23 4.564   Downloaded futures-task v0.3.32
+#23 4.566   Downloaded futures-macro v0.3.32
+#23 4.569   Downloaded futures-io v0.3.32
+#23 4.573   Downloaded wayland-sys v0.29.5
+#23 4.587   Downloaded matches v0.1.10
+#23 4.599   Downloaded which v3.1.1
+#23 4.608   Downloaded glob v0.3.3
+#23 4.617   Downloaded tower-service v0.3.3
+#23 4.621   Downloaded radium v0.6.2
+#23 4.623   Downloaded proc-macro-hack v0.5.20+deprecated
+#23 4.627   Downloaded proc-macro-crate v0.1.5
+#23 4.629   Downloaded number_prefix v0.4.0
+#23 4.631   Downloaded leb128 v0.2.6
+#23 4.634   Downloaded zbus_macros v1.9.3
+#23 4.636   Downloaded bigdecimal v0.2.2
+#23 4.641   Downloaded id-arena v2.3.0
+#23 4.653   Downloaded xcursor v0.3.10
+#23 4.674   Downloaded ptr_meta_derive v0.1.4
+#23 4.691   Downloaded openssl-macros v0.1.1
+#23 4.695   Downloaded seahash v4.1.0
+#23 4.697   Downloaded http v0.2.12
+#23 4.705   Downloaded flate2 v1.1.9
+#23 4.734   Downloaded memoffset v0.6.5
+#23 4.741   Downloaded lazy_static v1.5.0
+#23 4.747   Downloaded serde v1.0.166
+#23 4.759   Downloaded num-bigint v0.4.6
+#23 4.769   Downloaded hyper-rustls v0.23.2
+#23 4.775   Downloaded pulldown-cmark v0.9.6
+#23 4.785   Downloaded parking v2.2.1
+#23 4.788   Downloaded radium v0.7.0
+#23 4.791   Downloaded tempfile v3.8.0
+#23 4.797   Downloaded toml_parser v1.0.0
+#23 4.801   Downloaded wasm-encoder v0.33.2
+#23 4.808   Downloaded parking_lot_core v0.9.12
+#23 4.813   Downloaded proc-macro-crate v1.2.1
+#23 4.816   Downloaded polling v2.8.0
+#23 4.824   Downloaded nb-connect v1.2.0
+#23 4.827   Downloaded signal-hook-registry v1.4.8
+#23 4.830   Downloaded socket2 v0.5.10
+#23 4.833   Downloaded proc-macro-error v1.0.4
+#23 4.840   Downloaded webpki v0.22.4
+#23 4.852   Downloaded shlex v1.3.0
+#23 4.856   Downloaded sha2 v0.9.9
+#23 4.862   Downloaded zbus v1.9.3
+#23 4.868   Downloaded serde_derive v1.0.166
+#23 4.873   Downloaded indicatif v0.17.1
+#23 4.879   Downloaded num-rational v0.4.2
+#23 4.883   Downloaded url v2.3.0
+#23 4.889   Downloaded serde_json v1.0.105
+#23 4.904   Downloaded reqwest v0.11.10
+#23 4.917   Downloaded wayland-client v0.29.5
+#23 4.923   Downloaded wasm-encoder v0.41.2
+#23 4.928   Downloaded tracing-core v0.1.36
+#23 4.934   Downloaded unicode-bidi v0.3.18
+#23 4.941   Downloaded regex v1.6.0
+#23 4.957   Downloaded wit-parser v0.11.3
+#23 5.002   Downloaded rustix v0.37.28
+#23 5.043   Downloaded num v0.4.3
+#23 5.046   Downloaded num_cpus v1.17.0
+#23 5.053   Downloaded lock_api v0.4.14
+#23 5.056   Downloaded unicode-segmentation v1.12.0
+#23 5.061   Downloaded rand v0.8.6
+#23 5.067   Downloaded lexical v5.2.2
+#23 5.073   Downloaded rustix v0.38.44
+#23 5.119   Downloaded oauth2 v4.2.3
+#23 5.125   Downloaded unicode-normalization v0.1.25
+#23 5.131   Downloaded smithay-client-toolkit v0.16.1
+#23 5.140   Downloaded indexmap v2.11.1
+#23 5.148   Downloaded typenum v1.20.0
+#23 5.156   Downloaded tokio-util v0.7.4
+#23 5.166   Downloaded num-iter v0.1.45
+#23 5.168   Downloaded itertools v0.12.1
+#23 5.180   Downloaded num-integer v0.1.46
+#23 5.183   Downloaded num-bigint v0.3.3
+#23 5.193   Downloaded wayland-protocols v0.29.5
+#23 5.209   Downloaded tinyvec v1.11.0
+#23 5.213   Downloaded wit-component v0.14.7
+#23 5.289   Downloaded rust_decimal v1.41.0
+#23 5.301   Downloaded quick-xml v0.30.0
+#23 5.308   Downloaded wasmparser v0.113.3
+#23 5.318   Downloaded wasmparser v0.121.2
+#23 5.329   Downloaded mysql_common v0.27.5
+#23 5.341   Downloaded nix v0.25.1
+#23 5.357   Downloaded hyper v0.14.32
+#23 5.371   Downloaded xcb v1.7.0
+#23 5.387   Downloaded winnow v0.7.15
+#23 5.405   Downloaded toml_edit v0.22.27
+#23 5.415   Downloaded toml v0.5.9
+#23 5.420   Downloaded time v0.2.27
+#23 5.428   Downloaded zvariant v2.10.0
+#23 5.433   Downloaded uuid v1.23.1
+#23 5.438   Downloaded nix v0.22.3
+#23 5.453   Downloaded nix v0.24.3
+#23 5.471   Downloaded webpki-roots v0.22.6
+#23 5.476   Downloaded idna v0.2.3
+#23 5.486   Downloaded unicode-width v0.1.14
+#23 5.494   Downloaded uuid v0.8.2
+#23 5.500   Downloaded xml-rs v0.8.28
+#23 5.507   Downloaded serde_repr v0.1.20
+#23 5.512   Downloaded regex-syntax v0.6.29
+#23 5.522   Downloaded sha1_smol v1.0.1
+#23 5.524   Downloaded sha1 v0.6.1
+#23 5.526   Downloaded serde_urlencoded v0.7.1
+#23 5.529   Downloaded rend v0.4.2
+#23 5.531   Downloaded proc-macro-crate v3.3.0
+#23 5.534   Downloaded lexical-core v0.7.6
+#23 5.551   Downloaded tracing v0.1.44
+#23 5.583   Downloaded pkg-config v0.3.33
+#23 5.585   Downloaded pin-project-lite v0.2.17
+#23 5.597   Downloaded rustls v0.20.9
+#23 5.615   Downloaded openssl v0.10.78
+#23 5.631   Downloaded io-lifetimes v1.0.11
+#23 5.635   Downloaded mio v0.8.11
+#23 5.646   Downloaded encoding_rs v0.8.35
+#23 5.678   Downloaded tokio v1.27.0
+#23 5.738   Downloaded parking_lot v0.12.5
+#23 5.743   Downloaded toml v0.8.23
+#23 5.749   Downloaded clap v4.0.18
+#23 5.777   Downloaded bitvec v0.22.3
+#23 5.790   Downloaded slab v0.4.12
+#23 5.793   Downloaded hkdf v0.11.0
+#23 5.799   Downloaded clap v2.34.0
+#23 5.811   Downloaded bitvec v1.0.1
+#23 5.844   Downloaded bindgen v0.58.1
+#23 5.853   Downloaded smithay-clipboard v0.6.6
+#23 5.857   Downloaded libc v0.2.186
+#23 5.931   Downloaded libz-sys v1.1.28
+#23 5.970   Downloaded h2 v0.3.27
+#23 5.984   Downloaded spdx v0.10.8
+#23 6.096   Downloaded chrono v0.4.22
+#23 6.105   Downloaded openssl-probe v0.1.6
+#23 6.107   Downloaded rustc-hash v1.1.0
+#23 6.109   Downloaded secret-service v2.0.2
+#23 6.113   Downloaded rusqlite v0.28.0
+#23 6.122   Downloaded thread_local v1.1.9
+#23 6.126   Downloaded subprocess v0.2.9
+#23 6.132   Downloaded futures-util v0.3.32
+#23 6.154   Downloaded rkyv v0.7.46
+#23 6.173   Downloaded nom v5.1.3
+#23 6.185   Downloaded linux-raw-sys v0.3.8
+#23 6.211   Downloaded keyring v1.2.0
+#23 6.216   Downloaded ipnet v2.12.0
+#23 6.220   Downloaded wit-bindgen-rust v0.12.0
+#23 6.223   Downloaded wit-bindgen-core v0.12.0
+#23 6.225   Downloaded zeroize v1.8.2
+#23 6.228   Downloaded ring v0.17.14
+#23 6.296   Downloaded wyz v0.5.1
+#23 6.298   Downloaded webbrowser v0.8.0
+#23 6.304   Downloaded unicase v2.9.0
+#23 6.306   Downloaded hashbrown v0.15.5
+#23 6.314   Downloaded wayland-scanner v0.29.5
+#23 6.316   Downloaded wayland-commons v0.29.5
+#23 6.318   Downloaded tokio-rustls v0.23.4
+#23 6.321   Downloaded tokio-native-tls v0.3.0
+#23 6.324   Downloaded tinytemplate v1.2.1
+#23 6.326   Downloaded time v0.1.45
+#23 6.329   Downloaded thiserror-impl v1.0.69
+#23 6.331   Downloaded thiserror v1.0.69
+#23 6.344   Downloaded textwrap v0.11.0
+#23 6.348   Downloaded standback v0.2.17
+#23 6.354   Downloaded simdutf8 v0.1.5
+#23 6.359   Downloaded aho-corasick v0.7.20
+#23 6.367   Downloaded aes v0.7.5
+#23 6.375   Downloaded peeking_take_while v0.1.2
+#23 6.377   Downloaded semver v1.0.28
+#23 6.382   Downloaded mime v0.3.17
+#23 6.385   Downloaded openssl-sys v0.9.114
+#23 6.396   Downloaded x11-clipboard v0.6.1
+#23 6.399   Downloaded cc v1.2.61
+#23 6.404   Downloaded sct v0.7.1
+#23 6.411   Downloaded scoped-tls v1.0.1
+#23 6.412   Downloaded saturating v0.1.0
+#23 6.414   Downloaded rustls-pemfile v0.3.0
+#23 6.418   Downloaded wasm-metadata v0.10.20
+#23 6.420   Downloaded futures v0.3.25
+#23 6.430   Downloaded bytes v1.11.1
+#23 6.437   Downloaded borsh v1.6.1
+#23 6.450   Downloaded ptr_meta v0.1.4
+#23 6.451   Downloaded proc-macro-error-attr v1.0.4
+#23 6.453   Downloaded percent-encoding v2.3.2
+#23 6.455   Downloaded opaque-debug v0.3.1
+#23 6.458   Downloaded sha2 v0.10.9
+#23 6.463   Downloaded serde_path_to_error v0.1.14
+#23 6.466   Downloaded rkyv_derive v0.7.46
+#23 6.469   Downloaded os_str_bytes v6.6.1
+#23 6.473   Downloaded num-complex v0.4.6
+#23 6.476   Downloaded native-tls v0.2.10
+#23 6.481   Downloaded libloading v0.8.9
+#23 6.487   Downloaded hyper-tls v0.5.0
+#23 6.490   Downloaded zvariant_derive v2.10.0
+#23 6.492   Downloaded wyz v0.4.0
+#23 6.494   Downloaded wit-bindgen-rust-macro v0.12.0
+#23 6.496   Downloaded linux-raw-sys v0.4.15
+#23 6.576   Downloaded wit-bindgen-rust-lib v0.12.0
+#23 6.577   Downloaded wit-bindgen v0.12.0
+#23 6.578   Downloaded version_check v0.9.5
+#23 6.581   Downloaded untrusted v0.9.0
+#23 6.584   Downloaded httparse v1.10.1
+#23 6.589   Downloaded futures-lite v1.13.0
+#23 6.592   Downloaded futures-channel v0.3.32
+#23 6.596   Downloaded frunk v0.4.4
+#23 6.603   Downloaded env_logger v0.8.4
+#23 6.608   Downloaded dialoguer v0.10.2
+#23 6.614   Downloaded crossbeam-utils v0.8.21
+#23 6.620   Downloaded crc32fast v1.5.0
+#23 6.624   Downloaded base64 v0.13.1
+#23 6.630   Downloaded allocator-api2 v0.2.21
+#23 6.636   Downloaded ahash v0.8.12
+#23 6.641   Downloaded wayland-cursor v0.29.5
+#23 6.642   Downloaded want v0.3.1
+#23 6.644   Downloaded frunk_core v0.4.4
+#23 6.648   Downloaded erased-serde v0.3.31
+#23 6.653   Downloaded derivative v2.2.0
+#23 6.672   Downloaded clang-sys v1.8.1
+#23 6.677   Downloaded cargo_toml v0.19.2
+#23 6.679   Downloaded borsh-derive v1.6.1
+#23 6.686   Downloaded bitflags v2.11.1
+#23 6.694   Downloaded async-io v1.13.0
+#23 6.697   Downloaded anyhow v1.0.72
+#23 6.705   Downloaded unicode-xid v0.2.6
+#23 6.707   Downloaded ahash v0.7.8
+#23 6.711   Downloaded tokio-macros v2.0.0
+#23 6.713   Downloaded hashlink v0.8.4
+#23 6.716   Downloaded frunk_derives v0.4.4
+#23 6.718   Downloaded fuzzy-matcher v0.3.7
+#23 6.721   Downloaded futures-executor v0.3.32
+#23 6.724   Downloaded frunk_proc_macros v0.1.4
+#23 6.724   Downloaded find-msvc-tools v0.1.9
+#23 6.727   Downloaded fallible-iterator v0.2.0
+#23 6.730   Downloaded console v0.15.2
+#23 6.734   Downloaded cmake v0.1.58
+#23 6.736   Downloaded clap_derive v4.0.18
+#23 6.739   Downloaded cipher v0.3.0
+#23 6.742   Downloaded cexpr v0.4.0
+#23 6.746   Downloaded async-lock v2.8.0
+#23 6.751   Downloaded waker-fn v1.2.0
+#23 6.756   Downloaded untrusted v0.7.1
+#23 6.758   Downloaded fastrand v2.4.1
+#23 6.762   Downloaded dyn-clone v1.0.20
+#23 6.765   Downloaded concurrent-queue v2.5.0
+#23 6.768   Downloaded colored v2.0.0
+#23 6.772   Downloaded block-modes v0.8.1
+#23 6.777   Downloaded bincode v1.3.3
+#23 6.782   Downloaded async-trait v0.1.79
+#23 6.791   Downloaded arrayvec v0.7.6
+#23 6.794   Downloaded vec_map v0.8.2
+#23 6.796   Downloaded hmac v0.11.0
+#23 6.799   Downloaded futures-core v0.3.32
+#23 6.802   Downloaded foreign-types v0.3.2
+#23 6.804   Downloaded crypto-mac v0.11.1
+#23 6.806   Downloaded crypto-common v0.1.7
+#23 6.808   Downloaded foreign-types-shared v0.1.1
+#23 6.810   Downloaded fallible-streaming-iterator v0.1.9
+#23 6.812   Downloaded errno v0.3.14
+#23 6.830   Downloaded libsqlite3-sys v0.25.2
+#23 6.918   Downloaded ring v0.16.20
+#23 7.202    Compiling proc-macro2 v1.0.106
+#23 7.202    Compiling unicode-ident v1.0.24
+#23 7.202    Compiling quote v1.0.45
+#23 7.202    Compiling libc v0.2.186
+#23 7.215    Compiling cfg-if v1.0.4
+#23 7.215    Compiling version_check v0.9.5
+#23 7.307    Compiling serde v1.0.166
+#23 7.452    Compiling autocfg v1.5.0
+#23 7.838    Compiling shlex v1.3.0
+#23 7.838    Compiling find-msvc-tools v0.1.9
+#23 7.838    Compiling pkg-config v0.3.33
+#23 8.267    Compiling cc v1.2.61
+#23 8.423    Compiling once_cell v1.21.4
+#23 8.546    Compiling bitflags v1.3.2
+#23 8.655    Compiling memchr v2.8.0
+#23 8.983    Compiling smallvec v1.15.1
+#23 9.324    Compiling pin-project-lite v0.2.17
+#23 9.512    Compiling log v0.4.29
+#23 9.816    Compiling syn v2.0.117
+#23 9.924    Compiling vcpkg v0.2.15
+#23 9.963    Compiling generic-array v0.14.7
+#23 10.11    Compiling serde_json v1.0.105
+#23 10.69    Compiling syn v1.0.109
+#23 10.72    Compiling typenum v1.20.0
+#23 11.24    Compiling num-traits v0.2.19
+#23 11.28    Compiling lazy_static v1.5.0
+#23 11.86    Compiling equivalent v1.0.2
+#23 11.93    Compiling hashbrown v0.15.5
+#23 13.19    Compiling getrandom v0.2.17
+#23 13.37    Compiling futures-core v0.3.32
+#23 13.48    Compiling socket2 v0.4.10
+#23 13.49    Compiling memoffset v0.6.5
+#23 13.73    Compiling thiserror v1.0.69
+#23 13.81    Compiling futures-sink v0.3.32
+#23 13.87    Compiling futures-io v0.3.32
+#23 14.03    Compiling bytes v1.11.1
+#23 14.07    Compiling zerocopy v0.8.48
+#23 14.19    Compiling num-integer v0.1.46
+#23 14.55    Compiling slab v0.4.12
+#23 14.69    Compiling parking_lot_core v0.9.12
+#23 14.73    Compiling itoa v1.0.18
+#23 14.78    Compiling ryu v1.0.23
+#23 15.47    Compiling futures-channel v0.3.32
+#23 15.76    Compiling futures-task v0.3.32
+#23 15.84    Compiling anyhow v1.0.72
+#23 15.94    Compiling scopeguard v1.2.0
+#23 16.05    Compiling lock_api v0.4.14
+#23 16.43    Compiling errno v0.3.14
+#23 16.68    Compiling tokio v1.27.0
+#23 16.95    Compiling serde_derive v1.0.166
+#23 17.06    Compiling futures-macro v0.3.32
+#23 17.09    Compiling thiserror-impl v1.0.69
+#23 18.01    Compiling xml-rs v0.8.28
+#23 19.52    Compiling futures-util v0.3.32
+#23 19.86    Compiling tinyvec_macros v0.1.1
+#23 19.90    Compiling tinyvec v1.11.0
+#23 20.12    Compiling wayland-scanner v0.29.5
+#23 20.25    Compiling tokio-macros v2.0.0
+#23 20.33    Compiling parking_lot v0.12.5
+#23 22.16    Compiling signal-hook-registry v1.4.8
+#23 22.46    Compiling openssl-sys v0.9.114
+#23 22.74    Compiling ring v0.17.14
+#23 23.04    Compiling num_cpus v1.17.0
+#23 23.36    Compiling mio v0.8.11
+#23 24.04    Compiling bitflags v2.11.1
+#23 24.24    Compiling semver v1.0.28
+#23 24.71    Compiling unicode-normalization v0.1.25
+#23 24.91    Compiling wayland-sys v0.29.5
+#23 25.37    Compiling libloading v0.8.9
+#23 25.56    Compiling glob v0.3.3
+#23 25.72    Compiling unicode-bidi v0.3.18
+#23 26.05    Compiling pulldown-cmark v0.9.6
+#23 26.43    Compiling scoped-tls v1.0.1
+#23 26.54    Compiling leb128 v0.2.6
+#23 26.68    Compiling percent-encoding v2.3.2
+#23 26.95    Compiling matches v0.1.10
+#23 27.04    Compiling untrusted v0.9.0
+#23 27.16    Compiling idna v0.2.3
+#23 27.24    Compiling form_urlencoded v1.2.2
+#23 27.45    Compiling clang-sys v1.8.1
+#23 27.92    Compiling indexmap v2.11.1
+#23 28.44    Compiling toml v0.5.9
+#23 29.11    Compiling dlib v0.5.3
+#23 29.21    Compiling ring v0.16.20
+#23 29.45    Compiling tracing-core v0.1.36
+#23 29.94    Compiling nom v5.1.3
+#23 30.20    Compiling fnv v1.0.7
+#23 30.40    Compiling static_assertions v1.1.0
+#23 30.40    Compiling unicase v2.9.0
+#23 30.47    Compiling cpufeatures v0.2.17
+#23 30.83    Compiling spdx v0.10.8
+#23 31.20    Compiling http v0.2.12
+#23 31.50    Compiling tracing v0.1.44
+#23 32.64    Compiling wasmparser v0.121.2
+#23 33.24    Compiling url v2.3.0
+#23 34.16    Compiling wasm-encoder v0.41.2
+#23 34.63    Compiling ppv-lite86 v0.2.21
+#23 34.93    Compiling wayland-client v0.29.5
+#23 35.20    Compiling atty v0.2.14
+#23 35.25    Compiling nix v0.24.3
+#23 35.46    Compiling rand_core v0.6.4
+#23 35.65    Compiling digest v0.9.0
+#23 35.73    Compiling aho-corasick v0.7.20
+#23 36.82    Compiling standback v0.2.17
+#23 37.03    Compiling unicode-xid v0.2.6
+#23 37.10    Compiling crossbeam-utils v0.8.21
+#23 37.33    Compiling regex-syntax v0.6.29
+#23 37.83    Compiling io-lifetimes v1.0.11
+#23 37.83    Compiling unicode-segmentation v1.12.0
+#23 38.11    Compiling id-arena v2.3.0
+#23 38.19    Compiling foreign-types-shared v0.1.1
+#23 38.23    Compiling httparse v1.10.1
+#23 38.23    Compiling unicode-width v0.1.14
+#23 38.39    Compiling openssl v0.10.78
+#23 38.55    Compiling proc-macro-hack v0.5.20+deprecated
+#23 38.79    Compiling textwrap v0.11.0
+#23 38.94    Compiling regex v1.6.0
+#23 39.25    Compiling foreign-types v0.3.2
+#23 39.29    Compiling wit-parser v0.11.3
+#23 39.70    Compiling heck v0.4.1
+#23 40.24    Compiling wasm-metadata v0.10.20
+#23 40.36    Compiling webpki v0.22.4
+#23 40.55    Compiling wayland-commons v0.29.5
+#23 40.98    Compiling rand_chacha v0.3.1
+#23 41.09    Compiling tokio-util v0.7.4
+#23 41.56    Compiling wasmparser v0.113.3
+#23 41.74    Compiling toml_datetime v0.6.11
+#23 41.94    Compiling serde_spanned v0.6.9
+#23 41.95    Compiling wasm-encoder v0.33.2
+#23 42.01    Compiling openssl-macros v0.1.1
+#23 42.11    Compiling num-bigint v0.4.6
+#23 42.41    Compiling polling v2.8.0
+#23 42.59    Compiling vec_map v0.8.2
+#23 42.64    Compiling untrusted v0.7.1
+#23 42.73    Compiling downcast-rs v1.2.1
+#23 42.75    Compiling native-tls v0.2.10
+#23 42.78    Compiling bindgen v0.58.1
+#23 42.92    Compiling toml_write v0.1.2
+#23 42.93    Compiling try-lock v0.2.5
+#23 42.95    Compiling winnow v0.7.15
+#23 42.99    Compiling spin v0.5.2
+#23 43.04    Compiling byteorder v1.5.0
+#23 43.06    Compiling termcolor v1.4.1
+#23 43.14    Compiling rustix v0.37.28
+#23 43.22    Compiling rustls v0.20.9
+#23 43.33    Compiling ansi_term v0.12.1
+#23 43.42    Compiling frunk_core v0.4.4
+#23 43.49    Compiling humantime v2.3.0
+#23 43.52    Compiling strsim v0.8.0
+#23 43.67    Compiling opaque-debug v0.3.1
+#23 43.71    Compiling env_logger v0.8.4
+#23 43.72    Compiling clap v2.34.0
+#23 44.15    Compiling proc-macro-crate v1.2.1
+#23 44.43    Compiling toml_edit v0.22.27
+#23 44.57    Compiling wit-component v0.14.7
+#23 44.86    Compiling frunk_proc_macro_helpers v0.1.4
+#23 45.87    Compiling want v0.3.1
+#23 46.81    Compiling cexpr v0.4.0
+#23 47.27    Compiling h2 v0.3.27
+#23 47.39    Compiling rand v0.8.6
+#23 49.71    Compiling sct v0.7.1
+#23 49.89    Compiling http-body v0.4.6
+#23 49.90    Compiling wayland-protocols v0.29.5
+#23 50.09    Compiling enumflags2_derive v0.6.4
+#23 50.34    Compiling which v3.1.1
+#23 50.58    Compiling block-buffer v0.9.0
+#23 50.64    Compiling libz-sys v1.1.28
+#23 50.68    Compiling socket2 v0.5.10
+#23 51.01    Compiling time v0.1.45
+#23 51.57    Compiling quick-xml v0.30.0
+#23 51.76    Compiling async-io v1.13.0
+#23 51.94    Compiling num-bigint v0.3.3
+#23 52.10    Compiling proc-macro-error-attr v1.0.4
+#23 52.21    Compiling ahash v0.8.12
+#23 52.28    Compiling openssl-probe v0.1.6
+#23 52.36    Compiling radium v0.6.2
+#23 52.39    Compiling event-listener v2.5.3
+#23 52.50    Compiling parking v2.2.1
+#23 52.54    Compiling peeking_take_while v0.1.2
+#23 52.57    Compiling rustc-hash v1.1.0
+#23 52.60    Compiling const_fn v0.4.12
+#23 52.63    Compiling crc32fast v1.5.0
+#23 52.68    Compiling subtle v2.4.1
+#23 52.68    Compiling linux-raw-sys v0.3.8
+#23 52.83    Compiling lexical-core v0.7.6
+#23 52.83    Compiling lazycell v1.3.0
+#23 52.88    Compiling waker-fn v1.2.0
+#23 52.91    Compiling base64 v0.13.1
+#23 52.96    Compiling tower-service v0.3.3
+#23 52.99    Compiling fastrand v1.9.0
+#23 53.00    Compiling httpdate v1.0.3
+#23 53.24    Compiling iana-time-zone v0.1.65
+#23 53.29    Compiling futures-lite v1.13.0
+#23 53.51    Compiling chrono v0.4.22
+#23 53.56    Compiling hyper v0.14.32
+#23 54.05    Compiling crypto-mac v0.11.1
+#23 54.13    Compiling async-lock v2.8.0
+#23 55.15    Compiling xcb v1.7.0
+#23 55.47    Compiling enumflags2 v0.6.4
+#23 55.70    Compiling sha2 v0.9.9
+#23 57.05    Compiling time-macros-impl v0.1.2
+#23 57.78    Compiling concurrent-queue v2.5.0
+#23 58.07    Compiling wit-bindgen-core v0.12.0
+#23 58.18    Compiling toml v0.8.23
+#23 58.32    Compiling zvariant_derive v2.10.0
+#23 58.55    Compiling proc-macro-crate v0.1.5
+#23 58.75    Compiling futures-executor v0.3.32
+#23 58.76    Compiling subprocess v0.2.9
+#23 59.28    Compiling cipher v0.3.0
+#23 59.34    Compiling cmake v0.1.58
+#23 59.39    Compiling smithay-client-toolkit v0.16.1
+#23 59.40    Compiling time v0.2.27
+#23 59.44    Compiling proc-macro-error v1.0.4
+#23 59.56    Compiling rust_decimal v1.41.0
+#23 59.59    Compiling xcursor v0.3.10
+#23 59.62    Compiling rustix v0.38.44
+#23 59.65    Compiling tap v1.0.1
+#23 59.73    Compiling wit-bindgen-rust v0.12.0
+#23 59.81    Compiling arrayvec v0.5.2
+#23 59.91    Compiling wyz v0.4.0
+#23 59.95    Compiling wayland-cursor v0.29.5
+#23 60.03    Compiling mysql_common v0.27.5
+#23 60.59    Compiling zvariant v2.10.0
+#23 60.59    Compiling tokio-rustls v0.23.4
+#23 60.60    Compiling futures v0.3.25
+#23 60.64    Compiling zbus_macros v1.9.3
+#23 60.76    Compiling cargo_toml v0.19.2
+#23 61.26    Compiling wit-bindgen-rust-lib v0.12.0
+#23 61.90    Compiling time-macros v0.1.1
+#23 63.36    Compiling tokio-native-tls v0.3.0
+#23 63.66    Compiling hmac v0.11.0
+#23 63.85    Compiling frunk_proc_macros v0.1.4
+#23 64.17    Compiling frunk_derives v0.4.4
+#23 64.26    Compiling num-rational v0.4.2
+#23 64.78    Compiling tinytemplate v1.2.1
+#23 65.12    Compiling derivative v2.2.0
+#23 65.25    Compiling serde_repr v0.1.20
+#23 65.41    Compiling nix v0.22.3
+#23 65.82    Compiling num-iter v0.1.45
+#23 65.90    Compiling num-complex v0.4.6
+#23 66.01    Compiling nb-connect v1.2.0
+#23 66.11    Compiling block-buffer v0.10.4
+#23 66.20    Compiling crypto-common v0.1.7
+#23 66.34    Compiling libsqlite3-sys v0.25.2
+#23 66.71    Compiling memmap2 v0.5.10
+#23 66.93    Compiling terminal_size v0.1.17
+#23 66.99    Compiling arrayvec v0.7.6
+#23 67.03    Compiling block-padding v0.2.1
+#23 67.13    Compiling async-trait v0.1.79
+#23 67.37    Compiling funty v1.2.0 (https://github.com/bitvecto-rs/funty/?rev=7ef0d890fbcd8b3def1635ac1a877fc298488446#7ef0d890)
+#23 68.20    Compiling sha1_smol v1.0.1
+#23 68.43    Compiling either v1.15.0
+#23 68.60    Compiling linux-raw-sys v0.4.15
+#23 68.65    Compiling allocator-api2 v0.2.21
+#23 68.95    Compiling hashbrown v0.14.5
+#23 70.23    Compiling frunk v0.4.4
+#23 70.47    Compiling sha1 v0.6.1
+#23 70.51    Compiling zbus v1.9.3
+#23 72.52    Compiling bitvec v0.22.3
+#23 73.79    Compiling console v0.15.2
+#23 75.16    Compiling block-modes v0.8.1
+#23 76.22    Compiling digest v0.10.7
+#23 76.38    Compiling num v0.4.3
+#23 76.42    Compiling sesame_build v0.1.0 (/workspace/Sesame/build)
+#23 77.31    Compiling flate2 v1.1.9
+#23 77.91    Compiling hkdf v0.11.0
+#23 78.23    Compiling hyper-tls v0.5.0
+#23 78.41    Compiling bigdecimal v0.2.2
+#23 79.48    Compiling lexical v5.2.2
+#23 79.54    Compiling hyper-rustls v0.23.2
+#23 79.71    Compiling aes v0.7.5
+#23 80.27    Compiling rustls-pemfile v0.3.0
+#23 80.45    Compiling serde_urlencoded v0.7.1
+#23 80.68    Compiling webpki-roots v0.22.6
+#23 80.75    Compiling bincode v1.3.3
+#23 80.81    Compiling thread_local v1.1.9
+#23 81.07    Compiling encoding_rs v0.8.35
+#23 81.17    Compiling mime v0.3.17
+#23 81.80    Compiling uuid v0.8.2
+#23 82.17    Compiling os_str_bytes v6.6.1
+#23 82.39    Compiling fastrand v2.4.1
+#23 82.64    Compiling saturating v0.1.0
+#23 82.79    Compiling ipnet v2.12.0
+#23 83.90    Compiling reqwest v0.11.10
+#23 85.16    Compiling tempfile v3.8.0
+#23 85.83    Compiling clap_lex v0.3.3
+#23 86.13    Compiling x11-clipboard v0.6.1
+#23 86.14    Compiling sesame_sandbox v0.1.0 (/workspace/Sesame/sandbox)
+#23 86.19 warning: the feature `specialization` is incomplete and may not be safe to use and/or cause compiler crashes
+#23 86.19  --> /workspace/Sesame/sandbox/src/lib.rs:4:12
+#23 86.19   |
+#23 86.19 4 | #![feature(specialization)]
+#23 86.19   |            ^^^^^^^^^^^^^^
+#23 86.19   |
+#23 86.19   = note: see issue #31844 <https://github.com/rust-lang/rust/issues/31844> for more information
+#23 86.19   = help: consider using `min_specialization` instead, which is more stable and complete
+#23 86.19   = note: `#[warn(incomplete_features)]` on by default
+#23 86.19 
+#23 86.30 warning: `sesame_sandbox` (lib) generated 1 warning
+#23 86.30    Compiling fuzzy-matcher v0.3.7
+#23 87.37    Compiling wit-bindgen-rust-macro v0.12.0
+#23 87.55    Compiling secret-service v2.0.2
+#23 88.90    Compiling clap_derive v4.0.18
+#23 90.54    Compiling avail v0.1.0 (/workspace/avail)
+#23 90.83    Compiling sha2 v0.10.9
+#23 92.03    Compiling smithay-clipboard v0.6.6
+#23 92.11    Compiling hashlink v0.8.4
+#23 92.39    Compiling itertools v0.12.1
+#23 95.92    Compiling erased-serde v0.3.31
+#23 96.51    Compiling serde_path_to_error v0.1.14
+#23 96.95    Compiling nix v0.25.1
+#23 97.07    Compiling dirs-sys v0.3.7
+#23 98.10    Compiling fallible-iterator v0.2.0
+#23 98.16    Compiling strsim v0.10.0
+#23 98.40    Compiling number_prefix v0.4.0
+#23 98.55    Compiling fallible-streaming-iterator v0.1.9
+#23 98.72    Compiling zeroize v1.8.2
+#23 98.83    Compiling dyn-clone v1.0.20
+#23 98.92    Compiling sesame v0.1.0 (/workspace/Sesame/core)
+#23 99.01 warning: the feature `specialization` is incomplete and may not be safe to use and/or cause compiler crashes
+#23 99.01  --> /workspace/Sesame/core/src/lib.rs:1:12
+#23 99.01   |
+#23 99.01 1 | #![feature(specialization)]
+#23 99.01   |            ^^^^^^^^^^^^^^
+#23 99.01   |
+#23 99.01   = note: see issue #31844 <https://github.com/rust-lang/rust/issues/31844> for more information
+#23 99.01   = help: consider using `min_specialization` instead, which is more stable and complete
+#23 99.01   = note: `#[warn(incomplete_features)]` on by default
+#23 99.01 
+#23 99.02    Compiling dialoguer v0.10.2
+#23 99.97    Compiling toml_parser v1.0.0
+#23 101.5    Compiling indicatif v0.17.1
+#23 101.8 warning: `sesame` (lib) generated 1 warning
+#23 101.8    Compiling clap v4.0.18
+#23 101.9    Compiling ctrlc v3.2.3
+#23 102.0    Compiling dirs v4.0.0
+#23 102.5    Compiling oauth2 v4.2.3
+#23 104.7    Compiling copypasta v0.8.1
+#23 105.3    Compiling wit-bindgen v0.12.0
+#23 105.4    Compiling keyring v1.2.0
+#23 105.6    Compiling colored v2.0.0
+#23 106.0    Compiling itertools v0.10.5
+#23 106.4    Compiling webbrowser v0.8.0
+#23 123.8    Compiling rusqlite v0.28.0
+#23 373.2 warning: [93mSesame Build: Logger: Warning: Log file at /tmp/avail_x86_64-unknown-linux-gnu_release.log[0m
+#23 373.2 warning: [34mSesame Build: Environment: Info: [0m
+#23 373.2 warning: [34mEnv {[0m
+#23 373.2 warning: [34m    current_crate_name: "avail",[0m
+#23 373.2 warning: [34m    cargo: "cargo",[0m
+#23 373.2 warning: [34m    cargo_toml: Manifest {[0m
+#23 373.2 warning: [34m        package: Some([0m
+#23 373.2 warning: [34m            Package {[0m
+#23 373.2 warning: [34m                name: "avail",[0m
+#23 373.2 warning: [34m                edition: Set([0m
+#23 373.2 warning: [34m                    E2021,[0m
+#23 373.2 warning: [34m                ),[0m
+#23 373.2 warning: [34m                rust_version: None,[0m
+#23 373.2 warning: [34m                version: Set([0m
+#23 373.2 warning: [34m                    "0.1.0",[0m
+#23 373.2 warning: [34m                ),[0m
+#23 373.2 warning: [34m                build: Some([0m
+#23 373.2 warning: [34m                    Path([0m
+#23 373.2 warning: [34m                        "build.rs",[0m
+#23 373.2 warning: [34m                    ),[0m
+#23 373.2 warning: [34m                ),[0m
+#23 373.2 warning: [34m                workspace: None,[0m
+#23 373.2 warning: [34m                authors: Set([0m
+#23 373.2 warning: [34m                    [],[0m
+#23 373.2 warning: [34m                ),[0m
+#23 373.2 warning: [34m                links: None,[0m
+#23 373.2 warning: [34m                description: Some([0m
+#23 373.2 warning: [34m                    Set([0m
+#23 373.2 warning: [34m                        "A command-line tool to find available times between all your calendars.",[0m
+#23 373.2 warning: [34m                    ),[0m
+#23 373.2 warning: [34m                ),[0m
+#23 373.2 warning: [34m                homepage: None,[0m
+#23 373.2 warning: [34m                documentation: None,[0m
+#23 373.2 warning: [34m                readme: Set([0m
+#23 373.2 warning: [34m                    Path([0m
+#23 373.2 warning: [34m                        "README.md",[0m
+#23 373.2 warning: [34m                    ),[0m
+#23 373.2 warning: [34m                ),[0m
+#23 373.2 warning: [34m                keywords: Set([0m
+#23 373.2 warning: [34m                    [],[0m
+#23 373.2 warning: [34m                ),[0m
+#23 373.2 warning: [34m                categories: Set([0m
+#23 373.2 warning: [34m                    [],[0m
+#23 373.2 warning: [34m                ),[0m
+#23 373.2 warning: [34m                exclude: Set([0m
+#23 373.2 warning: [34m                    [],[0m
+#23 373.2 warning: [34m                ),[0m
+#23 373.2 warning: [34m                include: Set([0m
+#23 373.2 warning: [34m                    [],[0m
+#23 373.2 warning: [34m                ),[0m
+#23 373.2 warning: [34m                license: None,[0m
+#23 373.2 warning: [34m                license_file: None,[0m
+#23 373.2 warning: [34m                repository: None,[0m
+#23 373.2 warning: [34m                default_run: None,[0m
+#23 373.2 warning: [34m                autobins: true,[0m
+#23 373.2 warning: [34m                autoexamples: true,[0m
+#23 373.2 warning: [34m                autotests: true,[0m
+#23 373.2 warning: [34m                autobenches: true,[0m
+#23 373.2 warning: [34m                publish: Set([0m
+#23 373.2 warning: [34m                    Flag([0m
+#23 373.2 warning: [34m                        true,[0m
+#23 373.2 warning: [34m                    ),[0m
+#23 373.2 warning: [34m                ),[0m
+#23 373.2 warning: [34m                resolver: None,[0m
+#23 373.2 warning: [34m                metadata: None,[0m
+#23 373.2 warning: [34m            },[0m
+#23 373.2 warning: [34m        ),[0m
+#23 373.2 warning: [34m        workspace: Some([0m
+#23 373.2 warning: [34m            Workspace {[0m
+#23 373.2 warning: [34m                members: [],[0m
+#23 373.2 warning: [34m                default_members: [],[0m
+#23 373.2 warning: [34m                package: None,[0m
+#23 373.2 warning: [34m                exclude: [],[0m
+#23 373.2 warning: [34m                metadata: Some([0m
+#23 373.2 warning: [34m                    Table([0m
+#23 373.2 warning: [34m                        {[0m
+#23 373.2 warning: [34m                            "dylint": Table([0m
+#23 373.2 warning: [34m                                {[0m
+#23 373.2 warning: [34m                                    "libraries": Array([0m
+#23 373.2 warning: [34m                                        [[0m
+#23 373.2 warning: [34m                                            Table([0m
+#23 373.2 warning: [34m                                                {[0m
+#23 373.2 warning: [34m                                                    "path": String([0m
+#23 373.2 warning: [34m                                                        "../Sesame/lints",[0m
+#23 373.2 warning: [34m                                                    ),[0m
+#23 373.2 warning: [34m                                                },[0m
+#23 373.2 warning: [34m                                            ),[0m
+#23 373.2 warning: [34m                                        ],[0m
+#23 373.2 warning: [34m                                    ),[0m
+#23 373.2 warning: [34m                                },[0m
+#23 373.2 warning: [34m                            ),[0m
+#23 373.2 warning: [34m                        },[0m
+#23 373.2 warning: [34m                    ),[0m
+#23 373.2 warning: [34m                ),[0m
+#23 373.2 warning: [34m                resolver: None,[0m
+#23 373.2 warning: [34m                dependencies: {},[0m
+#23 373.2 warning: [34m                lints: None,[0m
+#23 373.2 warning: [34m            },[0m
+#23 373.2 warning: [34m        ),[0m
+#23 373.2 warning: [34m        dependencies: {[0m
+#23 373.2 warning: [34m            "anyhow": Simple([0m
+#23 373.2 warning: [34m                "=1.0.72",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "async-trait": Simple([0m
+#23 373.2 warning: [34m                "=0.1.79",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "chrono": Simple([0m
+#23 373.2 warning: [34m                "=0.4.22",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "clap": Detailed([0m
+#23 373.2 warning: [34m                DependencyDetail {[0m
+#23 373.2 warning: [34m                    version: Some([0m
+#23 373.2 warning: [34m                        "=4.0.18",[0m
+#23 373.2 warning: [34m                    ),[0m
+#23 373.2 warning: [34m                    registry: None,[0m
+#23 373.2 warning: [34m                    registry_index: None,[0m
+#23 373.2 warning: [34m                    path: None,[0m
+#23 373.2 warning: [34m                    inherited: false,[0m
+#23 373.2 warning: [34m                    git: None,[0m
+#23 373.2 warning: [34m                    branch: None,[0m
+#23 373.2 warning: [34m                    tag: None,[0m
+#23 373.2 warning: [34m                    rev: None,[0m
+#23 373.2 warning: [34m                    features: [[0m
+#23 373.2 warning: [34m                        "derive",[0m
+#23 373.2 warning: [34m                    ],[0m
+#23 373.2 warning: [34m                    optional: false,[0m
+#23 373.2 warning: [34m                    default_features: true,[0m
+#23 373.2 warning: [34m                    package: None,[0m
+#23 373.2 warning: [34m                    unstable: {},[0m
+#23 373.2 warning: [34m                },[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "colored": Simple([0m
+#23 373.2 warning: [34m                "=2.0.0",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "console": Simple([0m
+#23 373.2 warning: [34m                "=0.15.2",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "copypasta": Simple([0m
+#23 373.2 warning: [34m                "=0.8.1",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "ctrlc": Detailed([0m
+#23 373.2 warning: [34m                DependencyDetail {[0m
+#23 373.2 warning: [34m                    version: Some([0m
+#23 373.2 warning: [34m                        "=3.2.3",[0m
+#23 373.2 warning: [34m                    ),[0m
+#23 373.2 warning: [34m                    registry: None,[0m
+#23 373.2 warning: [34m                    registry_index: None,[0m
+#23 373.2 warning: [34m                    path: None,[0m
+#23 373.2 warning: [34m                    inherited: false,[0m
+#23 373.2 warning: [34m                    git: None,[0m
+#23 373.2 warning: [34m                    branch: None,[0m
+#23 373.2 warning: [34m                    tag: None,[0m
+#23 373.2 warning: [34m                    rev: None,[0m
+#23 373.2 warning: [34m                    features: [[0m
+#23 373.2 warning: [34m                        "termination",[0m
+#23 373.2 warning: [34m                    ],[0m
+#23 373.2 warning: [34m                    optional: false,[0m
+#23 373.2 warning: [34m                    default_features: true,[0m
+#23 373.2 warning: [34m                    package: None,[0m
+#23 373.2 warning: [34m                    unstable: {},[0m
+#23 373.2 warning: [34m                },[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "dialoguer": Detailed([0m
+#23 373.2 warning: [34m                DependencyDetail {[0m
+#23 373.2 warning: [34m                    version: Some([0m
+#23 373.2 warning: [34m                        "=0.10.2",[0m
+#23 373.2 warning: [34m                    ),[0m
+#23 373.2 warning: [34m                    registry: None,[0m
+#23 373.2 warning: [34m                    registry_index: None,[0m
+#23 373.2 warning: [34m                    path: None,[0m
+#23 373.2 warning: [34m                    inherited: false,[0m
+#23 373.2 warning: [34m                    git: None,[0m
+#23 373.2 warning: [34m                    branch: None,[0m
+#23 373.2 warning: [34m                    tag: None,[0m
+#23 373.2 warning: [34m                    rev: None,[0m
+#23 373.2 warning: [34m                    features: [[0m
+#23 373.2 warning: [34m                        "fuzzy-select",[0m
+#23 373.2 warning: [34m                    ],[0m
+#23 373.2 warning: [34m                    optional: false,[0m
+#23 373.2 warning: [34m                    default_features: true,[0m
+#23 373.2 warning: [34m                    package: None,[0m
+#23 373.2 warning: [34m                    unstable: {},[0m
+#23 373.2 warning: [34m                },[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "dirs": Simple([0m
+#23 373.2 warning: [34m                "=4.0.0",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "futures": Simple([0m
+#23 373.2 warning: [34m                "=0.3.25",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "indicatif": Simple([0m
+#23 373.2 warning: [34m                "=0.17.1",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "itertools": Simple([0m
+#23 373.2 warning: [34m                "=0.10.5",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "keyring": Simple([0m
+#23 373.2 warning: [34m                "=1.2.0",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "native-tls": Simple([0m
+#23 373.2 warning: [34m                "=0.2.10",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "oauth2": Simple([0m
+#23 373.2 warning: [34m                "=4.2.3",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "proc-macro-crate": Simple([0m
+#23 373.2 warning: [34m                "=1.2.1",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "regex": Simple([0m
+#23 373.2 warning: [34m                "=1.6.0",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "reqwest": Detailed([0m
+#23 373.2 warning: [34m                DependencyDetail {[0m
+#23 373.2 warning: [34m                    version: Some([0m
+#23 373.2 warning: [34m                        "=0.11.10",[0m
+#23 373.2 warning: [34m                    ),[0m
+#23 373.2 warning: [34m                    registry: None,[0m
+#23 373.2 warning: [34m                    registry_index: None,[0m
+#23 373.2 warning: [34m                    path: None,[0m
+#23 373.2 warning: [34m                    inherited: false,[0m
+#23 373.2 warning: [34m                    git: None,[0m
+#23 373.2 warning: [34m                    branch: None,[0m
+#23 373.2 warning: [34m                    tag: None,[0m
+#23 373.2 warning: [34m                    rev: None,[0m
+#23 373.2 warning: [34m                    features: [[0m
+#23 373.2 warning: [34m                        "json",[0m
+#23 373.2 warning: [34m                    ],[0m
+#23 373.2 warning: [34m                    optional: false,[0m
+#23 373.2 warning: [34m                    default_features: true,[0m
+#23 373.2 warning: [34m                    package: None,[0m
+#23 373.2 warning: [34m                    unstable: {},[0m
+#23 373.2 warning: [34m                },[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "rusqlite": Detailed([0m
+#23 373.2 warning: [34m                DependencyDetail {[0m
+#23 373.2 warning: [34m                    version: Some([0m
+#23 373.2 warning: [34m                        "=0.28.0",[0m
+#23 373.2 warning: [34m                    ),[0m
+#23 373.2 warning: [34m                    registry: None,[0m
+#23 373.2 warning: [34m                    registry_index: None,[0m
+#23 373.2 warning: [34m                    path: None,[0m
+#23 373.2 warning: [34m                    inherited: false,[0m
+#23 373.2 warning: [34m                    git: None,[0m
+#23 373.2 warning: [34m                    branch: None,[0m
+#23 373.2 warning: [34m                    tag: None,[0m
+#23 373.2 warning: [34m                    rev: None,[0m
+#23 373.2 warning: [34m                    features: [[0m
+#23 373.2 warning: [34m                        "bundled",[0m
+#23 373.2 warning: [34m                    ],[0m
+#23 373.2 warning: [34m                    optional: false,[0m
+#23 373.2 warning: [34m                    default_features: true,[0m
+#23 373.2 warning: [34m                    package: None,[0m
+#23 373.2 warning: [34m                    unstable: {},[0m
+#23 373.2 warning: [34m                },[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "serde": Simple([0m
+#23 373.2 warning: [34m                "=1.0.166",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "serde_json": Simple([0m
+#23 373.2 warning: [34m                "=1.0.105",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "sesame": Detailed([0m
+#23 373.2 warning: [34m                DependencyDetail {[0m
+#23 373.2 warning: [34m                    version: None,[0m
+#23 373.2 warning: [34m                    registry: None,[0m
+#23 373.2 warning: [34m                    registry_index: None,[0m
+#23 373.2 warning: [34m                    path: Some([0m
+#23 373.2 warning: [34m                        "../Sesame/core",[0m
+#23 373.2 warning: [34m                    ),[0m
+#23 373.2 warning: [34m                    inherited: false,[0m
+#23 373.2 warning: [34m                    git: None,[0m
+#23 373.2 warning: [34m                    branch: None,[0m
+#23 373.2 warning: [34m                    tag: None,[0m
+#23 373.2 warning: [34m                    rev: None,[0m
+#23 373.2 warning: [34m                    features: [],[0m
+#23 373.2 warning: [34m                    optional: false,[0m
+#23 373.2 warning: [34m                    default_features: true,[0m
+#23 373.2 warning: [34m                    package: None,[0m
+#23 373.2 warning: [34m                    unstable: {},[0m
+#23 373.2 warning: [34m                },[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "spdx": Simple([0m
+#23 373.2 warning: [34m                "=0.10.8",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "subprocess": Simple([0m
+#23 373.2 warning: [34m                "=0.2.9",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "tempfile": Simple([0m
+#23 373.2 warning: [34m                "=3.8.0",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "tokio": Detailed([0m
+#23 373.2 warning: [34m                DependencyDetail {[0m
+#23 373.2 warning: [34m                    version: Some([0m
+#23 373.2 warning: [34m                        "=1.27.0",[0m
+#23 373.2 warning: [34m                    ),[0m
+#23 373.2 warning: [34m                    registry: None,[0m
+#23 373.2 warning: [34m                    registry_index: None,[0m
+#23 373.2 warning: [34m                    path: None,[0m
+#23 373.2 warning: [34m                    inherited: false,[0m
+#23 373.2 warning: [34m                    git: None,[0m
+#23 373.2 warning: [34m                    branch: None,[0m
+#23 373.2 warning: [34m                    tag: None,[0m
+#23 373.2 warning: [34m                    rev: None,[0m
+#23 373.2 warning: [34m                    features: [[0m
+#23 373.2 warning: [34m                        "full",[0m
+#23 373.2 warning: [34m                    ],[0m
+#23 373.2 warning: [34m                    optional: false,[0m
+#23 373.2 warning: [34m                    default_features: true,[0m
+#23 373.2 warning: [34m                    package: None,[0m
+#23 373.2 warning: [34m                    unstable: {},[0m
+#23 373.2 warning: [34m                },[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "tokio-native-tls": Simple([0m
+#23 373.2 warning: [34m                "=0.3.0",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "tokio-util": Simple([0m
+#23 373.2 warning: [34m                "=0.7.4",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "toml": Simple([0m
+#23 373.2 warning: [34m                "=0.5.9",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "toml_parser": Simple([0m
+#23 373.2 warning: [34m                "=1.0.0",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "unicode-segmentation": Simple([0m
+#23 373.2 warning: [34m                "=1.12",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "url": Simple([0m
+#23 373.2 warning: [34m                "=2.3.0",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "webbrowser": Simple([0m
+#23 373.2 warning: [34m                "=0.8.0",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m            "wit-bindgen": Simple([0m
+#23 373.2 warning: [34m                "=0.12.0",[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m        },[0m
+#23 373.2 warning: [34m        dev_dependencies: {},[0m
+#23 373.2 warning: [34m        build_dependencies: {[0m
+#23 373.2 warning: [34m            "sesame_build": Detailed([0m
+#23 373.2 warning: [34m                DependencyDetail {[0m
+#23 373.2 warning: [34m                    version: None,[0m
+#23 373.2 warning: [34m                    registry: None,[0m
+#23 373.2 warning: [34m                    registry_index: None,[0m
+#23 373.2 warning: [34m                    path: Some([0m
+#23 373.2 warning: [34m                        "../Sesame/build",[0m
+#23 373.2 warning: [34m                    ),[0m
+#23 373.2 warning: [34m                    inherited: false,[0m
+#23 373.2 warning: [34m                    git: None,[0m
+#23 373.2 warning: [34m                    branch: None,[0m
+#23 373.2 warning: [34m                    tag: None,[0m
+#23 373.2 warning: [34m                    rev: None,[0m
+#23 373.2 warning: [34m                    features: [],[0m
+#23 373.2 warning: [34m                    optional: false,[0m
+#23 373.2 warning: [34m                    default_features: true,[0m
+#23 373.2 warning: [34m                    package: None,[0m
+#23 373.2 warning: [34m                    unstable: {},[0m
+#23 373.2 warning: [34m                },[0m
+#23 373.2 warning: [34m            ),[0m
+#23 373.2 warning: [34m        },[0m
+#23 373.2 warning: [34m        target: {},[0m
+#23 373.2 warning: [34m        features: {},[0m
+#23 373.2 warning: [34m        replace: {},[0m
+#23 373.2 warning: [34m        patch: {[0m
+#23 373.2 warning: [34m            "crates-io": {[0m
+#23 373.2 warning: [34m                "funty": Detailed([0m
+#23 373.2 warning: [34m                    DependencyDetail {[0m
+#23 373.2 warning: [34m                        version: None,[0m
+#23 373.2 warning: [34m                        registry: None,[0m
+#23 373.2 warning: [34m                        registry_index: None,[0m
+#23 373.2 warning: [34m                        path: None,[0m
+#23 373.2 warning: [34m                        inherited: false,[0m
+#23 373.2 warning: [34m                        git: Some([0m
+#23 373.2 warning: [34m                            "https://github.com/bitvecto-rs/funty/",[0m
+#23 373.2 warning: [34m                        ),[0m
+#23 373.2 warning: [34m                        branch: None,[0m
+#23 373.2 warning: [34m                        tag: None,[0m
+#23 373.2 warning: [34m                        rev: Some([0m
+#23 373.2 warning: [34m                            "7ef0d890fbcd8b3def1635ac1a877fc298488446",[0m
+#23 373.2 warning: [34m                        ),[0m
+#23 373.2 warning: [34m                        features: [],[0m
+#23 373.2 warning: [34m                        optional: false,[0m
+#23 373.2 warning: [34m                        default_features: true,[0m
+#23 373.2 warning: [34m                        package: None,[0m
+#23 373.2 warning: [34m                        unstable: {},[0m
+#23 373.2 warning: [34m                    },[0m
+#23 373.2 warning: [34m                ),[0m
+#23 373.2 warning: [34m            },[0m
+#23 373.2 warning: [34m        },[0m
+#23 373.2 warning: [34m        lib: None,[0m
+#23 373.2 warning: [34m        profile: Profiles {[0m
+#23 373.2 warning: [34m            release: None,[0m
+#23 373.2 warning: [34m            dev: None,[0m
+#23 373.2 warning: [34m            test: None,[0m
+#23 373.2 warning: [34m            bench: None,[0m
+#23 373.2 warning: [34m            doc: None,[0m
+#23 373.2 warning: [34m            custom: {},[0m
+#23 373.2 warning: [34m        },[0m
+#23 373.2 warning: [34m        badges: Badges {[0m
+#23 373.2 warning: [34m            appveyor: None,[0m
+#23 373.2 warning: [34m            circle_ci: None,[0m
+#23 373.2 warning: [34m            gitlab: None,[0m
+#23 373.2 warning: [34m            travis_ci: None,[0m
+#23 373.2 warning: [34m            codecov: None,[0m
+#23 373.2 warning: [34m            coveralls: None,[0m
+#23 373.2 warning: [34m            is_it_maintained_issue_resolution: None,[0m
+#23 373.2 warning: [34m            is_it_maintained_open_issues: None,[0m
+#23 373.2 warning: [34m            maintenance: Maintenance {[0m
+#23 373.2 warning: [34m                status: None,[0m
+#23 373.2 warning: [34m            },[0m
+#23 373.2 warning: [34m        },[0m
+#23 373.2 warning: [34m        bin: [[0m
+#23 373.2 warning: [34m            Product {[0m
+#23 373.2 warning: [34m                path: Some([0m
+#23 373.2 warning: [34m                    "src/main.rs",[0m
+#23 373.2 warning: [34m                ),[0m
+#23 373.2 warning: [34m                name: Some([0m
+#23 373.2 warning: [34m                    "avail",[0m
+#23 373.2 warning: [34m                ),[0m
+#23 373.2 warning: [34m                test: true,[0m
+#23 373.2 warning: [34m                doctest: true,[0m
+#23 373.2 warning: [34m                bench: true,[0m
+#23 373.2 warning: [34m                doc: true,[0m
+#23 373.2 warning: [34m                plugin: false,[0m
+#23 373.2 warning: [34m                proc_macro: false,[0m
+#23 373.2 warning: [34m                harness: true,[0m
+#23 373.2 warning: [34m                edition: E2021,[0m
+#23 373.2 warning: [34m                crate_type: [],[0m
+#23 373.2 warning: [34m                required_features: [],[0m
+#23 373.2 warning: [34m            },[0m
+#23 373.2 warning: [34m        ],[0m
+#23 373.2 warning: [34m        bench: [],[0m
+#23 373.2 warning: [34m        test: [],[0m
+#23 373.2 warning: [34m        example: [],[0m
+#23 373.2 warning: [34m        lints: None,[0m
+#23 373.2 warning: [34m    },[0m
+#23 373.2 warning: [34m    package_directory: "/workspace/avail",[0m
+#23 373.2 warning: [34m    out_directory: "/workspace/avail/target/release/build/avail-09501599d0b9d450/out",[0m
+#23 373.2 warning: [34m    target: "x86_64-unknown-linux-gnu",[0m
+#23 373.2 warning: [34m    working_directory: "/workspace/avail",[0m
+#23 373.2 warning: [34m    profile: "release",[0m
+#23 373.2 warning: [34m    host: "x86_64-unknown-linux-gnu",[0m
+#23 373.2 warning: [34m}[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mSesame Build: Bash Environment: Info: [0m
+#23 373.2 warning: [34m  CARGO = /usr/local/rustup/toolchains/nightly-2023-08-25-x86_64-unknown-linux-gnu/bin/cargo[0m
+#23 373.2 warning: [34m  CARGO_CFG_OVERFLOW_CHECKS = [0m
+#23 373.2 warning: [34m  CARGO_CFG_PANIC = unwind[0m
+#23 373.2 warning: [34m  CARGO_CFG_RELOCATION_MODEL = pic[0m
+#23 373.2 warning: [34m  CARGO_CFG_TARGET_ABI = [0m
+#23 373.2 warning: [34m  CARGO_CFG_TARGET_ARCH = x86_64[0m
+#23 373.2 warning: [34m  CARGO_CFG_TARGET_ENDIAN = little[0m
+#23 373.2 warning: [34m  CARGO_CFG_TARGET_ENV = gnu[0m
+#23 373.2 warning: [34m  CARGO_CFG_TARGET_FAMILY = unix[0m
+#23 373.2 warning: [34m  CARGO_CFG_TARGET_FEATURE = fxsr,sse,sse2[0m
+#23 373.2 warning: [34m  CARGO_CFG_TARGET_HAS_ATOMIC = 16,32,64,8,ptr[0m
+#23 373.2 warning: [34m  CARGO_CFG_TARGET_HAS_ATOMIC_EQUAL_ALIGNMENT = 16,32,64,8,ptr[0m
+#23 373.2 warning: [34m  CARGO_CFG_TARGET_HAS_ATOMIC_LOAD_STORE = 16,32,64,8,ptr[0m
+#23 373.2 warning: [34m  CARGO_CFG_TARGET_OS = linux[0m
+#23 373.2 warning: [34m  CARGO_CFG_TARGET_POINTER_WIDTH = 64[0m
+#23 373.2 warning: [34m  CARGO_CFG_TARGET_THREAD_LOCAL = [0m
+#23 373.2 warning: [34m  CARGO_CFG_TARGET_VENDOR = unknown[0m
+#23 373.2 warning: [34m  CARGO_CFG_UNIX = [0m
+#23 373.2 warning: [34m  CARGO_ENCODED_RUSTFLAGS = [0m
+#23 373.2 warning: [34m  CARGO_HOME = /usr/local/cargo[0m
+#23 373.2 warning: [34m  CARGO_MAKEFLAGS = -j --jobserver-fds=8,11 --jobserver-auth=8,11[0m
+#23 373.2 warning: [34m  CARGO_MANIFEST_DIR = /workspace/avail[0m
+#23 373.2 warning: [34m  CARGO_NET_GIT_FETCH_WITH_CLI = true[0m
+#23 373.2 warning: [34m  CARGO_PKG_AUTHORS = [0m
+#23 373.2 warning: [34m  CARGO_PKG_DESCRIPTION = A command-line tool to find available times between all your calendars.[0m
+#23 373.2 warning: [34m  CARGO_PKG_HOMEPAGE = [0m
+#23 373.2 warning: [34m  CARGO_PKG_LICENSE = [0m
+#23 373.2 warning: [34m  CARGO_PKG_LICENSE_FILE = [0m
+#23 373.2 warning: [34m  CARGO_PKG_NAME = avail[0m
+#23 373.2 warning: [34m  CARGO_PKG_README = README.md[0m
+#23 373.2 warning: [34m  CARGO_PKG_REPOSITORY = [0m
+#23 373.2 warning: [34m  CARGO_PKG_RUST_VERSION = [0m
+#23 373.2 warning: [34m  CARGO_PKG_VERSION = 0.1.0[0m
+#23 373.2 warning: [34m  CARGO_PKG_VERSION_MAJOR = 0[0m
+#23 373.2 warning: [34m  CARGO_PKG_VERSION_MINOR = 1[0m
+#23 373.2 warning: [34m  CARGO_PKG_VERSION_PATCH = 0[0m
+#23 373.2 warning: [34m  CARGO_PKG_VERSION_PRE = [0m
+#23 373.2 warning: [34m  DEBIAN_FRONTEND = noninteractive[0m
+#23 373.2 warning: [34m  DEBUG = false[0m
+#23 373.2 warning: [34m  DYLINT_VERSION = 2.5.0[0m
+#23 373.2 warning: [34m  HOME = /root[0m
+#23 373.2 warning: [34m  HOST = x86_64-unknown-linux-gnu[0m
+#23 373.2 warning: [34m  LD_LIBRARY_PATH = /workspace/avail/target/release/deps:/workspace/avail/target/release:/usr/local/rustup/toolchains/nightly-2023-08-25-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/lib:/usr/local/rustup/toolchains/nightly-2023-08-25-x86_64-unknown-linux-gnu/lib[0m
+#23 373.2 warning: [34m  NUM_JOBS = 6[0m
+#23 373.2 warning: [34m  OPT_LEVEL = 3[0m
+#23 373.2 warning: [34m  OUT_DIR = /workspace/avail/target/release/build/avail-09501599d0b9d450/out[0m
+#23 373.2 warning: [34m  PATH = /root/.cargo/bin:/usr/local/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin[0m
+#23 373.2 warning: [34m  PROFILE = release[0m
+#23 373.2 warning: [34m  PWD = /workspace/avail[0m
+#23 373.2 warning: [34m  RUSTC = /usr/local/rustup/toolchains/nightly-2023-08-25-x86_64-unknown-linux-gnu/bin/rustc[0m
+#23 373.2 warning: [34m  RUSTDOC = /usr/local/rustup/toolchains/nightly-2023-08-25-x86_64-unknown-linux-gnu/bin/rustdoc[0m
+#23 373.2 warning: [34m  RUSTUP_HOME = /usr/local/rustup[0m
+#23 373.2 warning: [34m  RUSTUP_TOOLCHAIN = nightly-2023-08-25-x86_64-unknown-linux-gnu[0m
+#23 373.2 warning: [34m  RUSTUP_TOOLCHAIN_SOURCE = cli[0m
+#23 373.2 warning: [34m  RUST_RECURSION_COUNT = 1[0m
+#23 373.2 warning: [34m  RUST_VERSION = 1.95.0[0m
+#23 373.2 warning: [34m  SSL_CERT_DIR = /usr/lib/ssl/certs[0m
+#23 373.2 warning: [34m  SSL_CERT_FILE = /usr/lib/ssl/cert.pem[0m
+#23 373.2 warning: [34m  TARGET = x86_64-unknown-linux-gnu[0m
+#23 373.2 warning: [34m  TOOLCHAIN = nightly-2023-08-25[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [93mSesame Build: Scrutinizer: Warning: Running scrutinizer analysis[0m
+#23 373.2 warning: [34mSesame Build: Scrutinizer: Info: [0m
+#23 373.2 warning: [34m  Executing command for `Scrutinizer`[0m
+#23 373.2 warning: [34m    cmd: rustup run nightly-2023-08-25 cargo scrutinizer --config-path scrutinizer-config.toml[0m
+#23 373.2 warning: [34m    Working dir: /workspace/avail[0m
+#23 373.2 warning: [34m    Env: [0m
+#23 373.2 warning: [34m          CARGO = +CLEANED+[0m
+#23 373.2 warning: [34m          CARGO_ENCODED_RUSTFLAGS = +CLEANED+[0m
+#23 373.2 warning: [34m          CARGO_MAKEFLAGS = +CLEANED+[0m
+#23 373.2 warning: [34m          LD_LIBRARY_PATH = +CLEANED+[0m
+#23 373.2 warning: [34m          RUSTC = +CLEANED+[0m
+#23 373.2 warning: [34m          RUSTC_WORKSPACE_WRAPPER = +CLEANED+[0m
+#23 373.2 warning: [34m          RUSTC_WRAPPER = +CLEANED+[0m
+#23 373.2 warning: [34m          RUSTDOC = +CLEANED+[0m
+#23 373.2 warning: [34m          RUSTFLAGS = +CLEANED+[0m
+#23 373.2 warning: [34m          RUSTUP_TOOLCHAIN = +CLEANED+[0m
+#23 373.2 warning: [34m          RUSTUP_TOOLCHAIN_SOURCE = +CLEANED+[0m
+#23 373.2 warning: [34m          RUST_BACKTRACE = full[0m
+#23 373.2 warning: [34m          RUST_LOG = scrutinizer=trace,scrutils=trace[0m
+#23 373.2 warning: [34mSesame Build: Scrutinizer: Info: stdout ---------------------[0m
+#23 373.2 warning: [34mcargo:warning=[32;1mScrutinizer: [96mStarted analyzing DefId(0:290 ~ avail[935c]::ifc::compute_availability::{closure#0})[0m[0m
+#23 373.2 warning: [34mcargo:warning=[32;1mScrutinizer: [96mStarted analyzing DefId(0:291 ~ avail[935c]::ifc::compute_availability::{closure#1})[0m[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34m----------------------------------------------------[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mSesame Build: Scrutinizer: Info: stderr ---------------------[0m
+#23 373.2 warning: [34mwarning: the feature `specialization` is incomplete and may not be safe to use and/or cause compiler crashes[0m
+#23 373.2 warning: [34m --> /workspace/Sesame/sandbox/src/lib.rs:4:12[0m
+#23 373.2 warning: [34m  |[0m
+#23 373.2 warning: [34m4 | #![feature(specialization)][0m
+#23 373.2 warning: [34m  |            ^^^^^^^^^^^^^^[0m
+#23 373.2 warning: [34m  |[0m
+#23 373.2 warning: [34m  = note: see issue #31844 <https://github.com/rust-lang/rust/issues/31844> for more information[0m
+#23 373.2 warning: [34m  = help: consider using `min_specialization` instead, which is more stable and complete[0m
+#23 373.2 warning: [34m  = note: `#[warn(incomplete_features)]` on by default[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mwarning: the feature `specialization` is incomplete and may not be safe to use and/or cause compiler crashes[0m
+#23 373.2 warning: [34m --> /workspace/Sesame/core/src/lib.rs:1:12[0m
+#23 373.2 warning: [34m  |[0m
+#23 373.2 warning: [34m1 | #![feature(specialization)][0m
+#23 373.2 warning: [34m  |            ^^^^^^^^^^^^^^[0m
+#23 373.2 warning: [34m  |[0m
+#23 373.2 warning: [34m  = note: see issue #31844 <https://github.com/rust-lang/rust/issues/31844> for more information[0m
+#23 373.2 warning: [34m  = help: consider using `min_specialization` instead, which is more stable and complete[0m
+#23 373.2 warning: [34m  = note: `#[warn(incomplete_features)]` on by default[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mwarning: method `get_availability` is never used[0m
+#23 373.2 warning: [34m  --> src/datetime/finder.rs:31:12[0m
+#23 373.2 warning: [34m   |[0m
+#23 373.2 warning: [34m30 | impl AvailabilityFinder {[0m
+#23 373.2 warning: [34m   | ----------------------- method in this implementation[0m
+#23 373.2 warning: [34m31 |     pub fn get_availability([0m
+#23 373.2 warning: [34m   |            ^^^^^^^^^^^^^^^^[0m
+#23 373.2 warning: [34m   |[0m
+#23 373.2 warning: [34m   = note: `#[warn(dead_code)]` on by default[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mwarning: function `local_events` is never used[0m
+#23 373.2 warning: [34m  --> src/datetime/finder.rs:62:4[0m
+#23 373.2 warning: [34m   |[0m
+#23 373.2 warning: [34m62 | fn local_events(events: Vec<Event>) -> Vec<TimedEvent<Local>> {[0m
+#23 373.2 warning: [34m   |    ^^^^^^^^^^^^[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mwarning: type alias `ProtectedEvent` is never used[0m
+#23 373.2 warning: [34m   --> src/ifc.rs:111:10[0m
+#23 373.2 warning: [34m    |[0m
+#23 373.2 warning: [34m111 | pub type ProtectedEvent = PCon<Event, CalendarSecrecyPolicy>;[0m
+#23 373.2 warning: [34m    |          ^^^^^^^^^^^^^^[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mwarning: function `protect_event` is never used[0m
+#23 373.2 warning: [34m   --> src/ifc.rs:131:8[0m
+#23 373.2 warning: [34m    |[0m
+#23 373.2 warning: [34m131 | pub fn protect_event(event: Event, owner: &str) -> ProtectedEvent {[0m
+#23 373.2 warning: [34m    |        ^^^^^^^^^^^^^[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34m----------------------------------------------------[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [32mSesame Build: Scrutinizer: Success: Scrutinizer analysis completed[0m
+#23 373.2 warning: [93mSesame Build: Sesame lints: Warning: Running dylints[0m
+#23 373.2 warning: [34mSesame Build: Sesame Dylint Toolchain: Info: [0m
+#23 373.2 warning: [34m  Executing command for `Sesame Dylint Toolchain`[0m
+#23 373.2 warning: [34m    cmd: rustup show active-toolchain[0m
+#23 373.2 warning: [34m    Working dir: /workspace/avail/../Sesame/lints[0m
+#23 373.2 warning: [34m    Env: [0m
+#23 373.2 warning: [34m          RUSTC = +CLEANED+[0m
+#23 373.2 warning: [34m          RUSTUP_TOOLCHAIN = +CLEANED+[0m
+#23 373.2 warning: [34mSesame Build: Sesame Dylint Toolchain: Info: stdout ---------------------[0m
+#23 373.2 warning: [34mnightly-2023-08-25-x86_64-unknown-linux-gnu (overridden by '/workspace/Sesame/lints/rust-toolchain.toml')[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34m----------------------------------------------------[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mSesame Build: Sesame Dylint Toolchain: Info: stderr ---------------------[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34m----------------------------------------------------[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mSesame Build: Sesame Dylint Driver: Info: [0m
+#23 373.2 warning: [34m  Executing command for `Sesame Dylint Driver`[0m
+#23 373.2 warning: [34m    cmd: cargo build[0m
+#23 373.2 warning: [34m    Working dir: /workspace/avail/target/release/build/avail-09501599d0b9d450/out/sesame-dylint-driver-package/nightly-2023-08-25-x86_64-unknown-linux-gnu[0m
+#23 373.2 warning: [34m    Env: [0m
+#23 373.2 warning: [34m          RUSTFLAGS = -C link-args=-Wl,-rpath,/usr/local/rustup/toolchains/nightly-2023-08-25-x86_64-unknown-linux-gnu/lib[0m
+#23 373.2 warning: [34mSesame Build: Sesame Dylint Driver: Info: stdout ---------------------[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34m----------------------------------------------------[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mSesame Build: Sesame Dylint Driver: Info: stderr ---------------------[0m
+#23 373.2 warning: [34m    Updating crates.io index[0m
+#23 373.2 warning: [34m Downloading crates ...[0m
+#23 373.2 warning: [34m  Downloaded rustversion v1.0.22[0m
+#23 373.2 warning: [34m  Downloaded dylint_driver v2.5.0[0m
+#23 373.2 warning: [34m  Downloaded regex v1.12.3[0m
+#23 373.2 warning: [34m   Compiling libc v0.2.186[0m
+#23 373.2 warning: [34m   Compiling anyhow v1.0.102[0m
+#23 373.2 warning: [34m   Compiling memchr v2.8.0[0m
+#23 373.2 warning: [34m   Compiling serde v1.0.166[0m
+#23 373.2 warning: [34m   Compiling regex-syntax v0.8.10[0m
+#23 373.2 warning: [34m   Compiling log v0.4.29[0m
+#23 373.2 warning: [34m   Compiling serde_json v1.0.105[0m
+#23 373.2 warning: [34m   Compiling rustversion v1.0.22[0m
+#23 373.2 warning: [34m   Compiling aho-corasick v1.1.4[0m
+#23 373.2 warning: [34m   Compiling itoa v1.0.18[0m
+#23 373.2 warning: [34m   Compiling ryu v1.0.23[0m
+#23 373.2 warning: [34m   Compiling cfg-if v1.0.4[0m
+#23 373.2 warning: [34m   Compiling libloading v0.8.9[0m
+#23 373.2 warning: [34m   Compiling dylint_internal v2.5.0[0m
+#23 373.2 warning: [34m   Compiling is-terminal v0.4.17[0m
+#23 373.2 warning: [34m   Compiling termcolor v1.4.1[0m
+#23 373.2 warning: [34m   Compiling regex-automata v0.4.14[0m
+#23 373.2 warning: [34m   Compiling humantime v2.3.0[0m
+#23 373.2 warning: [34m   Compiling regex v1.12.3[0m
+#23 373.2 warning: [34m   Compiling dylint_driver v2.5.0[0m
+#23 373.2 warning: [34m   Compiling env_logger v0.10.2[0m
+#23 373.2 warning: [34m   Compiling sesame_dylint_driver_nightly-2023-08-25-x86_64-unknown-linux-gnu v0.1.0 (/workspace/avail/target/release/build/avail-09501599d0b9d450/out/sesame-dylint-driver-package/nightly-2023-08-25-x86_64-unknown-linux-gnu)[0m
+#23 373.2 warning: [34m    Finished dev [unoptimized + debuginfo] target(s) in 7.18s[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34m----------------------------------------------------[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mSesame Build: Sesame Lints: Info: [0m
+#23 373.2 warning: [34m  Executing command for `Sesame Lints`[0m
+#23 373.2 warning: [34m    cmd: cargo dylint --all --workspace[0m
+#23 373.2 warning: [34m    Working dir: +EMPTY+[0m
+#23 373.2 warning: [34m    Env: [0m
+#23 373.2 warning: [34m          DYLINT_DRIVER_PATH = /workspace/avail/target/release/build/avail-09501599d0b9d450/out/sesame-dylint-drivers[0m
+#23 373.2 warning: [34m          RUST_BACKTRACE = 1[0m
+#23 373.2 warning: [34m          RUST_LOG = dylint=warn,dylint_utils=warn[0m
+#23 373.2 warning: [34mSesame Build: Sesame Lints: Info: stdout ---------------------[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34m----------------------------------------------------[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mSesame Build: Sesame Lints: Info: stderr ---------------------[0m
+#23 373.2 warning: [34mBuilding workspace metadata entry `sesame_lints`[0m
+#23 373.2 warning: [34m    Updating crates.io index[0m
+#23 373.2 warning: [34mwarning: Patch `rustc_plugin v0.7.4-nightly-2023-08-25 (https://github.com/JustusAdam/rustc_plugin?rev=e413907b2ae9a03d2c8e9aca3b72dd451a16b1db#e413907b)` was not used in the crate graph.[0m
+#23 373.2 warning: [34mCheck that the patched package version and available features are compatible[0m
+#23 373.2 warning: [34mwith the dependency requirements. If the patch has a different version from[0m
+#23 373.2 warning: [34mwhat is locked in the Cargo.lock file, run `cargo update` to use the new[0m
+#23 373.2 warning: [34mversion. This may also occur with an optional dependency that is not enabled.[0m
+#23 373.2 warning: [34m Downloading crates ...[0m
+#23 373.2 warning: [34m  Downloaded futures-task v0.3.31[0m
+#23 373.2 warning: [34m  Downloaded autocfg v1.0.0[0m
+#23 373.2 warning: [34m  Downloaded cfg-if v0.1.6[0m
+#23 373.2 warning: [34m  Downloaded fnv v1.0.6[0m
+#23 373.2 warning: [34m  Downloaded is-terminal v0.4.8[0m
+#23 373.2 warning: [34m  Downloaded crypto-common v0.1.3[0m
+#23 373.2 warning: [34m  Downloaded cpufeatures v0.2.5[0m
+#23 373.2 warning: [34m  Downloaded block-buffer v0.10.1[0m
+#23 373.2 warning: [34m  Downloaded dylint_linting v2.5.0[0m
+#23 373.2 warning: [34m  Downloaded equivalent v1.0.0[0m
+#23 373.2 warning: [34m  Downloaded form_urlencoded v1.0.0[0m
+#23 373.2 warning: [34m  Downloaded http-body-util v0.1.0[0m
+#23 373.2 warning: [34m  Downloaded num_cpus v1.13.0[0m
+#23 373.2 warning: [34m  Downloaded futures-sink v0.3.31[0m
+#23 373.2 warning: [34m  Downloaded percent-encoding v2.1.0[0m
+#23 373.2 warning: [34m  Downloaded thiserror-impl v1.0.31[0m
+#23 373.2 warning: [34m  Downloaded home v0.5.0[0m
+#23 373.2 warning: [34m  Downloaded openssl-probe v0.1.0[0m
+#23 373.2 warning: [34m  Downloaded http-body v1.0.0[0m
+#23 373.2 warning: [34m  Downloaded foreign-types-shared v0.1.0[0m
+#23 373.2 warning: [34m  Downloaded futures-core v0.3.31[0m
+#23 373.2 warning: [34m  Downloaded pkg-config v0.3.11[0m
+#23 373.2 warning: [34m  Downloaded intervaltree v0.2.0[0m
+#23 373.2 warning: [34m  Downloaded mime v0.3.16[0m
+#23 373.2 warning: [34m  Downloaded foreign-types v0.3.1[0m
+#23 373.2 warning: [34m  Downloaded itoa v1.0.0[0m
+#23 373.2 warning: [34m  Downloaded rustc-semver v1.1.0[0m
+#23 373.2 warning: [34m  Downloaded tower-service v0.3.0[0m
+#23 373.2 warning: [34m  Downloaded vcpkg v0.2.8[0m
+#23 373.2 warning: [34m  Downloaded try-lock v0.2.0[0m
+#23 373.2 warning: [34m  Downloaded time-core v0.1.1[0m
+#23 373.2 warning: [34m  Downloaded tower-layer v0.3.1[0m
+#23 373.2 warning: [34m  Downloaded same-file v1.0.1[0m
+#23 373.2 warning: [34m  Downloaded rand_chacha v0.3.0[0m
+#23 373.2 warning: [34m  Downloaded paste v1.0.0[0m
+#23 373.2 warning: [34m  Downloaded serde_spanned v0.6.5[0m
+#23 373.2 warning: [34m  Downloaded rustls-pemfile v1.0.0[0m
+#23 373.2 warning: [34m  Downloaded sedregex v0.2.0[0m
+#23 373.2 warning: [34m  Downloaded sync_wrapper v0.1.2[0m
+#23 373.2 warning: [34m  Downloaded rustversion v1.0.0[0m
+#23 373.2 warning: [34m  Downloaded slab v0.4.2[0m
+#23 373.2 warning: [34m  Downloaded version_check v0.9.0[0m
+#23 373.2 warning: [34m  Downloaded want v0.3.0[0m
+#23 373.2 warning: [34m  Downloaded unicode-xid v0.2.0[0m
+#23 373.2 warning: [34m  Downloaded time-macros v0.2.9[0m
+#23 373.2 warning: [34m  Downloaded thiserror v1.0.31[0m
+#23 373.2 warning: [34m  Downloaded futures-io v0.3.31[0m
+#23 373.2 warning: [34m  Downloaded getrandom v0.2.0[0m
+#23 373.2 warning: [34m  Downloaded tracing-attributes v0.1.20[0m
+#23 373.2 warning: [34m  Downloaded globset v0.4.8[0m
+#23 373.2 warning: [34m  Downloaded hyper-tls v0.6.0[0m
+#23 373.2 warning: [34m  Downloaded matches v0.1.2[0m
+#23 373.2 warning: [34m  Downloaded log v0.4.8[0m
+#23 373.2 warning: [34m  Downloaded index_vec v0.1.3[0m
+#23 373.2 warning: [34m  Downloaded pin-project-lite v0.2.14[0m
+#23 373.2 warning: [34m  Downloaded rand_core v0.6.2[0m
+#23 373.2 warning: [34m  Downloaded jobserver v0.1.32[0m
+#23 373.2 warning: [34m  Downloaded smallvec v0.4.5[0m
+#23 373.2 warning: [34m  Downloaded semver v1.0.7[0m
+#23 373.2 warning: [34m  Downloaded proc-macro2 v1.0.86[0m
+#23 373.2 warning: [34m  Downloaded quote v1.0.37[0m
+#23 373.2 warning: [34m  Downloaded arrayvec v0.7.0[0m
+#23 373.2 warning: [34m  Downloaded unicode-bidi v0.3.0[0m
+#23 373.2 warning: [34m  Downloaded pin-utils v0.1.0[0m
+#23 373.2 warning: [34m  Downloaded pin-project-internal v1.0.2[0m
+#23 373.2 warning: [34m  Downloaded bytes v1.0.0[0m
+#23 373.2 warning: [34m  Downloaded url v2.2.0[0m
+#23 373.2 warning: [34m  Downloaded tracing-core v0.1.27[0m
+#23 373.2 warning: [34m  Downloaded ryu v1.0.0[0m
+#23 373.2 warning: [34m  Downloaded ipnet v2.3.0[0m
+#23 373.2 warning: [34m  Downloaded bitflags v2.5.0[0m
+#23 373.2 warning: [34m  Downloaded aho-corasick v0.7.3[0m
+#23 373.2 warning: [34m  Downloaded typenum v1.14.0[0m
+#23 373.2 warning: [34m  Downloaded indexmap v2.0.0[0m
+#23 373.2 warning: [34m  Downloaded ppv-lite86 v0.2.8[0m
+#23 373.2 warning: [34m  Downloaded httparse v1.8.0[0m
+#23 373.2 warning: [34m  Downloaded tower v0.4.1[0m
+#23 373.2 warning: [34m  Downloaded unicode-ident v1.0.0[0m
+#23 373.2 warning: [34m  Downloaded base64 v0.21.0[0m
+#23 373.2 warning: [34m  Downloaded base64 v0.22.0[0m
+#23 373.2 warning: [34m  Downloaded tracing v0.1.35[0m
+#23 373.2 warning: [34m  Downloaded toml_edit v0.22.8[0m
+#23 373.2 warning: [34m  Downloaded hyper-util v0.1.3[0m
+#23 373.2 warning: [34m  Downloaded winnow v0.6.0[0m
+#23 373.2 warning: [34m  Downloaded base64 v0.13.0[0m
+#23 373.2 warning: [34m  Downloaded socket2 v0.5.0[0m
+#23 373.2 warning: [34m  Downloaded unicode-normalization v0.1.5[0m
+#23 373.2 warning: [34m  Downloaded memchr v2.6.0[0m
+#23 373.2 warning: [34m  Downloaded tokio v1.6.1[0m
+#23 373.2 warning: [34m  Downloaded rand v0.8.3[0m
+#23 373.2 warning: [34m  Downloaded http v1.0.0[0m
+#23 373.2 warning: [34m  Downloaded cc v1.1.10[0m
+#23 373.2 warning: [34m  Downloaded mio v0.7.6[0m
+#23 373.2 warning: [34m  Downloaded tokio-util v0.7.1[0m
+#23 373.2 warning: [34m  Downloaded pin-project v1.0.2[0m
+#23 373.2 warning: [34m  Downloaded futures-channel v0.3.0[0m
+#23 373.2 warning: [34m  Downloaded generic-array v0.14.4[0m
+#23 373.2 warning: [34m  Downloaded itertools v0.10.1[0m
+#23 373.2 warning: [34m  Downloaded ansi_term v0.12.0[0m
+#23 373.2 warning: [34m  Downloaded cargo-platform v0.1.8[0m
+#23 373.2 warning: [34m  Downloaded either v1.10.0[0m
+#23 373.2 warning: [34m  Downloaded hyper v1.1.0[0m
+#23 373.2 warning: [34m  Downloaded serde_json v1.0.79[0m
+#23 373.2 warning: [34m  Downloaded aho-corasick v1.0.0[0m
+#23 373.2 warning: [34m  Downloaded byteorder v1.1.0[0m
+#23 373.2 warning: [34m  Downloaded futures-util v0.3.31[0m
+#23 373.2 warning: [34m  Downloaded h2 v0.4.0[0m
+#23 373.2 warning: [34m  Downloaded bitflags v1.2.0[0m
+#23 373.2 warning: [34m  Downloaded cargo_metadata v0.18.0[0m
+#23 373.2 warning: [34m  Downloaded reqwest v0.12.2[0m
+#23 373.2 warning: [34m  Downloaded git2 v0.17.0[0m
+#23 373.2 warning: [34m  Downloaded idna v0.2.0[0m
+#23 373.2 warning: [34m  Downloaded syn v2.0.58[0m
+#23 373.2 warning: [34m  Downloaded syn v1.0.45[0m
+#23 373.2 warning: [34m  Downloaded rustix v0.38.0[0m
+#23 373.2 warning: [34m  Downloaded regex-syntax v0.8.0[0m
+#23 373.2 warning: [34m  Downloaded regex-automata v0.4.0[0m
+#23 373.2 warning: [34m  Downloaded regex v1.10.0[0m
+#23 373.2 warning: [34m  Downloaded linux-raw-sys v0.4.3[0m
+#23 373.2 warning: [34m  Downloaded libz-sys v1.1.0[0m
+#23 373.2 warning: [34m  Downloaded libgit2-sys v0.15.0+1.6.3[0m
+#23 373.2 warning: [34m  Downloaded libc v0.2.146[0m
+#23 373.2 warning: [34m  Downloaded encoding_rs v0.8.0[0m
+#23 373.2 warning: [34m  Downloaded bstr v0.2.0[0m
+#23 373.2 warning: [34m   Compiling proc-macro2 v1.0.86[0m
+#23 373.2 warning: [34m   Compiling unicode-ident v1.0.0[0m
+#23 373.2 warning: [34m   Compiling libc v0.2.146[0m
+#23 373.2 warning: [34m   Compiling cfg-if v0.1.6[0m
+#23 373.2 warning: [34m   Compiling log v0.4.8[0m
+#23 373.2 warning: [34m   Compiling syn v1.0.45[0m
+#23 373.2 warning: [34m   Compiling unicode-xid v0.2.0[0m
+#23 373.2 warning: [34m   Compiling serde v1.0.197[0m
+#23 373.2 warning: [34m   Compiling memchr v2.6.0[0m
+#23 373.2 warning: [34m   Compiling cfg-if v1.0.0[0m
+#23 373.2 warning: [34m   Compiling itoa v1.0.0[0m
+#23 373.2 warning: [34m   Compiling once_cell v1.18.0[0m
+#23 373.2 warning: [34m   Compiling bytes v1.0.0[0m
+#23 373.2 warning: [34m   Compiling pin-project-lite v0.2.14[0m
+#23 373.2 warning: [34m   Compiling autocfg v1.0.0[0m
+#23 373.2 warning: [34m   Compiling pkg-config v0.3.11[0m
+#23 373.2 warning: [34m   Compiling quote v1.0.37[0m
+#23 373.2 warning: [34m   Compiling tokio v1.6.1[0m
+#23 373.2 warning: [34m   Compiling syn v2.0.58[0m
+#23 373.2 warning: [34m   Compiling equivalent v1.0.0[0m
+#23 373.2 warning: [34m   Compiling cc v1.1.10[0m
+#23 373.2 warning: [34m   Compiling futures-sink v0.3.31[0m
+#23 373.2 warning: [34m   Compiling hashbrown v0.14.0[0m
+#23 373.2 warning: [34m   Compiling futures-core v0.3.31[0m
+#23 373.2 warning: [34m   Compiling vcpkg v0.2.8[0m
+#23 373.2 warning: [34m   Compiling mio v0.7.6[0m
+#23 373.2 warning: [34m   Compiling indexmap v2.0.0[0m
+#23 373.2 warning: [34m   Compiling num_cpus v1.13.0[0m
+#23 373.2 warning: [34m   Compiling openssl-sys v0.9.114[0m
+#23 373.2 warning: [34m   Compiling tracing-core v0.1.27[0m
+#23 373.2 warning: [34m   Compiling pin-utils v0.1.0[0m
+#23 373.2 warning: [34m   Compiling fnv v1.0.6[0m
+#23 373.2 warning: [34m   Compiling ryu v1.0.0[0m
+#23 373.2 warning: [34m   Compiling futures-io v0.3.31[0m
+#23 373.2 warning: [34m   Compiling getrandom v0.2.0[0m
+#23 373.2 warning: [34m   Compiling slab v0.4.2[0m
+#23 373.2 warning: [34m   Compiling futures-task v0.3.31[0m
+#23 373.2 warning: [34m   Compiling futures-util v0.3.31[0m
+#23 373.2 warning: [34m   Compiling http v1.0.0[0m
+#23 373.2 warning: [34m   Compiling serde_derive v1.0.197[0m
+#23 373.2 warning: [34m   Compiling typenum v1.14.0[0m
+#23 373.2 warning: [34m   Compiling anyhow v1.0.72[0m
+#23 373.2 warning: [34m   Compiling version_check v0.9.0[0m
+#23 373.2 warning: [34m   Compiling tracing-attributes v0.1.20[0m
+#23 373.2 warning: [34m   Compiling generic-array v0.14.4[0m
+#23 373.2 warning: [34m   Compiling openssl v0.10.78[0m
+#23 373.2 warning: [34m   Compiling matches v0.1.2[0m
+#23 373.2 warning: [34m   Compiling httparse v1.8.0[0m
+#23 373.2 warning: [34m   Compiling foreign-types-shared v0.1.0[0m
+#23 373.2 warning: [34m   Compiling foreign-types v0.3.1[0m
+#23 373.2 warning: [34m   Compiling rand_core v0.6.2[0m
+#23 373.2 warning: [34m   Compiling pin-project-internal v1.0.2[0m
+#23 373.2 warning: [34m   Compiling serde_spanned v0.6.5[0m
+#23 373.2 warning: [34m   Compiling toml_datetime v0.6.5[0m
+#23 373.2 warning: [34m   Compiling openssl-macros v0.1.1[0m
+#23 373.2 warning: [34m   Compiling http-body v1.0.0[0m
+#23 373.2 warning: [34m   Compiling tracing v0.1.35[0m
+#23 373.2 warning: [34m   Compiling tokio-util v0.7.1[0m
+#23 373.2 warning: [34m   Compiling byteorder v1.1.0[0m
+#23 373.2 warning: [34m   Compiling winnow v0.6.0[0m
+#23 373.2 warning: [34m   Compiling serde_json v1.0.79[0m
+#23 373.2 warning: [34m   Compiling native-tls v0.2.10[0m
+#23 373.2 warning: [34m   Compiling ppv-lite86 v0.2.8[0m
+#23 373.2 warning: [34m   Compiling bitflags v2.5.0[0m
+#23 373.2 warning: [34m   Compiling try-lock v0.2.0[0m
+#23 373.2 warning: [34m   Compiling either v1.10.0[0m
+#23 373.2 warning: [34m   Compiling want v0.3.0[0m
+#23 373.2 warning: [34m   Compiling rand_chacha v0.3.0[0m
+#23 373.2 warning: [34m   Compiling pin-project v1.0.2[0m
+#23 373.2 warning: [34m   Compiling h2 v0.4.0[0m
+#23 373.2 warning: [34m   Compiling fxhash v0.2.1[0m
+#23 373.2 warning: [34m   Compiling toml_edit v0.22.8[0m
+#23 373.2 warning: [34m   Compiling futures-channel v0.3.0[0m
+#23 373.2 warning: [34m   Compiling camino v1.1.12[0m
+#23 373.2 warning: [34m   Compiling splitmut v0.2.1[0m
+#23 373.2 warning: [34m   Compiling semver v1.0.7[0m
+#23 373.2 warning: [34m   Compiling smallvec v0.4.5[0m
+#23 373.2 warning: [34m   Compiling tower-service v0.3.0[0m
+#23 373.2 warning: [34m   Compiling percent-encoding v2.1.0[0m
+#23 373.2 warning: [34m   Compiling tower-layer v0.3.1[0m
+#23 373.2 warning: [34m   Compiling openssl-probe v0.1.0[0m
+#23 373.2 warning: [34m   Compiling index_vec v0.1.3[0m
+#23 373.2 warning: [34m   Compiling form_urlencoded v1.0.0[0m
+#23 373.2 warning: [34m   Compiling indexical v0.3.1[0m
+#23 373.2 warning: [34m   Compiling tower v0.4.1[0m
+#23 373.2 warning: [34m   Compiling hyper v1.1.0[0m
+#23 373.2 warning: [34m   Compiling intervaltree v0.2.0[0m
+#23 373.2 warning: [34m   Compiling toml v0.8.12[0m
+#23 373.2 warning: [34m   Compiling rand v0.8.3[0m
+#23 373.2 warning: [34m   Compiling unicode-bidi v0.3.0[0m
+#23 373.2 warning: [34m   Compiling thiserror-impl v1.0.31[0m
+#23 373.2 warning: [34m   Compiling socket2 v0.5.0[0m
+#23 373.2 warning: [34m   Compiling aho-corasick v1.0.0[0m
+#23 373.2 warning: [34m   Compiling regex-syntax v0.8.0[0m
+#23 373.2 warning: [34m   Compiling unicode-normalization v0.1.5[0m
+#23 373.2 warning: [34m   Compiling thiserror v1.0.31[0m
+#23 373.2 warning: [34m   Compiling idna v0.2.0[0m
+#23 373.2 warning: [34m   Compiling hyper-util v0.1.3[0m
+#23 373.2 warning: [34m   Compiling regex-automata v0.4.0[0m
+#23 373.2 warning: [34m   Compiling rustc_utils v0.7.4-nightly-2023-08-25 (https://github.com/JustusAdam/rustc_plugin?rev=e413907b2ae9a03d2c8e9aca3b72dd451a16b1db#e413907b)[0m
+#23 373.2 warning: [34m   Compiling dylint_linting v2.5.0[0m
+#23 373.2 warning: [34m   Compiling tokio-native-tls v0.3.0[0m
+#23 373.2 warning: [34m   Compiling cargo-platform v0.1.8[0m
+#23 373.2 warning: [34m   Compiling crypto-common v0.1.3[0m
+#23 373.2 warning: [34m   Compiling block-buffer v0.10.1[0m
+#23 373.2 warning: [34m   Compiling itertools v0.12.1[0m
+#23 373.2 warning: [34m   Compiling http-body-util v0.1.0[0m
+#23 373.2 warning: [34m   Compiling fluid-let v1.0.0[0m
+#23 373.2 warning: [34m   Compiling base64 v0.13.0[0m
+#23 373.2 warning: [34m   Compiling rustls-pemfile v1.0.0[0m
+#23 373.2 warning: [34m   Compiling flowistry v0.5.41 (https://github.com/brownsys/flowistry?rev=08c4ad9587b3251a8f7c64aa60be31404e6e04c0#08c4ad95)[0m
+#23 373.2 warning: [34m   Compiling hyper-tls v0.6.0[0m
+#23 373.2 warning: [34m   Compiling digest v0.10.7[0m
+#23 373.2 warning: [34m   Compiling cargo_metadata v0.18.0[0m
+#23 373.2 warning: [34m   Compiling regex v1.10.0[0m
+#23 373.2 warning: [34m   Compiling url v2.2.0[0m
+#23 373.2 warning: [34m   Compiling serde_urlencoded v0.7.1[0m
+#23 373.2 warning: [34m   Compiling itertools v0.10.1[0m
+#23 373.2 warning: [34m   Compiling dylint_internal v2.5.0[0m
+#23 373.2 warning: [34m   Compiling rustversion v1.0.0[0m
+#23 373.2 warning: [34m   Compiling encoding_rs v0.8.0[0m
+#23 373.2 warning: [34m   Compiling if_chain v1.0.2[0m
+#23 373.2 warning: [34m   Compiling arrayvec v0.7.0[0m
+#23 373.2 warning: [34m   Compiling cpufeatures v0.2.5[0m
+#23 373.2 warning: [34m   Compiling paste v1.0.0[0m
+#23 373.2 warning: [34m   Compiling mime v0.3.16[0m
+#23 373.2 warning: [34m   Compiling ipnet v2.3.0[0m
+#23 373.2 warning: [34m   Compiling sync_wrapper v0.1.2[0m
+#23 373.2 warning: [34m   Compiling base64 v0.21.0[0m
+#23 373.2 warning: [34m   Compiling time-core v0.1.1[0m
+#23 373.2 warning: [34m   Compiling rustc-semver v1.1.0[0m
+#23 373.2 warning: [34m   Compiling clippy_utils v0.1.73 (/workspace/Sesame/lints/vendor/clippy_utils)[0m
+#23 373.2 warning: [34m   Compiling time-macros v0.2.9[0m
+#23 373.2 warning: [34m   Compiling reqwest v0.12.2[0m
+#23 373.2 warning: [34m   Compiling sha2 v0.10.8[0m
+#23 373.2 warning: [34m   Compiling scrutils v0.1.0 (/workspace/scrutinizer/scrutils)[0m
+#23 373.2 warning: [34mwarning: unused imports: `debug`, `warn`[0m
+#23 373.2 warning: [34m --> /workspace/scrutinizer/scrutils/src/collector/collector_domain.rs:2:11[0m
+#23 373.2 warning: [34m  |[0m
+#23 373.2 warning: [34m2 | use log::{debug, trace, warn};[0m
+#23 373.2 warning: [34m  |           ^^^^^         ^^^^[0m
+#23 373.2 warning: [34m  |[0m
+#23 373.2 warning: [34m  = note: `#[warn(unused_imports)]` on by default[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34m   Compiling base64 v0.22.0[0m
+#23 373.2 warning: [34m   Compiling hex v0.4.3[0m
+#23 373.2 warning: [34mwarning: `scrutils` (lib) generated 1 warning (run `cargo fix --lib -p scrutils` to apply 1 suggestion)[0m
+#23 373.2 warning: [34m   Compiling sesame_lints v0.1.0 (/workspace/Sesame/lints)[0m
+#23 373.2 warning: [34m    Finished release [optimized] target(s) in 51.18s[0m
+#23 373.2 warning: [34mChecking with toolchain `nightly-2023-08-25-x86_64-unknown-linux-gnu`[0m
+#23 373.2 warning: [34m   Compiling proc-macro2 v1.0.106[0m
+#23 373.2 warning: [34m   Compiling quote v1.0.45[0m
+#23 373.2 warning: [34m   Compiling unicode-ident v1.0.24[0m
+#23 373.2 warning: [34m   Compiling libc v0.2.186[0m
+#23 373.2 warning: [34m    Checking cfg-if v1.0.4[0m
+#23 373.2 warning: [34m   Compiling version_check v0.9.5[0m
+#23 373.2 warning: [34m   Compiling serde v1.0.166[0m
+#23 373.2 warning: [34m   Compiling autocfg v1.5.0[0m
+#23 373.2 warning: [34m   Compiling shlex v1.3.0[0m
+#23 373.2 warning: [34m   Compiling find-msvc-tools v0.1.9[0m
+#23 373.2 warning: [34m   Compiling pkg-config v0.3.33[0m
+#23 373.2 warning: [34m   Compiling cc v1.2.61[0m
+#23 373.2 warning: [34m    Checking once_cell v1.21.4[0m
+#23 373.2 warning: [34m    Checking bitflags v1.3.2[0m
+#23 373.2 warning: [34m   Compiling memchr v2.8.0[0m
+#23 373.2 warning: [34m    Checking smallvec v1.15.1[0m
+#23 373.2 warning: [34m    Checking log v0.4.29[0m
+#23 373.2 warning: [34m   Compiling vcpkg v0.2.15[0m
+#23 373.2 warning: [34m   Compiling syn v2.0.117[0m
+#23 373.2 warning: [34m    Checking pin-project-lite v0.2.17[0m
+#23 373.2 warning: [34m   Compiling generic-array v0.14.7[0m
+#23 373.2 warning: [34m    Checking typenum v1.20.0[0m
+#23 373.2 warning: [34m   Compiling serde_json v1.0.105[0m
+#23 373.2 warning: [34m   Compiling syn v1.0.109[0m
+#23 373.2 warning: [34m   Compiling num-traits v0.2.19[0m
+#23 373.2 warning: [34m    Checking lazy_static v1.5.0[0m
+#23 373.2 warning: [34m   Compiling hashbrown v0.15.5[0m
+#23 373.2 warning: [34m   Compiling equivalent v1.0.2[0m
+#23 373.2 warning: [34m    Checking getrandom v0.2.17[0m
+#23 373.2 warning: [34m    Checking futures-core v0.3.32[0m
+#23 373.2 warning: [34m    Checking socket2 v0.4.10[0m
+#23 373.2 warning: [34m   Compiling memoffset v0.6.5[0m
+#23 373.2 warning: [34m   Compiling zerocopy v0.8.48[0m
+#23 373.2 warning: [34m    Checking futures-sink v0.3.32[0m
+#23 373.2 warning: [34m    Checking futures-io v0.3.32[0m
+#23 373.2 warning: [34m    Checking bytes v1.11.1[0m
+#23 373.2 warning: [34m    Checking num-integer v0.1.46[0m
+#23 373.2 warning: [34m   Compiling parking_lot_core v0.9.12[0m
+#23 373.2 warning: [34m   Compiling itoa v1.0.18[0m
+#23 373.2 warning: [34m   Compiling thiserror v1.0.69[0m
+#23 373.2 warning: [34m   Compiling ryu v1.0.23[0m
+#23 373.2 warning: [34m    Checking slab v0.4.12[0m
+#23 373.2 warning: [34m    Checking futures-channel v0.3.32[0m
+#23 373.2 warning: [34m    Checking futures-task v0.3.32[0m
+#23 373.2 warning: [34m    Checking scopeguard v1.2.0[0m
+#23 373.2 warning: [34m    Checking lock_api v0.4.14[0m
+#23 373.2 warning: [34m    Checking errno v0.3.14[0m
+#23 373.2 warning: [34m   Compiling tokio v1.27.0[0m
+#23 373.2 warning: [34m   Compiling anyhow v1.0.72[0m
+#23 373.2 warning: [34m   Compiling tinyvec_macros v0.1.1[0m
+#23 373.2 warning: [34m   Compiling xml-rs v0.8.28[0m
+#23 373.2 warning: [34m   Compiling tinyvec v1.11.0[0m
+#23 373.2 warning: [34m   Compiling wayland-scanner v0.29.5[0m
+#23 373.2 warning: [34m    Checking signal-hook-registry v1.4.8[0m
+#23 373.2 warning: [34m    Checking parking_lot v0.12.5[0m
+#23 373.2 warning: [34m   Compiling openssl-sys v0.9.114[0m
+#23 373.2 warning: [34m   Compiling ring v0.17.14[0m
+#23 373.2 warning: [34m   Compiling serde_derive v1.0.166[0m
+#23 373.2 warning: [34m   Compiling futures-macro v0.3.32[0m
+#23 373.2 warning: [34m   Compiling thiserror-impl v1.0.69[0m
+#23 373.2 warning: [34m   Compiling tokio-macros v2.0.0[0m
+#23 373.2 warning: [34m    Checking num_cpus v1.17.0[0m
+#23 373.2 warning: [34m    Checking mio v0.8.11[0m
+#23 373.2 warning: [34m    Checking futures-util v0.3.32[0m
+#23 373.2 warning: [34m   Compiling bitflags v2.11.1[0m
+#23 373.2 warning: [34m   Compiling semver v1.0.28[0m
+#23 373.2 warning: [34m   Compiling unicode-normalization v0.1.25[0m
+#23 373.2 warning: [34m   Compiling wayland-sys v0.29.5[0m
+#23 373.2 warning: [34m    Checking libloading v0.8.9[0m
+#23 373.2 warning: [34m    Checking untrusted v0.9.0[0m
+#23 373.2 warning: [34m   Compiling matches v0.1.10[0m
+#23 373.2 warning: [34m   Compiling unicode-bidi v0.3.18[0m
+#23 373.2 warning: [34m   Compiling leb128 v0.2.6[0m
+#23 373.2 warning: [34m    Checking scoped-tls v1.0.1[0m
+#23 373.2 warning: [34m   Compiling percent-encoding v2.3.2[0m
+#23 373.2 warning: [34m   Compiling glob v0.3.3[0m
+#23 373.2 warning: [34m   Compiling pulldown-cmark v0.9.6[0m
+#23 373.2 warning: [34m   Compiling clang-sys v1.8.1[0m
+#23 373.2 warning: [34m   Compiling idna v0.2.3[0m
+#23 373.2 warning: [34m   Compiling form_urlencoded v1.2.2[0m
+#23 373.2 warning: [34m    Checking dlib v0.5.3[0m
+#23 373.2 warning: [34m   Compiling ring v0.16.20[0m
+#23 373.2 warning: [34m    Checking tracing-core v0.1.36[0m
+#23 373.2 warning: [34m   Compiling nom v5.1.3[0m
+#23 373.2 warning: [34m    Checking fnv v1.0.7[0m
+#23 373.2 warning: [34m    Checking cpufeatures v0.2.17[0m
+#23 373.2 warning: [34m    Checking static_assertions v1.1.0[0m
+#23 373.2 warning: [34m   Compiling unicase v2.9.0[0m
+#23 373.2 warning: [34m   Compiling spdx v0.10.8[0m
+#23 373.2 warning: [34m    Checking http v0.2.12[0m
+#23 373.2 warning: [34m    Checking tracing v0.1.44[0m
+#23 373.2 warning: [34m   Compiling url v2.3.0[0m
+#23 373.2 warning: [34m   Compiling wasm-encoder v0.41.2[0m
+#23 373.2 warning: [34m    Checking ppv-lite86 v0.2.21[0m
+#23 373.2 warning: [34m   Compiling wayland-client v0.29.5[0m
+#23 373.2 warning: [34m   Compiling atty v0.2.14[0m
+#23 373.2 warning: [34m   Compiling indexmap v2.11.1[0m
+#23 373.2 warning: [34m   Compiling toml v0.5.9[0m
+#23 373.2 warning: [34m    Checking nix v0.24.3[0m
+#23 373.2 warning: [34m    Checking digest v0.9.0[0m
+#23 373.2 warning: [34m    Checking rand_core v0.6.4[0m
+#23 373.2 warning: [34m   Compiling aho-corasick v0.7.20[0m
+#23 373.2 warning: [34m   Compiling wasmparser v0.121.2[0m
+#23 373.2 warning: [34m   Compiling standback v0.2.17[0m
+#23 373.2 warning: [34m   Compiling proc-macro-hack v0.5.20+deprecated[0m
+#23 373.2 warning: [34m   Compiling unicode-xid v0.2.6[0m
+#23 373.2 warning: [34m   Compiling unicode-segmentation v1.12.0[0m
+#23 373.2 warning: [34m   Compiling id-arena v2.3.0[0m
+#23 373.2 warning: [34m   Compiling regex-syntax v0.6.29[0m
+#23 373.2 warning: [34m    Checking foreign-types-shared v0.1.1[0m
+#23 373.2 warning: [34m   Compiling httparse v1.10.1[0m
+#23 373.2 warning: [34m   Compiling crossbeam-utils v0.8.21[0m
+#23 373.2 warning: [34m   Compiling openssl v0.10.78[0m
+#23 373.2 warning: [34m   Compiling io-lifetimes v1.0.11[0m
+#23 373.2 warning: [34m   Compiling unicode-width v0.1.14[0m
+#23 373.2 warning: [34m    Checking foreign-types v0.3.2[0m
+#23 373.2 warning: [34m   Compiling heck v0.4.1[0m
+#23 373.2 warning: [34m   Compiling textwrap v0.11.0[0m
+#23 373.2 warning: [34m    Checking wayland-commons v0.29.5[0m
+#23 373.2 warning: [34m   Compiling wit-parser v0.11.3[0m
+#23 373.2 warning: [34m   Compiling wasmparser v0.113.3[0m
+#23 373.2 warning: [34m    Checking rand_chacha v0.3.1[0m
+#23 373.2 warning: [34m   Compiling serde_spanned v0.6.9[0m
+#23 373.2 warning: [34m   Compiling toml_datetime v0.6.11[0m
+#23 373.2 warning: [34m   Compiling regex v1.6.0[0m
+#23 373.2 warning: [34m    Checking tokio-util v0.7.4[0m
+#23 373.2 warning: [34m    Checking webpki v0.22.4[0m
+#23 373.2 warning: [34m   Compiling wasm-encoder v0.33.2[0m
+#23 373.2 warning: [34m   Compiling wasm-metadata v0.10.20[0m
+#23 373.2 warning: [34m   Compiling openssl-macros v0.1.1[0m
+#23 373.2 warning: [34m    Checking num-bigint v0.4.6[0m
+#23 373.2 warning: [34m   Compiling polling v2.8.0[0m
+#23 373.2 warning: [34m    Checking opaque-debug v0.3.1[0m
+#23 373.2 warning: [34m   Compiling ansi_term v0.12.1[0m
+#23 373.2 warning: [34m   Compiling rustls v0.20.9[0m
+#23 373.2 warning: [34m   Compiling rustix v0.37.28[0m
+#23 373.2 warning: [34m    Checking downcast-rs v1.2.1[0m
+#23 373.2 warning: [34m   Compiling frunk_core v0.4.4[0m
+#23 373.2 warning: [34m    Checking spin v0.5.2[0m
+#23 373.2 warning: [34m   Compiling native-tls v0.2.10[0m
+#23 373.2 warning: [34m   Compiling winnow v0.7.15[0m
+#23 373.2 warning: [34m   Compiling strsim v0.8.0[0m
+#23 373.2 warning: [34m   Compiling vec_map v0.8.2[0m
+#23 373.2 warning: [34m   Compiling bindgen v0.58.1[0m
+#23 373.2 warning: [34m    Checking try-lock v0.2.5[0m
+#23 373.2 warning: [34m    Checking untrusted v0.7.1[0m
+#23 373.2 warning: [34m   Compiling toml_write v0.1.2[0m
+#23 373.2 warning: [34m   Compiling termcolor v1.4.1[0m
+#23 373.2 warning: [34m    Checking byteorder v1.5.0[0m
+#23 373.2 warning: [34m   Compiling humantime v2.3.0[0m
+#23 373.2 warning: [34m   Compiling proc-macro-crate v1.2.1[0m
+#23 373.2 warning: [34m   Compiling env_logger v0.8.4[0m
+#23 373.2 warning: [34m   Compiling frunk_proc_macro_helpers v0.1.4[0m
+#23 373.2 warning: [34m    Checking want v0.3.1[0m
+#23 373.2 warning: [34m   Compiling clap v2.34.0[0m
+#23 373.2 warning: [34m   Compiling toml_edit v0.22.27[0m
+#23 373.2 warning: [34m   Compiling wit-component v0.14.7[0m
+#23 373.2 warning: [34m   Compiling cexpr v0.4.0[0m
+#23 373.2 warning: [34m    Checking h2 v0.3.27[0m
+#23 373.2 warning: [34m    Checking rand v0.8.6[0m
+#23 373.2 warning: [34m    Checking sct v0.7.1[0m
+#23 373.2 warning: [34m    Checking http-body v0.4.6[0m
+#23 373.2 warning: [34m   Compiling enumflags2_derive v0.6.4[0m
+#23 373.2 warning: [34m   Compiling wayland-protocols v0.29.5[0m
+#23 373.2 warning: [34m   Compiling which v3.1.1[0m
+#23 373.2 warning: [34m    Checking block-buffer v0.9.0[0m
+#23 373.2 warning: [34m   Compiling libz-sys v1.1.28[0m
+#23 373.2 warning: [34m    Checking socket2 v0.5.10[0m
+#23 373.2 warning: [34m    Checking time v0.1.45[0m
+#23 373.2 warning: [34m   Compiling quick-xml v0.30.0[0m
+#23 373.2 warning: [34m   Compiling async-io v1.13.0[0m
+#23 373.2 warning: [34m   Compiling num-bigint v0.3.3[0m
+#23 373.2 warning: [34m   Compiling proc-macro-error-attr v1.0.4[0m
+#23 373.2 warning: [34m   Compiling ahash v0.8.12[0m
+#23 373.2 warning: [34m   Compiling lexical-core v0.7.6[0m
+#23 373.2 warning: [34m    Checking linux-raw-sys v0.3.8[0m
+#23 373.2 warning: [34m    Checking iana-time-zone v0.1.65[0m
+#23 373.2 warning: [34m    Checking httpdate v1.0.3[0m
+#23 373.2 warning: [34m   Compiling lazycell v1.3.0[0m
+#23 373.2 warning: [34m    Checking parking v2.2.1[0m
+#23 373.2 warning: [34m    Checking tower-service v0.3.3[0m
+#23 373.2 warning: [34m   Compiling crc32fast v1.5.0[0m
+#23 373.2 warning: [34m    Checking openssl-probe v0.1.6[0m
+#23 373.2 warning: [34m   Compiling radium v0.6.2[0m
+#23 373.2 warning: [34m   Compiling peeking_take_while v0.1.2[0m
+#23 373.2 warning: [34m   Compiling const_fn v0.4.12[0m
+#23 373.2 warning: [34m    Checking subtle v2.4.1[0m
+#23 373.2 warning: [34m    Checking event-listener v2.5.3[0m
+#23 373.2 warning: [34m    Checking base64 v0.13.1[0m
+#23 373.2 warning: [34m    Checking waker-fn v1.2.0[0m
+#23 373.2 warning: [34m   Compiling rustc-hash v1.1.0[0m
+#23 373.2 warning: [34m    Checking fastrand v1.9.0[0m
+#23 373.2 warning: [34m    Checking crypto-mac v0.11.1[0m
+#23 373.2 warning: [34m    Checking async-lock v2.8.0[0m
+#23 373.2 warning: [34m    Checking futures-lite v1.13.0[0m
+#23 373.2 warning: [34m    Checking hyper v0.14.32[0m
+#23 373.2 warning: [34m   Compiling xcb v1.7.0[0m
+#23 373.2 warning: [34m    Checking chrono v0.4.22[0m
+#23 373.2 warning: [34m    Checking enumflags2 v0.6.4[0m
+#23 373.2 warning: [34m    Checking sha2 v0.9.9[0m
+#23 373.2 warning: [34m    Checking concurrent-queue v2.5.0[0m
+#23 373.2 warning: [34m   Compiling time-macros-impl v0.1.2[0m
+#23 373.2 warning: [34m   Compiling wit-bindgen-core v0.12.0[0m
+#23 373.2 warning: [34m   Compiling toml v0.8.23[0m
+#23 373.2 warning: [34m   Compiling zvariant_derive v2.10.0[0m
+#23 373.2 warning: [34m   Compiling proc-macro-crate v0.1.5[0m
+#23 373.2 warning: [34m    Checking futures-executor v0.3.32[0m
+#23 373.2 warning: [34m   Compiling subprocess v0.2.9[0m
+#23 373.2 warning: [34m    Checking cipher v0.3.0[0m
+#23 373.2 warning: [34m   Compiling cmake v0.1.58[0m
+#23 373.2 warning: [34m   Compiling smithay-client-toolkit v0.16.1[0m
+#23 373.2 warning: [34m   Compiling proc-macro-error v1.0.4[0m
+#23 373.2 warning: [34m   Compiling time v0.2.27[0m
+#23 373.2 warning: [34m    Checking arrayvec v0.5.2[0m
+#23 373.2 warning: [34m   Compiling rust_decimal v1.41.0[0m
+#23 373.2 warning: [34m   Compiling rustix v0.38.44[0m
+#23 373.2 warning: [34m   Compiling wit-bindgen-rust v0.12.0[0m
+#23 373.2 warning: [34m    Checking tap v1.0.1[0m
+#23 373.2 warning: [34m    Checking xcursor v0.3.10[0m
+#23 373.2 warning: [34m    Checking wyz v0.4.0[0m
+#23 373.2 warning: [34m   Compiling mysql_common v0.27.5[0m
+#23 373.2 warning: [34m    Checking wayland-cursor v0.29.5[0m
+#23 373.2 warning: [34m    Checking zvariant v2.10.0[0m
+#23 373.2 warning: [34m    Checking futures v0.3.25[0m
+#23 373.2 warning: [34m   Compiling zbus_macros v1.9.3[0m
+#23 373.2 warning: [34m    Checking tokio-rustls v0.23.4[0m
+#23 373.2 warning: [34m   Compiling cargo_toml v0.19.2[0m
+#23 373.2 warning: [34m    Checking time-macros v0.1.1[0m
+#23 373.2 warning: [34m   Compiling wit-bindgen-rust-lib v0.12.0[0m
+#23 373.2 warning: [34m    Checking tokio-native-tls v0.3.0[0m
+#23 373.2 warning: [34m    Checking hmac v0.11.0[0m
+#23 373.2 warning: [34m   Compiling frunk_proc_macros v0.1.4[0m
+#23 373.2 warning: [34m   Compiling frunk_derives v0.4.4[0m
+#23 373.2 warning: [34m    Checking num-rational v0.4.2[0m
+#23 373.2 warning: [34m   Compiling tinytemplate v1.2.1[0m
+#23 373.2 warning: [34m   Compiling derivative v2.2.0[0m
+#23 373.2 warning: [34m   Compiling serde_repr v0.1.20[0m
+#23 373.2 warning: [34m    Checking nix v0.22.3[0m
+#23 373.2 warning: [34m    Checking num-iter v0.1.45[0m
+#23 373.2 warning: [34m    Checking num-complex v0.4.6[0m
+#23 373.2 warning: [34m    Checking nb-connect v1.2.0[0m
+#23 373.2 warning: [34m    Checking crypto-common v0.1.7[0m
+#23 373.2 warning: [34m    Checking block-buffer v0.10.4[0m
+#23 373.2 warning: [34m   Compiling libsqlite3-sys v0.25.2[0m
+#23 373.2 warning: [34m    Checking terminal_size v0.1.17[0m
+#23 373.2 warning: [34m    Checking memmap2 v0.5.10[0m
+#23 373.2 warning: [34m    Checking funty v1.2.0 (https://github.com/bitvecto-rs/funty/?rev=7ef0d890fbcd8b3def1635ac1a877fc298488446#7ef0d890)[0m
+#23 373.2 warning: [34m    Checking arrayvec v0.7.6[0m
+#23 373.2 warning: [34m   Compiling async-trait v0.1.79[0m
+#23 373.2 warning: [34m    Checking block-padding v0.2.1[0m
+#23 373.2 warning: [34m    Checking allocator-api2 v0.2.21[0m
+#23 373.2 warning: [34m    Checking either v1.15.0[0m
+#23 373.2 warning: [34m    Checking sha1_smol v1.0.1[0m
+#23 373.2 warning: [34m    Checking linux-raw-sys v0.4.15[0m
+#23 373.2 warning: [34m    Checking sha1 v0.6.1[0m
+#23 373.2 warning: [34m    Checking hashbrown v0.14.5[0m
+#23 373.2 warning: [34m    Checking zbus v1.9.3[0m
+#23 373.2 warning: [34m    Checking frunk v0.4.4[0m
+#23 373.2 warning: [34m    Checking block-modes v0.8.1[0m
+#23 373.2 warning: [34m    Checking console v0.15.2[0m
+#23 373.2 warning: [34m    Checking bitvec v0.22.3[0m
+#23 373.2 warning: [34m    Checking digest v0.10.7[0m
+#23 373.2 warning: [34m    Checking num v0.4.3[0m
+#23 373.2 warning: [34m   Compiling sesame_build v0.1.0 (/workspace/Sesame/build)[0m
+#23 373.2 warning: [34m    Checking bigdecimal v0.2.2[0m
+#23 373.2 warning: [34m    Checking hkdf v0.11.0[0m
+#23 373.2 warning: [34m    Checking flate2 v1.1.9[0m
+#23 373.2 warning: [34m    Checking hyper-tls v0.5.0[0m
+#23 373.2 warning: [34m    Checking lexical v5.2.2[0m
+#23 373.2 warning: [34m    Checking hyper-rustls v0.23.2[0m
+#23 373.2 warning: [34m    Checking aes v0.7.5[0m
+#23 373.2 warning: [34m    Checking rustls-pemfile v0.3.0[0m
+#23 373.2 warning: [34m    Checking serde_urlencoded v0.7.1[0m
+#23 373.2 warning: [34m    Checking webpki-roots v0.22.6[0m
+#23 373.2 warning: [34m    Checking bincode v1.3.3[0m
+#23 373.2 warning: [34m    Checking encoding_rs v0.8.35[0m
+#23 373.2 warning: [34m    Checking thread_local v1.1.9[0m
+#23 373.2 warning: [34m    Checking mime v0.3.17[0m
+#23 373.2 warning: [34m    Checking fastrand v2.4.1[0m
+#23 373.2 warning: [34m    Checking ipnet v2.12.0[0m
+#23 373.2 warning: [34m    Checking saturating v0.1.0[0m
+#23 373.2 warning: [34m    Checking uuid v0.8.2[0m
+#23 373.2 warning: [34m    Checking os_str_bytes v6.6.1[0m
+#23 373.2 warning: [34m    Checking reqwest v0.11.10[0m
+#23 373.2 warning: [34m    Checking clap_lex v0.3.3[0m
+#23 373.2 warning: [34m   Compiling wit-bindgen-rust-macro v0.12.0[0m
+#23 373.2 warning: [34m    Checking tempfile v3.8.0[0m
+#23 373.2 warning: [34m    Checking x11-clipboard v0.6.1[0m
+#23 373.2 warning: [34m    Checking fuzzy-matcher v0.3.7[0m
+#23 373.2 warning: [34m    Checking sesame_sandbox v0.1.0 (/workspace/Sesame/sandbox)[0m
+#23 373.2 warning: [34mwarning: the feature `specialization` is incomplete and may not be safe to use and/or cause compiler crashes[0m
+#23 373.2 warning: [34m --> /workspace/Sesame/sandbox/src/lib.rs:4:12[0m
+#23 373.2 warning: [34m  |[0m
+#23 373.2 warning: [34m4 | #![feature(specialization)][0m
+#23 373.2 warning: [34m  |            ^^^^^^^^^^^^^^[0m
+#23 373.2 warning: [34m  |[0m
+#23 373.2 warning: [34m  = note: see issue #31844 <https://github.com/rust-lang/rust/issues/31844> for more information[0m
+#23 373.2 warning: [34m  = help: consider using `min_specialization` instead, which is more stable and complete[0m
+#23 373.2 warning: [34m  = note: `#[warn(incomplete_features)]` on by default[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mwarning: `sesame_sandbox` (lib) generated 1 warning[0m
+#23 373.2 warning: [34m   Compiling avail v0.1.0 (/workspace/avail)[0m
+#23 373.2 warning: [34m    Checking secret-service v2.0.2[0m
+#23 373.2 warning: [34m   Compiling clap_derive v4.0.18[0m
+#23 373.2 warning: [34m    Checking sha2 v0.10.9[0m
+#23 373.2 warning: [34m    Checking hashlink v0.8.4[0m
+#23 373.2 warning: [34m    Checking itertools v0.12.1[0m
+#23 373.2 warning: [34m    Checking erased-serde v0.3.31[0m
+#23 373.2 warning: [34m    Checking smithay-clipboard v0.6.6[0m
+#23 373.2 warning: [34m    Checking serde_path_to_error v0.1.14[0m
+#23 373.2 warning: [34m    Checking dirs-sys v0.3.7[0m
+#23 373.2 warning: [34m    Checking nix v0.25.1[0m
+#23 373.2 warning: [34m    Checking number_prefix v0.4.0[0m
+#23 373.2 warning: [34m    Checking strsim v0.10.0[0m
+#23 373.2 warning: [34m    Checking zeroize v1.8.2[0m
+#23 373.2 warning: [34m    Checking fallible-streaming-iterator v0.1.9[0m
+#23 373.2 warning: [34m    Checking fallible-iterator v0.2.0[0m
+#23 373.2 warning: [34m    Checking dyn-clone v1.0.20[0m
+#23 373.2 warning: [34m    Checking clap v4.0.18[0m
+#23 373.2 warning: [34m    Checking sesame v0.1.0 (/workspace/Sesame/core)[0m
+#23 373.2 warning: [34mwarning: the feature `specialization` is incomplete and may not be safe to use and/or cause compiler crashes[0m
+#23 373.2 warning: [34m --> /workspace/Sesame/core/src/lib.rs:1:12[0m
+#23 373.2 warning: [34m  |[0m
+#23 373.2 warning: [34m1 | #![feature(specialization)][0m
+#23 373.2 warning: [34m  |            ^^^^^^^^^^^^^^[0m
+#23 373.2 warning: [34m  |[0m
+#23 373.2 warning: [34m  = note: see issue #31844 <https://github.com/rust-lang/rust/issues/31844> for more information[0m
+#23 373.2 warning: [34m  = help: consider using `min_specialization` instead, which is more stable and complete[0m
+#23 373.2 warning: [34m  = note: `#[warn(incomplete_features)]` on by default[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34m    Checking dialoguer v0.10.2[0m
+#23 373.2 warning: [34m    Checking ctrlc v3.2.3[0m
+#23 373.2 warning: [34m    Checking indicatif v0.17.1[0m
+#23 373.2 warning: [34m    Checking rusqlite v0.28.0[0m
+#23 373.2 warning: [34m    Checking dirs v4.0.0[0m
+#23 373.2 warning: [34m    Checking oauth2 v4.2.3[0m
+#23 373.2 warning: [34m    Checking copypasta v0.8.1[0m
+#23 373.2 warning: [34m    Checking wit-bindgen v0.12.0[0m
+#23 373.2 warning: [34mwarning: [93mSesame Build: Logger: Warning: Log file at /tmp/avail_x86_64-unknown-linux-gnu_debug.log[0m[0m
+#23 373.2 warning: [34mwarning: [34mSesame Build: Environment: Info: [0m[0m
+#23 373.2 warning: [34mwarning: [34mEnv {[0m[0m
+#23 373.2 warning: [34mwarning: [34m    current_crate_name: "avail",[0m[0m
+#23 373.2 warning: [34mwarning: [34m    cargo: "cargo",[0m[0m
+#23 373.2 warning: [34mwarning: [34m    cargo_toml: Manifest {[0m[0m
+#23 373.2 warning: [34mwarning: [34m        package: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m            Package {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                name: "avail",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                edition: Set([0m[0m
+#23 373.2 warning: [34mwarning: [34m                    E2021,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                rust_version: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                version: Set([0m[0m
+#23 373.2 warning: [34mwarning: [34m                    "0.1.0",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                build: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m                    Path([0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "build.rs",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                workspace: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                authors: Set([0m[0m
+#23 373.2 warning: [34mwarning: [34m                    [],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                links: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                description: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m                    Set([0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "A command-line tool to find available times between all your calendars.",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                homepage: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                documentation: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                readme: Set([0m[0m
+#23 373.2 warning: [34mwarning: [34m                    Path([0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "README.md",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                keywords: Set([0m[0m
+#23 373.2 warning: [34mwarning: [34m                    [],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                categories: Set([0m[0m
+#23 373.2 warning: [34mwarning: [34m                    [],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                exclude: Set([0m[0m
+#23 373.2 warning: [34mwarning: [34m                    [],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                include: Set([0m[0m
+#23 373.2 warning: [34mwarning: [34m                    [],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                license: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                license_file: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                repository: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                default_run: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                autobins: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                autoexamples: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                autotests: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                autobenches: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                publish: Set([0m[0m
+#23 373.2 warning: [34mwarning: [34m                    Flag([0m[0m
+#23 373.2 warning: [34mwarning: [34m                        true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                resolver: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                metadata: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m            },[0m[0m
+#23 373.2 warning: [34mwarning: [34m        ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m        workspace: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m            Workspace {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                members: [],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                default_members: [],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                package: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                exclude: [],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                metadata: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m                    Table([0m[0m
+#23 373.2 warning: [34mwarning: [34m                        {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                            "dylint": Table([0m[0m
+#23 373.2 warning: [34mwarning: [34m                                {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                                    "libraries": Array([0m[0m
+#23 373.2 warning: [34mwarning: [34m                                        [[0m[0m
+#23 373.2 warning: [34mwarning: [34m                                            Table([0m[0m
+#23 373.2 warning: [34mwarning: [34m                                                {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                                                    "path": String([0m[0m
+#23 373.2 warning: [34mwarning: [34m                                                        "../Sesame/lints",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                                                    ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                                                },[0m[0m
+#23 373.2 warning: [34mwarning: [34m                                            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                                        ],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                                    ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                                },[0m[0m
+#23 373.2 warning: [34mwarning: [34m                            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        },[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                resolver: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                dependencies: {},[0m[0m
+#23 373.2 warning: [34mwarning: [34m                lints: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m            },[0m[0m
+#23 373.2 warning: [34mwarning: [34m        ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m        dependencies: {[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "anyhow": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=1.0.72",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "async-trait": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=0.1.79",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "chrono": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=0.4.22",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "clap": Detailed([0m[0m
+#23 373.2 warning: [34mwarning: [34m                DependencyDetail {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    version: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "=4.0.18",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    registry: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    registry_index: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    path: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    inherited: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    git: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    branch: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    tag: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    rev: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    features: [[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "derive",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    optional: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    default_features: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    package: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    unstable: {},[0m[0m
+#23 373.2 warning: [34mwarning: [34m                },[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "colored": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=2.0.0",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "console": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=0.15.2",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "copypasta": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=0.8.1",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "ctrlc": Detailed([0m[0m
+#23 373.2 warning: [34mwarning: [34m                DependencyDetail {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    version: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "=3.2.3",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    registry: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    registry_index: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    path: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    inherited: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    git: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    branch: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    tag: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    rev: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    features: [[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "termination",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    optional: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    default_features: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    package: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    unstable: {},[0m[0m
+#23 373.2 warning: [34mwarning: [34m                },[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "dialoguer": Detailed([0m[0m
+#23 373.2 warning: [34mwarning: [34m                DependencyDetail {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    version: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "=0.10.2",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    registry: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    registry_index: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    path: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    inherited: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    git: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    branch: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    tag: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    rev: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    features: [[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "fuzzy-select",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    optional: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    default_features: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    package: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    unstable: {},[0m[0m
+#23 373.2 warning: [34mwarning: [34m                },[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "dirs": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=4.0.0",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "futures": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=0.3.25",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "indicatif": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=0.17.1",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "itertools": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=0.10.5",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "keyring": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=1.2.0",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "native-tls": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=0.2.10",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "oauth2": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=4.2.3",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "proc-macro-crate": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=1.2.1",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "regex": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=1.6.0",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "reqwest": Detailed([0m[0m
+#23 373.2 warning: [34mwarning: [34m                DependencyDetail {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    version: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "=0.11.10",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    registry: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    registry_index: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    path: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    inherited: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    git: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    branch: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    tag: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    rev: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    features: [[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "json",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    optional: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    default_features: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    package: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    unstable: {},[0m[0m
+#23 373.2 warning: [34mwarning: [34m                },[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "rusqlite": Detailed([0m[0m
+#23 373.2 warning: [34mwarning: [34m                DependencyDetail {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    version: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "=0.28.0",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    registry: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    registry_index: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    path: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    inherited: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    git: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    branch: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    tag: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    rev: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    features: [[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "bundled",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    optional: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    default_features: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    package: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    unstable: {},[0m[0m
+#23 373.2 warning: [34mwarning: [34m                },[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "serde": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=1.0.166",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "serde_json": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=1.0.105",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "sesame": Detailed([0m[0m
+#23 373.2 warning: [34mwarning: [34m                DependencyDetail {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    version: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    registry: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    registry_index: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    path: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "../Sesame/core",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    inherited: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    git: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    branch: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    tag: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    rev: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    features: [],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    optional: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    default_features: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    package: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    unstable: {},[0m[0m
+#23 373.2 warning: [34mwarning: [34m                },[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "spdx": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=0.10.8",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "subprocess": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=0.2.9",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "tempfile": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=3.8.0",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "tokio": Detailed([0m[0m
+#23 373.2 warning: [34mwarning: [34m                DependencyDetail {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    version: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "=1.27.0",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    registry: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    registry_index: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    path: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    inherited: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    git: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    branch: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    tag: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    rev: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    features: [[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "full",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    optional: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    default_features: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    package: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    unstable: {},[0m[0m
+#23 373.2 warning: [34mwarning: [34m                },[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "tokio-native-tls": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=0.3.0",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "tokio-util": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=0.7.4",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "toml": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=0.5.9",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "toml_parser": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=1.0.0",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "unicode-segmentation": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=1.12",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "url": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=2.3.0",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "webbrowser": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=0.8.0",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "wit-bindgen": Simple([0m[0m
+#23 373.2 warning: [34mwarning: [34m                "=0.12.0",[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m        },[0m[0m
+#23 373.2 warning: [34mwarning: [34m        dev_dependencies: {},[0m[0m
+#23 373.2 warning: [34mwarning: [34m        build_dependencies: {[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "sesame_build": Detailed([0m[0m
+#23 373.2 warning: [34mwarning: [34m                DependencyDetail {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    version: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    registry: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    registry_index: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    path: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m                        "../Sesame/build",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    inherited: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    git: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    branch: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    tag: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    rev: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    features: [],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    optional: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    default_features: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    package: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    unstable: {},[0m[0m
+#23 373.2 warning: [34mwarning: [34m                },[0m[0m
+#23 373.2 warning: [34mwarning: [34m            ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m        },[0m[0m
+#23 373.2 warning: [34mwarning: [34m        target: {},[0m[0m
+#23 373.2 warning: [34mwarning: [34m        features: {},[0m[0m
+#23 373.2 warning: [34mwarning: [34m        replace: {},[0m[0m
+#23 373.2 warning: [34mwarning: [34m        patch: {[0m[0m
+#23 373.2 warning: [34mwarning: [34m            "crates-io": {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                "funty": Detailed([0m[0m
+#23 373.2 warning: [34mwarning: [34m                    DependencyDetail {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        version: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        registry: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        registry_index: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        path: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        inherited: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        git: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m                            "https://github.com/bitvecto-rs/funty/",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        branch: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        tag: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        rev: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m                            "7ef0d890fbcd8b3def1635ac1a877fc298488446",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        features: [],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        optional: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        default_features: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        package: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                        unstable: {},[0m[0m
+#23 373.2 warning: [34mwarning: [34m                    },[0m[0m
+#23 373.2 warning: [34mwarning: [34m                ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m            },[0m[0m
+#23 373.2 warning: [34mwarning: [34m        },[0m[0m
+#23 373.2 warning: [34mwarning: [34m        lib: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m        profile: Profiles {[0m[0m
+#23 373.2 warning: [34mwarning: [34m            release: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m            dev: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m            test: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m            bench: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m            doc: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m            custom: {},[0m[0m
+#23 373.2 warning: [34mwarning: [34m        },[0m[0m
+#23 373.2 warning: [34mwarning: [34m        badges: Badges {[0m[0m
+#23 373.2 warning: [34mwarning: [34m            appveyor: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m            circle_ci: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m            gitlab: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m            travis_ci: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m            codecov: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m            coveralls: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m            is_it_maintained_issue_resolution: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m            is_it_maintained_open_issues: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m            maintenance: Maintenance {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                status: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m            },[0m[0m
+#23 373.2 warning: [34mwarning: [34m        },[0m[0m
+#23 373.2 warning: [34mwarning: [34m        bin: [[0m[0m
+#23 373.2 warning: [34mwarning: [34m            Product {[0m[0m
+#23 373.2 warning: [34mwarning: [34m                path: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m                    "src/main.rs",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                name: Some([0m[0m
+#23 373.2 warning: [34mwarning: [34m                    "avail",[0m[0m
+#23 373.2 warning: [34mwarning: [34m                ),[0m[0m
+#23 373.2 warning: [34mwarning: [34m                test: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                doctest: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                bench: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                doc: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                plugin: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                proc_macro: false,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                harness: true,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                edition: E2021,[0m[0m
+#23 373.2 warning: [34mwarning: [34m                crate_type: [],[0m[0m
+#23 373.2 warning: [34mwarning: [34m                required_features: [],[0m[0m
+#23 373.2 warning: [34mwarning: [34m            },[0m[0m
+#23 373.2 warning: [34mwarning: [34m        ],[0m[0m
+#23 373.2 warning: [34mwarning: [34m        bench: [],[0m[0m
+#23 373.2 warning: [34mwarning: [34m        test: [],[0m[0m
+#23 373.2 warning: [34mwarning: [34m        example: [],[0m[0m
+#23 373.2 warning: [34mwarning: [34m        lints: None,[0m[0m
+#23 373.2 warning: [34mwarning: [34m    },[0m[0m
+#23 373.2 warning: [34mwarning: [34m    package_directory: "/workspace/avail",[0m[0m
+#23 373.2 warning: [34mwarning: [34m    out_directory: "/workspace/avail/target/dylint/target/nightly-2023-08-25-x86_64-unknown-linux-gnu/debug/build/avail-ca1a3f07a177556b/out",[0m[0m
+#23 373.2 warning: [34mwarning: [34m    target: "x86_64-unknown-linux-gnu",[0m[0m
+#23 373.2 warning: [34mwarning: [34m    working_directory: "/workspace/avail",[0m[0m
+#23 373.2 warning: [34mwarning: [34m    profile: "debug",[0m[0m
+#23 373.2 warning: [34mwarning: [34m    host: "x86_64-unknown-linux-gnu",[0m[0m
+#23 373.2 warning: [34mwarning: [34m}[0m[0m
+#23 373.2 warning: [34mwarning: [34m[0m[0m
+#23 373.2 warning: [34mwarning: [34m[0m[0m
+#23 373.2 warning: [34mwarning: [34m[0m[0m
+#23 373.2 warning: [34mwarning: [34mSesame Build: Bash Environment: Info: [0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO = /usr/local/rustup/toolchains/nightly-2023-08-25-x86_64-unknown-linux-gnu/bin/cargo[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_DYLINT_LIB = sesame_lints[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_OVERFLOW_CHECKS = [0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_PANIC = unwind[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_RELOCATION_MODEL = pic[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_TARGET_ABI = [0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_TARGET_ARCH = x86_64[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_TARGET_ENDIAN = little[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_TARGET_ENV = gnu[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_TARGET_FAMILY = unix[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_TARGET_FEATURE = fxsr,sse,sse2[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_TARGET_HAS_ATOMIC = 16,32,64,8,ptr[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_TARGET_HAS_ATOMIC_EQUAL_ALIGNMENT = 16,32,64,8,ptr[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_TARGET_HAS_ATOMIC_LOAD_STORE = 16,32,64,8,ptr[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_TARGET_OS = linux[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_TARGET_POINTER_WIDTH = 64[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_TARGET_THREAD_LOCAL = [0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_TARGET_VENDOR = unknown[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_CFG_UNIX = [0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_ENCODED_RUSTFLAGS = [0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_HOME = /usr/local/cargo[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_MAKEFLAGS = -j --jobserver-fds=11,12 --jobserver-auth=11,12[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_MANIFEST_DIR = /workspace/avail[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_NET_GIT_FETCH_WITH_CLI = true[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_PKG_AUTHORS = [0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_PKG_DESCRIPTION = A command-line tool to find available times between all your calendars.[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_PKG_HOMEPAGE = [0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_PKG_LICENSE = [0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_PKG_LICENSE_FILE = [0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_PKG_NAME = avail[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_PKG_README = README.md[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_PKG_REPOSITORY = [0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_PKG_RUST_VERSION = [0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_PKG_VERSION = 0.1.0[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_PKG_VERSION_MAJOR = 0[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_PKG_VERSION_MINOR = 1[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_PKG_VERSION_PATCH = 0[0m[0m
+#23 373.2 warning: [34mwarning: [34m  CARGO_PKG_VERSION_PRE = [0m[0m
+#23 373.2 warning: [34mwarning: [34m  CLIPPY_DISABLE_DOCS_LINKS = null[0m[0m
+#23 373.2 warning: [34mwarning: [34m  DEBIAN_FRONTEND = noninteractive[0m[0m
+#23 373.2 warning: [34mwarning: [34m  DEBUG = true[0m[0m
+#23 373.2 warning: [34mwarning: [34m  DYLINT_DRIVER_PATH = /workspace/avail/target/release/build/avail-09501599d0b9d450/out/sesame-dylint-drivers[0m[0m
+#23 373.2 warning: [34mwarning: [34m  DYLINT_LIBS = ["/workspace/avail/target/dylint/libraries/nightly-2023-08-25-x86_64-unknown-linux-gnu/release/libsesame_lints@nightly-2023-08-25-x86_64-unknown-linux-gnu.so"][0m[0m
+#23 373.2 warning: [34mwarning: [34m  DYLINT_METADATA = {"libraries":[{"path":"../Sesame/lints"}]}[0m[0m
+#23 373.2 warning: [34mwarning: [34m  DYLINT_NO_DEPS = 0[0m[0m
+#23 373.2 warning: [34mwarning: [34m  DYLINT_VERSION = 2.5.0[0m[0m
+#23 373.2 warning: [34mwarning: [34m  HOME = /root[0m[0m
+#23 373.2 warning: [34mwarning: [34m  HOST = x86_64-unknown-linux-gnu[0m[0m
+#23 373.2 warning: [34mwarning: [34m  LD_LIBRARY_PATH = /workspace/avail/target/dylint/target/nightly-2023-08-25-x86_64-unknown-linux-gnu/debug/deps:/workspace/avail/target/dylint/target/nightly-2023-08-25-x86_64-unknown-linux-gnu/debug:/usr/local/rustup/toolchains/nightly-2023-08-25-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/lib:/workspace/avail/target/release/deps:/workspace/avail/target/release:/usr/local/rustup/toolchains/nightly-2023-08-25-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/lib:/usr/local/rustup/toolchains/nightly-2023-08-25-x86_64-unknown-linux-gnu/lib[0m[0m
+#23 373.2 warning: [34mwarning: [34m  NUM_JOBS = 6[0m[0m
+#23 373.2 warning: [34mwarning: [34m  OPT_LEVEL = 0[0m[0m
+#23 373.2 warning: [34mwarning: [34m  OUT_DIR = /workspace/avail/target/dylint/target/nightly-2023-08-25-x86_64-unknown-linux-gnu/debug/build/avail-ca1a3f07a177556b/out[0m[0m
+#23 373.2 warning: [34mwarning: [34m  PATH = /root/.cargo/bin:/usr/local/cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin[0m[0m
+#23 373.2 warning: [34mwarning: [34m  PROFILE = debug[0m[0m
+#23 373.2 warning: [34mwarning: [34m  PWD = /workspace/avail[0m[0m
+#23 373.2 warning: [34mwarning: [34m  RUSTC = /usr/local/rustup/toolchains/nightly-2023-08-25-x86_64-unknown-linux-gnu/bin/rustc[0m[0m
+#23 373.2 warning: [34mwarning: [34m  RUSTC_WORKSPACE_WRAPPER = /workspace/avail/target/release/build/avail-09501599d0b9d450/out/sesame-dylint-drivers/nightly-2023-08-25-x86_64-unknown-linux-gnu/dylint-driver[0m[0m
+#23 373.2 warning: [34mwarning: [34m  RUSTDOC = /usr/local/rustup/toolchains/nightly-2023-08-25-x86_64-unknown-linux-gnu/bin/rustdoc[0m[0m
+#23 373.2 warning: [34mwarning: [34m  RUSTUP_HOME = /usr/local/rustup[0m[0m
+#23 373.2 warning: [34mwarning: [34m  RUSTUP_TOOLCHAIN = nightly-2023-08-25-x86_64-unknown-linux-gnu[0m[0m
+#23 373.2 warning: [34mwarning: [34m  RUSTUP_TOOLCHAIN_SOURCE = env[0m[0m
+#23 373.2 warning: [34mwarning: [34m  RUST_BACKTRACE = 1[0m[0m
+#23 373.2 warning: [34mwarning: [34m  RUST_LOG = dylint=warn,dylint_utils=warn[0m[0m
+#23 373.2 warning: [34mwarning: [34m  RUST_RECURSION_COUNT = 3[0m[0m
+#23 373.2 warning: [34mwarning: [34m  RUST_VERSION = 1.95.0[0m[0m
+#23 373.2 warning: [34mwarning: [34m  SSL_CERT_DIR = /usr/lib/ssl/certs[0m[0m
+#23 373.2 warning: [34mwarning: [34m  SSL_CERT_FILE = /usr/lib/ssl/cert.pem[0m[0m
+#23 373.2 warning: [34mwarning: [34m  TARGET = x86_64-unknown-linux-gnu[0m[0m
+#23 373.2 warning: [34mwarning: [34m  TOOLCHAIN = nightly-2023-08-25[0m[0m
+#23 373.2 warning: [34mwarning: [34m[0m[0m
+#23 373.2 warning: [34mwarning: [34m[0m[0m
+#23 373.2 warning: [34mwarning: [34m[0m[0m
+#23 373.2 warning: [34mwarning: [34m[0m[0m
+#23 373.2 warning: [34mwarning: [34mSesame Build: Scrutinizer: Info: Skipping scrutinizer in debug profile[0m[0m
+#23 373.2 warning: [34mwarning: [34mSesame Build: Sesame lints: Info: Skipping dylints in debug profile[0m[0m
+#23 373.2 warning: [34m    Checking keyring v1.2.0[0m
+#23 373.2 warning: [34m    Checking colored v2.0.0[0m
+#23 373.2 warning: [34m    Checking toml_parser v1.0.0[0m
+#23 373.2 warning: [34mwarning: `sesame` (lib) generated 1 warning[0m
+#23 373.2 warning: [34m    Checking itertools v0.10.5[0m
+#23 373.2 warning: [34m    Checking webbrowser v0.8.0[0m
+#23 373.2 warning: [34mwarning: method `get_availability` is never used[0m
+#23 373.2 warning: [34m  --> src/datetime/finder.rs:31:12[0m
+#23 373.2 warning: [34m   |[0m
+#23 373.2 warning: [34m30 | impl AvailabilityFinder {[0m
+#23 373.2 warning: [34m   | ----------------------- method in this implementation[0m
+#23 373.2 warning: [34m31 |     pub fn get_availability([0m
+#23 373.2 warning: [34m   |            ^^^^^^^^^^^^^^^^[0m
+#23 373.2 warning: [34m   |[0m
+#23 373.2 warning: [34m   = note: `#[warn(dead_code)]` on by default[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mwarning: function `local_events` is never used[0m
+#23 373.2 warning: [34m  --> src/datetime/finder.rs:62:4[0m
+#23 373.2 warning: [34m   |[0m
+#23 373.2 warning: [34m62 | fn local_events(events: Vec<Event>) -> Vec<TimedEvent<Local>> {[0m
+#23 373.2 warning: [34m   |    ^^^^^^^^^^^^[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mwarning: type alias `ProtectedEvent` is never used[0m
+#23 373.2 warning: [34m   --> src/ifc.rs:111:10[0m
+#23 373.2 warning: [34m    |[0m
+#23 373.2 warning: [34m111 | pub type ProtectedEvent = PCon<Event, CalendarSecrecyPolicy>;[0m
+#23 373.2 warning: [34m    |          ^^^^^^^^^^^^^^[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mwarning: function `protect_event` is never used[0m
+#23 373.2 warning: [34m   --> src/ifc.rs:131:8[0m
+#23 373.2 warning: [34m    |[0m
+#23 373.2 warning: [34m131 | pub fn protect_event(event: Event, owner: &str) -> ProtectedEvent {[0m
+#23 373.2 warning: [34m    |        ^^^^^^^^^^^^^[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mwarning: invalid signature on privacy-critical region, could be a source of privacy policy violation bugs[0m
+#23 373.2 warning: [34m   --> src/ifc.rs:150:13[0m
+#23 373.2 warning: [34m    |[0m
+#23 373.2 warning: [34m150 | /             CriticalRegion::new([0m
+#23 373.2 warning: [34m151 | |                 |data: &T, _| data.clone(),[0m
+#23 373.2 warning: [34m152 | |                 Signature {[0m
+#23 373.2 warning: [34m153 | |                     username: "borvath",[0m
+#23 373.2 warning: [34m154 | |                     signature: "",[0m
+#23 373.2 warning: [34m155 | |                 },[0m
+#23 373.2 warning: [34m156 | |             ),[0m
+#23 373.2 warning: [34m    | |_____________^[0m
+#23 373.2 warning: [34m    |[0m
+#23 373.2 warning: [34m    = help: could not verify closure reviewer's signature: Couldn't parse signature: missing header[0m
+#23 373.2 warning: [34m            sig_verify: sshsig_armor: incomplete message[0m
+#23 373.2 warning: [34m            wrote the hash of privacy-critical region into the file for signing: ./pcr/ifc-reveal-{closure#0}_src_hash.rs[0m
+#23 373.2 warning: [34m            [0m
+#23 373.2 warning: [34m    = note: `#[warn(sesame_pcr)]` on by default[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mwarning: invalid signature on privacy-critical region, could be a source of privacy policy violation bugs[0m
+#23 373.2 warning: [34m   --> src/ifc.rs:195:13[0m
+#23 373.2 warning: [34m    |[0m
+#23 373.2 warning: [34m195 | /             CriticalRegion::new([0m
+#23 373.2 warning: [34m196 | |                 |slots, _| {[0m
+#23 373.2 warning: [34m197 | |                     PCon::new([0m
+#23 373.2 warning: [34m198 | |                         localize_availability(slots),[0m
+#23 373.2 warning: [34m...   |[0m
+#23 373.2 warning: [34m205 | |                 },[0m
+#23 373.2 warning: [34m206 | |             ),[0m
+#23 373.2 warning: [34m    | |_____________^[0m
+#23 373.2 warning: [34m    |[0m
+#23 373.2 warning: [34m    = help: could not verify closure reviewer's signature: Couldn't parse signature: missing header[0m
+#23 373.2 warning: [34m            sig_verify: sshsig_armor: incomplete message[0m
+#23 373.2 warning: [34m            wrote the hash of privacy-critical region into the file for signing: ./pcr/ifc-compute_availability-{closure#2}_src_hash.rs[0m
+#23 373.2 warning: [34m            [0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34mwarning: `avail` (bin "avail") generated 6 warnings[0m
+#23 373.2 warning: [34m    Finished dev [unoptimized + debuginfo] target(s) in 40.91s[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [34m----------------------------------------------------[0m
+#23 373.2 warning: [34m[0m
+#23 373.2 warning: [32mSesame Build: Sesame lints: Success: Sesame lints completed[0m
+#23 375.8 warning: method `get_availability` is never used
+#23 375.8   --> src/datetime/finder.rs:31:12
+#23 375.8    |
+#23 375.8 30 | impl AvailabilityFinder {
+#23 375.8    | ----------------------- method in this implementation
+#23 375.8 31 |     pub fn get_availability(
+#23 375.8    |            ^^^^^^^^^^^^^^^^
+#23 375.8    |
+#23 375.8    = note: `#[warn(dead_code)]` on by default
+#23 375.8 
+#23 375.8 warning: function `local_events` is never used
+#23 375.8   --> src/datetime/finder.rs:62:4
+#23 375.8    |
+#23 375.8 62 | fn local_events(events: Vec<Event>) -> Vec<TimedEvent<Local>> {
+#23 375.8    |    ^^^^^^^^^^^^
+#23 375.8 
+#23 375.8 warning: type alias `ProtectedEvent` is never used
+#23 375.8    --> src/ifc.rs:111:10
+#23 375.8     |
+#23 375.8 111 | pub type ProtectedEvent = PCon<Event, CalendarSecrecyPolicy>;
+#23 375.8     |          ^^^^^^^^^^^^^^
+#23 375.8 
+#23 375.8 warning: function `protect_event` is never used
+#23 375.8    --> src/ifc.rs:131:8
+#23 375.8     |
+#23 375.8 131 | pub fn protect_event(event: Event, owner: &str) -> ProtectedEvent {
+#23 375.8     |        ^^^^^^^^^^^^^
+#23 375.8 
+#23 381.7 warning: `avail` (bin "avail") generated 4 warnings
+#23 381.8     Finished release [optimized] target(s) in 6m 21s
+#23 DONE 389.0s
+
+#24 [runtime 2/4] RUN apt-get update     && apt-get install -y --no-install-recommends         ca-certificates         libdbus-1-3         libssl3         libx11-6         libxcb-render0         libxcb-shape0         libxcb-xfixes0         libxcb1     && rm -rf /var/lib/apt/lists/*
+#24 CACHED
+
+#25 [runtime 3/4] WORKDIR /data
+#25 CACHED
+
+#26 [runtime 4/4] COPY --from=tooling /workspace/avail/target/release/avail /usr/local/bin/avail
+#26 DONE 0.1s
+
+#27 exporting to image
+#27 exporting layers
+#27 exporting layers 0.7s done
+#27 exporting manifest sha256:2573d1b1cab002f1a09d0633efc9a091c75e199375e6d70573d3ddb24252285b done
+#27 exporting config sha256:a8390acbfb0aadeb877528f837e6d4b3fdb0e241bf993b0e25d8344659d6febb done
+#27 exporting attestation manifest sha256:87b5d04da3532dcb6284d1d8de0aeb931836030deeb0acbc16eb40f155dad9ca 0.0s done
+#27 exporting manifest list sha256:53f9e1ed45ea63afbbbe19bba9a315754f41bf4cb4f982fccb628d4be292a286 done
+#27 naming to docker.io/library/avail:latest done
+#27 unpacking to docker.io/library/avail:latest 0.1s done
+#27 DONE 0.9s

@@ -1,0 +1,6 @@
+.git
+.idea
+mir_dumps
+target
+scrutinizer.log
+*.scrutinizer.result.json

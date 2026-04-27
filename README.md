@@ -19,7 +19,7 @@ Should a user wish to modify the implementation of critical regions to be more t
 This port also does not implement sandboxing for Sesame's critical regions. The dockerfile also reports an invalid signature that is valid locally, but accepts another signature.
 
 ## Running this Port
-This port should work on Ubuntu 24, but still has incompatible dependencies on Windows systems. A dockerfile has been included and is the intended way to run this port.
-To execute the dockerfile run `./scripts/docker-build.sh` to build the image, and once the build is complete run it with `docker run --rm avail:latest`.
+This port should work on Ubuntu 24, but still has incompatible dependencies on Windows systems. A dockerfile has been included in the "avail" directory and is the intended way to run this port.
+To execute the dockerfile `cd avail` and run `./scripts/docker-build.sh` to build the image, and once the build is complete run it with `docker run --rm avail:latest`.
 To validate that Scrutinizer and Sesame's lints run correctly, run `./scripts/docker-build.sh &> build.log`.
 The build is expected to take ~6–8 minutes, and any warnings or errors from either tool should be visible at the end of step #23.

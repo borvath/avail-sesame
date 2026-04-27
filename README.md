@@ -16,7 +16,7 @@ In both of these cases the changes were meant to fix panics or compilation error
 This port does not implement any sort of rigorous performance testing or documentation of the changes made to Avail (runtime, added LoC, added files).
 This port also erred on the side of similarity with the Carapace implementation of security and declassification, specifically with respect to critical regions.
 Should a user wish to modify the implementation of critical regions to be more true to the nature of Sesame, the changes required should be minimal (wrapping outputs rather than declassifying).
-This port also does not implement sandboxing for Sesame's critical regions.
+This port also does not implement sandboxing for Sesame's critical regions. The dockerfile also reports an invalid signature that is valid locally, but accepts another signature.
 
 ## Running this Port
 This port should work on Ubuntu 24, but still has incompatible dependencies on Windows systems. A dockerfile has been included and is the intended way to run this port.

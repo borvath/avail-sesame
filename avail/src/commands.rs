@@ -6,6 +6,10 @@ use copypasta::{ClipboardContext, ClipboardProvider};
 use dialoguer::{theme::ColorfulTheme, Confirm, Input, MultiSelect, Select};
 use indicatif::ProgressBar;
 use itertools::Itertools;
+use sesame::critical::{CriticalRegion, Signature};
+use sesame::fold::fold;
+use sesame::pcon::PCon;
+use sesame::policy::AnyPolicyClone;
 use tokio::{sync::Semaphore, task::JoinHandle};
 
 use crate::cli::ProgressIndicator;
@@ -17,11 +21,45 @@ use crate::datetime::{
 };
 use crate::events::{google, microsoft, Calendar, GetResources};
 use crate::ifc::{
-    compute_availability, owners_from_availability, protect_calendar, reveal, rewrap_availability,
+    authorized_context, compute_availability, owners_from_availability, protect_calendar,
     ProtectedAvailability, ProtectedEvents, RevealRoute,
 };
 use crate::store::{AccountModel, CalendarModel, Platform, Store, PLATFORMS};
 use crate::util::AvailConfig;
+
+pub fn publish_availability_output(avails: &ProtectedAvailability) -> anyhow::Result<()> {
+    let authorized_owners = owners_from_availability(avails)?;
+    let mut ctx = ClipboardContext::new().map_err(|err| {
+        anyhow::anyhow!("failed to access clipboard: {}", err)
+    })?;
+
+    avails
+        .critical(
+            authorized_context(RevealRoute::AvailabilityOutput, &authorized_owners),
+            CriticalRegion::new(
+                |slots: &Vec<Availability<Local>>, _| -> anyhow::Result<()> {
+                    let formatted = format_availability(slots);
+                    print!("{}", formatted);
+                    if ctx.set_contents(formatted).is_ok() {
+                        println!("\nCopied to clipboard.");
+                    }
+                    Ok(())
+                },
+                Signature {
+                    username: "borvath",
+                    signature: "LS0tLS1CRUdJTiBTU0ggU0lHTkFUVVJFLS0tLS0KVTFOSVUwbEhBQUFBQVFBQUFETUFBQUFMYzNOb0xXVmtNalUxTVRrQUFBQWd1S1hiSjdkTFFLaHEvMWFmbkwwQUhHVlNzSgp6UnFndUVVcHl2b2Y3TkdrTUFBQUFFWm1sc1pRQUFBQUFBQUFBR2MyaGhOVEV5QUFBQVV3QUFBQXR6YzJndFpXUXlOVFV4Ck9RQUFBRUFQTjh6Uk0yTkFiRGcvNnJVYzFHQXA2R1JIcDkwc0M5bjRmUysvbG91bVg4dUlXVzY0ZWRFa3kzVVlwcEVSc20KZkF4T3YwQ1BVMnRpcFZQZE9ubWV3SgotLS0tLUVORCBTU0ggU0lHTkFUVVJFLS0tLS0K",
+                },
+            ),
+            (),
+        )
+        .map_err(|_| {
+            anyhow::anyhow!(
+                "Sesame blocked externalization for {}",
+                RevealRoute::AvailabilityOutput
+            )
+        })??;
+    Ok(())
+}
 
 pub async fn add_account(
     db: Store,
@@ -33,8 +71,7 @@ pub async fn add_account(
         .with_prompt("Which platform would you like to add an account for?")
         .items(&PLATFORMS[..])
         .default(0)
-        .interact()
-        .unwrap();
+        .interact()?;
 
     let selected_platform = PLATFORMS[selection];
 
@@ -84,8 +121,7 @@ pub async fn add_account(
 pub fn remove_account(db: Store, email: &str) -> anyhow::Result<()> {
     if Confirm::with_theme(&ColorfulTheme::default())
         .with_prompt(format!("Do you want to delete the account \"{}\"?", email))
-        .interact()
-        .unwrap()
+        .interact()?
     {
         crate::store::delete_token(email)?;
         let account = AccountModel {
@@ -133,7 +169,7 @@ pub async fn refresh_calendars(db: Store, cfg: &AvailConfig) -> anyhow::Result<(
         let refresh_token = crate::store::get_token(&account.name)?;
 
         let account_id = account.id.unwrap().to_owned();
-        let calendars = match account.platform.unwrap() {
+        let mut calendars = match account.platform.unwrap() {
             Platform::Microsoft => {
                 let access_token = microsoft::refresh_access_token(
                     &cfg.microsoft.to_owned().unwrap_or_default(),
@@ -154,11 +190,12 @@ pub async fn refresh_calendars(db: Store, cfg: &AvailConfig) -> anyhow::Result<(
         };
 
         let authorized_owners = BTreeSet::from([account.name.clone()]);
-        let mut calendars: Vec<Calendar> = calendars
-            .into_iter()
+        let protected_calendars: PCon<Vec<Calendar>, _> = calendars
+            .iter()
+            .cloned()
             .map(|calendar| protect_calendar(calendar, &account.name))
-            .map(|calendar| reveal(RevealRoute::RefreshCalendarsPrompt, &calendar, &authorized_owners))
-            .collect::<anyhow::Result<_>>()?;
+            .collect::<Vec<_>>()
+            .into();
 
         let mut prev_unselected_calendars = db
             .execute(Box::new(move |conn| {
@@ -172,14 +209,33 @@ pub async fn refresh_calendars(db: Store, cfg: &AvailConfig) -> anyhow::Result<(
             defaults.push(!prev_unselected_calendars.contains(&cal.id));
         }
 
-        let selected_calendars_idx: Vec<usize> = MultiSelect::with_theme(&ColorfulTheme::default())
-            .items(&calendars)
-            .defaults(&defaults)
-            .with_prompt(format!(
-                "Select the calendars you want to use for {}",
-                account.name
-            ))
-            .interact()?;
+        let selected_calendars_idx = protected_calendars
+            .critical(
+                authorized_context(RevealRoute::RefreshCalendarsPrompt, &authorized_owners),
+                CriticalRegion::new(
+                    |calendars: &Vec<Calendar>, _| -> anyhow::Result<Vec<usize>> {
+                        Ok(MultiSelect::with_theme(&ColorfulTheme::default())
+                            .items(calendars)
+                            .defaults(&defaults)
+                            .with_prompt(format!(
+                                "Select the calendars you want to use for {}",
+                                account.name
+                            ))
+                            .interact()?)
+                    },
+                    Signature {
+                        username: "borvath",
+                        signature: "LS0tLS1CRUdJTiBTU0ggU0lHTkFUVVJFLS0tLS0KVTFOSVUwbEhBQUFBQVFBQUFETUFBQUFMYzNOb0xXVmtNalUxTVRrQUFBQWd1S1hiSjdkTFFLaHEvMWFmbkwwQUhHVlNzSgp6UnFndUVVcHl2b2Y3TkdrTUFBQUFFWm1sc1pRQUFBQUFBQUFBR2MyaGhOVEV5QUFBQVV3QUFBQXR6YzJndFpXUXlOVFV4Ck9RQUFBRUEwaXBOZ3k4Y3l4RHNvdnl5U1pyL3ZBMDVkMDdPQ3F5MVY3U3piM0FVYkg3UitMRGYzcTJHY2VBSWx0REhvL0IKSHFDNWRiYU5nL1BiRTQ1dkZOSWVRSwotLS0tLUVORCBTU0ggU0lHTkFUVVJFLS0tLS0K",
+                    },
+                ),
+                (),
+            )
+            .map_err(|_| {
+                anyhow::anyhow!(
+                    "Sesame blocked externalization for {}",
+                    RevealRoute::RefreshCalendarsPrompt
+                )
+            })??;
 
         for (i, cal) in calendars.iter_mut().enumerate() {
             cal.selected = selected_calendars_idx.contains(&i);
@@ -212,28 +268,27 @@ pub async fn refresh_calendars(db: Store, cfg: &AvailConfig) -> anyhow::Result<(
     let mut all_calendars: Vec<Calendar> = db
         .execute(Box::new(CalendarModel::get_all))??
         .into_iter()
-        .map(|c| {
+        .map(|c| Calendar {
+            account_id: c.account_id.unwrap(),
+            id: c.id,
+            name: c.name,
+            selected: false,
+        })
+        .collect();
+
+    let protected_all_calendars: PCon<Vec<Calendar>, _> = all_calendars
+        .iter()
+        .cloned()
+        .map(|calendar| {
             let owner = accounts
                 .iter()
-                .find(|account| account.id == c.account_id)
+                .find(|account| account.id == Some(calendar.account_id))
                 .map(|account| account.name.as_str())
                 .expect("calendar owner must exist");
-
-            reveal(
-                RevealRoute::RefreshCalendarsHoldEventTarget,
-                &protect_calendar(
-                    Calendar {
-                        account_id: c.account_id.unwrap(),
-                        id: c.id,
-                        name: c.name,
-                        selected: false,
-                    },
-                    owner,
-                ),
-                &all_owners,
-            )
+            protect_calendar(calendar, owner)
         })
-        .collect::<anyhow::Result<_>>()?;
+        .collect::<Vec<_>>()
+        .into();
 
     let previous_selected = db.execute(Box::new(move |conn| {
         CalendarModel::get_hold_event_calendar(conn)
@@ -246,11 +301,30 @@ pub async fn refresh_calendars(db: Store, cfg: &AvailConfig) -> anyhow::Result<(
         0
     };
 
-    let selected_calendar_idx: usize = Select::with_theme(&ColorfulTheme::default())
-        .items(&all_calendars)
-        .default(previous_selected_idx)
-        .with_prompt("Which calendar would you like to use to create hold events?")
-        .interact()?;
+    let selected_calendar_idx = protected_all_calendars
+        .critical(
+            authorized_context(RevealRoute::RefreshCalendarsHoldEventTarget, &all_owners),
+            CriticalRegion::new(
+                |calendars: &Vec<Calendar>, _| -> anyhow::Result<usize> {
+                    Ok(Select::with_theme(&ColorfulTheme::default())
+                        .items(calendars)
+                        .default(previous_selected_idx)
+                        .with_prompt("Which calendar would you like to use to create hold events?")
+                        .interact()?)
+                },
+                Signature {
+                    username: "borvath",
+                    signature: "LS0tLS1CRUdJTiBTU0ggU0lHTkFUVVJFLS0tLS0KVTFOSVUwbEhBQUFBQVFBQUFETUFBQUFMYzNOb0xXVmtNalUxTVRrQUFBQWd1S1hiSjdkTFFLaHEvMWFmbkwwQUhHVlNzSgp6UnFndUVVcHl2b2Y3TkdrTUFBQUFFWm1sc1pRQUFBQUFBQUFBR2MyaGhOVEV5QUFBQVV3QUFBQXR6YzJndFpXUXlOVFV4Ck9RQUFBRUNjcUZBd3gxNkJ6aXJKSUt5ZWhwT0JhaFREYXcrS25CbXc0d25Ua3FXZkdKWEdnY3lJMTljdDZZVlpnb0I5ZlEKcHRIVXowZElLRzhzWE82ejVPRlk0SgotLS0tLUVORCBTU0ggU0lHTkFUVVJFLS0tLS0K",
+                },
+            ),
+            (),
+        )
+        .map_err(|_| {
+            anyhow::anyhow!(
+                "Sesame blocked externalization for {}",
+                RevealRoute::RefreshCalendarsHoldEventTarget
+            )
+        })??;
 
     let selected_calendar = all_calendars.get_mut(selected_calendar_idx).unwrap();
     selected_calendar.selected = true;
@@ -266,22 +340,6 @@ pub async fn refresh_calendars(db: Store, cfg: &AvailConfig) -> anyhow::Result<(
         CalendarModel::update_hold_event_calendar(conn, update_calendar)
     }))??;
 
-    Ok(())
-}
-
-pub fn print_and_copy_availability(avails: &[Availability<Local>]) {
-    let s = format_availability(avails);
-    let mut ctx = ClipboardContext::new().unwrap();
-    print!("{}", s);
-    if ctx.set_contents(s).is_ok() {
-        println!("\nCopied to clipboard.")
-    }
-}
-
-pub fn print_and_copy_protected_availability(avails: &ProtectedAvailability) -> anyhow::Result<()> {
-    let authorized_owners = owners_from_availability(avails)?;
-    let revealed = reveal(RevealRoute::AvailabilityOutput, avails, &authorized_owners)?;
-    print_and_copy_availability(&revealed);
     Ok(())
 }
 
@@ -311,7 +369,7 @@ pub(crate) async fn find_availability(
 
     let pb = m.add(ProgressBar::new(1));
     pb.set_message("Retrieving events...");
-    pb.enable_steady_tick(Duration::milliseconds(250).to_std().unwrap());
+    pb.enable_steady_tick(Duration::milliseconds(250).to_std()?);
 
     // Microsoft Graph has 4 concurrent requests limit
     let semaphore = Arc::new(Semaphore::new(4));
@@ -410,66 +468,80 @@ pub(crate) async fn find_availability(
 
     let pb = m.add(ProgressBar::new(1));
     pb.set_message("Computing availabilities...");
-    pb.enable_steady_tick(Duration::milliseconds(250).to_std().unwrap());
+    pb.enable_steady_tick(Duration::milliseconds(250).to_std()?);
 
     let protected_slots = compute_availability(&finder, protected_events)?;
     let authorized_owners = owners_from_availability(&protected_slots)?;
-    let slots = reveal(RevealRoute::AvailabilitySelection, &protected_slots, &authorized_owners)?;
+    let availability_policy = protected_slots.policy().clone();
 
     pb.finish_with_message("Computed availabilities.");
 
-    if slots.is_empty() {
-        return Ok(None);
-    }
+    protected_slots
+        .into_critical(
+            authorized_context(RevealRoute::AvailabilitySelection, &authorized_owners),
+            CriticalRegion::new(
+                move |slots: Vec<Availability<Local>>, _| -> anyhow::Result<Option<ProtectedAvailability>> {
+                    if slots.is_empty() {
+                        return Ok(None);
+                    }
 
-    // TODO: add multi-level multiselect
-    // Right arrow goes into a time window (can select granular windows)
-    // Left arrow goes back to parent
-    // Needs to work with paging
-    let selection = MultiSelect::with_theme(&ColorfulTheme::default())
-        .with_prompt("Select time window(s)")
-        .items(&slots[..])
-        .interact()
-        .unwrap();
+                    // TODO: add multi-level multiselect
+                    // Right arrow goes into a time window (can select granular windows)
+                    // Left arrow goes back to parent
+                    // Needs to work with paging
+                    let selection = MultiSelect::with_theme(&ColorfulTheme::default())
+                        .with_prompt("Select time window(s)")
+                        .items(&slots)
+                        .interact()?;
 
-    let selected_slots = selection.into_iter().map(|i| slots.get(i).unwrap());
+                    let selected_slots = selection.into_iter().map(|i| slots.get(i).unwrap());
+                    let days = selected_slots.group_by(|e| e.start.date());
+                    let mut iter = days.into_iter().peekable();
+                    let mut selected: Vec<Availability<Local>> = vec![];
 
-    // (day, day_avails)
-    let days = selected_slots.group_by(|e| (e.start.date()));
+                    while iter.peek().is_some() {
+                        let (day, avails) = iter.next().unwrap();
 
-    let mut iter = days.into_iter().peekable();
+                        let day_slots: Vec<&Availability<Local>> = avails.into_iter().collect();
+                        let windows = split_availability(&day_slots, finder.duration);
 
-    let mut selected: Vec<Availability<Local>> = vec![];
+                        let selection = MultiSelect::with_theme(&ColorfulTheme::default())
+                            .with_prompt(format!(
+                                "Select time window(s) for {}",
+                                day.format("%b %d %Y")
+                            ))
+                            .items(&windows)
+                            .interact()?;
 
-    while iter.peek().is_some() {
-        let i = iter.next();
-        let (day, avails) = i.unwrap();
+                        let mut selected_windows: Vec<Availability<Local>> = selection
+                            .into_iter()
+                            .map(|i| *windows.get(i).unwrap())
+                            .collect();
+                        selected.append(&mut selected_windows);
+                    }
 
-        let day_slots: Vec<&Availability<Local>> = avails.into_iter().collect();
-        let windows = split_availability(&day_slots, finder.duration);
+                    if selected.is_empty() {
+                        return Err(anyhow::anyhow!("No availabilities selected."));
+                    }
 
-        let selection = MultiSelect::with_theme(&ColorfulTheme::default())
-            .with_prompt(format!(
-                "Select time window(s) for {}",
-                day.format("%b %d %Y")
-            ))
-            .items(&windows[..])
-            .interact()
-            .unwrap();
-
-        let mut selected_windows: Vec<Availability<Local>> = selection
-            .into_iter()
-            .map(|i| *windows.get(i).unwrap())
-            .collect();
-        selected.append(&mut selected_windows);
-    }
-
-    if selected.is_empty() {
-        return Err(anyhow::anyhow!("No availabilities selected."));
-    }
-
-    let merged = merge_overlapping_avails(selected);
-    Ok(Some(rewrap_availability(merged, &protected_slots)))
+                    Ok(Some(PCon::new(
+                        merge_overlapping_avails(selected),
+                        availability_policy,
+                    )))
+                },
+                Signature {
+                    username: "borvath",
+                    signature: "LS0tLS1CRUdJTiBTU0ggU0lHTkFUVVJFLS0tLS0KVTFOSVUwbEhBQUFBQVFBQUFETUFBQUFMYzNOb0xXVmtNalUxTVRrQUFBQWd1S1hiSjdkTFFLaHEvMWFmbkwwQUhHVlNzSgp6UnFndUVVcHl2b2Y3TkdrTUFBQUFFWm1sc1pRQUFBQUFBQUFBR2MyaGhOVEV5QUFBQVV3QUFBQXR6YzJndFpXUXlOVFV4Ck9RQUFBRUE5NXltUFNDKy9Zd2pSTndsRjN6UDQycTJ3VVVTdWlqQ055bDRaSkFBek1MSUwxd3hqc3J6NE1adzBNd1dncTIKOFZ6RUVJUGEwUjZyQS9tUE8xMGxzTwotLS0tLUVORCBTU0ggU0lHTkFUVVJFLS0tLS0K",
+                },
+            ),
+            (),
+        )
+        .map_err(|_| {
+            anyhow::anyhow!(
+                "Sesame blocked externalization for {}",
+                RevealRoute::AvailabilitySelection
+            )
+        })?
 }
 
 pub(crate) async fn create_hold_events(
@@ -480,7 +552,6 @@ pub(crate) async fn create_hold_events(
 ) -> anyhow::Result<()> {
     let accounts = db.execute(Box::new(AccountModel::get))??;
     let authorized_owners = owners_from_availability(merged)?;
-    let merged = reveal(RevealRoute::HoldEventsSchedule, merged, &authorized_owners)?;
 
     let event_title: String = Input::with_theme(&ColorfulTheme::default())
         .with_prompt("What's the name of your event?")
@@ -498,13 +569,12 @@ pub(crate) async fn create_hold_events(
 
     let pb = m.add(ProgressBar::new(1));
     pb.set_message("Creating hold events...");
-    pb.enable_steady_tick(Duration::milliseconds(250).to_std().unwrap());
+    pb.enable_steady_tick(Duration::milliseconds(250).to_std()?);
 
     let (platform, cal) = calendar.unwrap();
 
     // Microsoft Graph has 4 concurrent requests limit
     let semaphore = Arc::new(Semaphore::new(4));
-    let mut tasks: Vec<JoinHandle<anyhow::Result<()>>> = vec![];
 
     let account_name = accounts
         .iter()
@@ -521,80 +591,111 @@ pub(crate) async fn create_hold_events(
         },
         &account_name,
     );
-    let hold_calendar = reveal(
-        RevealRoute::HoldEventsTargetCalendar,
-        &protected_hold_calendar,
-        &authorized_owners,
-    )?;
-
-    match Platform::from(&platform) {
+    let platform = Platform::from(&platform);
+    let refresh_token = crate::store::get_token(&account_name)?;
+    let access_token = match platform {
         Platform::Microsoft => {
-            for avail in merged.iter() {
-                let refresh_token = crate::store::get_token(&account_name)?;
-                let access_token = microsoft::refresh_access_token(
-                    &cfg.microsoft.to_owned().unwrap_or_default(),
-                    &refresh_token,
-                )
-                .await?;
-                let permit = semaphore
-                    .clone()
-                    .acquire_owned()
-                    .await
-                    .expect("unable to acquire permit"); // Acquire a permit
-                let calendar_id = hold_calendar.id.to_owned();
-                let title = format!("HOLD - {}", event_title);
-                let start = avail.start;
-                let end = avail.end;
-
-                tasks.push(tokio::task::spawn(async move {
-                    let res = microsoft::MicrosoftGraph::create_event(
-                        &access_token,
-                        &calendar_id,
-                        &title,
-                        start,
-                        end,
-                    )
-                    .await;
-                    drop(permit);
-                    res?;
-                    Ok(())
-                }));
-            }
+            microsoft::refresh_access_token(&cfg.microsoft.to_owned().unwrap_or_default(), &refresh_token)
+                .await?
         }
         Platform::Google => {
-            for avail in merged.iter() {
-                let refresh_token = crate::store::get_token(&account_name)?;
-                let access_token = google::refresh_access_token(
-                    &cfg.google.to_owned().unwrap_or_default(),
-                    &refresh_token,
-                )
-                .await?;
-
-                let calendar_id = hold_calendar.id.to_owned();
-                let title = format!("HOLD - {}", event_title);
-                let start = avail.start;
-                let end = avail.end;
-
-                tasks.push(tokio::task::spawn(async move {
-                    google::GoogleAPI::create_event(
-                        &access_token,
-                        &calendar_id,
-                        &title,
-                        start,
-                        end,
-                    )
-                    .await?;
-                    Ok(())
-                }));
-            }
+            google::refresh_access_token(&cfg.google.to_owned().unwrap_or_default(), &refresh_token)
+                .await?
         }
-        _ => return Err(anyhow::anyhow!("Unsupported platform")),
-    }
+        Platform::Unsupported => return Err(anyhow::anyhow!("Unsupported platform")),
+    };
 
-    let res = futures::future::join_all(tasks).await;
-    if res.iter().any(|r| r.is_err()) {
-        return Err(anyhow::anyhow!("Failed to create hold events."));
-    }
+    let protected_hold_data: PCon<
+        (Calendar, Vec<Availability<Local>>),
+        AnyPolicyClone,
+    > = fold((
+        protected_hold_calendar.into_any_policy(),
+        merged.clone(),
+    ))
+    .map_err(|_| anyhow::anyhow!("failed to combine protected hold-event data"))?;
+
+    protected_hold_data
+        .critical(
+            authorized_context(RevealRoute::HoldEventsCreate, &authorized_owners),
+            CriticalRegion::new(
+                |(calendar, slots): &(Calendar, Vec<Availability<Local>>), _| -> anyhow::Result<()> {
+                    tokio::task::block_in_place(|| {
+                        tokio::runtime::Handle::current().block_on(async {
+                            let mut tasks: Vec<JoinHandle<anyhow::Result<()>>> = vec![];
+
+                            for avail in slots.iter() {
+                                let permit = match platform {
+                                    Platform::Microsoft => Some(
+                                        semaphore
+                                            .clone()
+                                            .acquire_owned()
+                                            .await
+                                            .expect("unable to acquire permit"),
+                                    ),
+                                    Platform::Google => None,
+                                    Platform::Unsupported => {
+                                        return Err(anyhow::anyhow!("Unsupported platform"))
+                                    }
+                                };
+                                let calendar_id = calendar.id.clone();
+                                let title = format!("HOLD - {}", event_title);
+                                let start = avail.start;
+                                let end = avail.end;
+                                let access_token = access_token.clone();
+
+                                tasks.push(tokio::task::spawn(async move {
+                                    let res = match platform {
+                                        Platform::Microsoft => {
+                                            microsoft::MicrosoftGraph::create_event(
+                                                &access_token,
+                                                &calendar_id,
+                                                &title,
+                                                start,
+                                                end,
+                                            )
+                                            .await
+                                        }
+                                        Platform::Google => {
+                                            google::GoogleAPI::create_event(
+                                                &access_token,
+                                                &calendar_id,
+                                                &title,
+                                                start,
+                                                end,
+                                            )
+                                            .await
+                                        }
+                                        Platform::Unsupported => {
+                                            Err(anyhow::anyhow!("Unsupported platform"))
+                                        }
+                                    };
+                                    drop(permit);
+                                    res?;
+                                    Ok(())
+                                }));
+                            }
+
+                            let res = futures::future::join_all(tasks).await;
+                            if res.iter().any(|r| r.is_err()) {
+                                return Err(anyhow::anyhow!("Failed to create hold events."));
+                            }
+                            Ok(())
+                        })
+                    })
+                },
+                Signature {
+                    username: "borvath",
+                    signature: "LS0tLS1CRUdJTiBTU0ggU0lHTkFUVVJFLS0tLS0KVTFOSVUwbEhBQUFBQVFBQUFETUFBQUFMYzNOb0xXVmtNalUxTVRrQUFBQWd1S1hiSjdkTFFLaHEvMWFmbkwwQUhHVlNzSgp6UnFndUVVcHl2b2Y3TkdrTUFBQUFFWm1sc1pRQUFBQUFBQUFBR2MyaGhOVEV5QUFBQVV3QUFBQXR6YzJndFpXUXlOVFV4Ck9RQUFBRUI0Y2p2WHRkbFRtd2x1K3EwV0hOWVZVZU5VcTIvLzdKeDlZRldpMDB4OFRIQy9wNHpvYjUzWkZMOHRJV0FKMnUKNTdpRTlHbXZWeVpNUGpZdktHRnlNUAotLS0tLUVORCBTU0ggU0lHTkFUVVJFLS0tLS0K",
+                },
+            ),
+            (),
+        )
+        .map_err(|_| {
+            anyhow::anyhow!(
+                "Sesame blocked externalization for {}",
+                RevealRoute::HoldEventsCreate
+            )
+        })??;
 
     pb.finish_with_message("Created hold events.");
 

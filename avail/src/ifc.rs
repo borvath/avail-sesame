@@ -43,8 +43,7 @@ pub enum RevealRoute {
     AvailabilityCompute,
     AvailabilitySelection,
     AvailabilityOutput,
-    HoldEventsSchedule,
-    HoldEventsTargetCalendar,
+    HoldEventsCreate,
 }
 
 impl RevealRoute {
@@ -55,8 +54,7 @@ impl RevealRoute {
             Self::AvailabilityCompute => "availability.compute",
             Self::AvailabilitySelection => "availability.selection",
             Self::AvailabilityOutput => "availability.output",
-            Self::HoldEventsSchedule => "hold_events.schedule",
-            Self::HoldEventsTargetCalendar => "hold_events.target_calendar",
+            Self::HoldEventsCreate => "hold_events.create",
         }
     }
 
@@ -68,8 +66,7 @@ impl RevealRoute {
                 | "availability.compute"
                 | "availability.selection"
                 | "availability.output"
-                | "hold_events.schedule"
-                | "hold_events.target_calendar"
+                | "hold_events.create"
         )
     }
 }
@@ -136,27 +133,14 @@ pub fn protect_events(events: Vec<Event>, owner: &str) -> ProtectedEvents {
     PCon::new(events, CalendarSecrecyPolicy::for_owner(owner))
 }
 
-pub fn reveal<T: Clone, P: sesame::policy::Policy>(
+pub fn authorized_context(
     route: RevealRoute,
-    value: &PCon<T, P>,
     authorized_owners: &BTreeSet<String>,
-) -> anyhow::Result<T> {
-    value
-        .critical(
-            Context::new(
-                route.to_string(),
-                authorized_owners.iter().cloned().collect::<Vec<_>>(),
-            ),
-            CriticalRegion::new(
-                |data: &T, _| data.clone(),
-                Signature {
-                    username: "borvath",
-                    signature: "LS0tLS1CRUdJTiBTU0ggU0lHTkFUVVJFLS0tLS0KVTFOSVUwbEhBQUFBQVFBQUFETUFBQUFMYzNOb0xXVmtNalUxTVRrQUFBQWd1S1hiSjdkTFFLaHEvMWFmbkwwQUhHVlNzSgp6UnFndUVVcHl2b2Y3TkdrTUFBQUFFWm1sc1pRQUFBQUFBQUFBR2MyaGhOVEV5QUFBQVV3QUFBQXR6YzJndFpXUXlOVFV4Ck9RQUFBRUJQVCsyT3o2RlVUM0o1MWV3cEt1NVlFWFdtYTRhOVFkS2M4c2NSOGV3OWRaSWlxdVBtMVh6RTVhaGJyM1MwWFgKL2ptb1hXSWx6R0pnM2tkZlJQRGRJSAotLS0tLUVORCBTU0ggU0lHTkFUVVJFLS0tLS0K",
-                },
-            ),
-            (),
-        )
-        .map_err(|_| anyhow!("Sesame blocked externalization for {}", route))
+) -> Context<Vec<String>> {
+    Context::new(
+        route.to_string(),
+        authorized_owners.iter().cloned().collect::<Vec<_>>(),
+    )
 }
 
 fn owners_from_event_batch_policy(
@@ -201,7 +185,7 @@ pub fn compute_availability(
                 },
                 Signature {
                     username: "borvath",
-                    signature: "LS0tLS1CRUdJTiBTU0ggU0lHTkFUVVJFLS0tLS0KVTFOSVUwbEhBQUFBQVFBQUFETUFBQUFMYzNOb0xXVmtNalUxTVRrQUFBQWd1S1hiSjdkTFFLaHEvMWFmbkwwQUhHVlNzSgp6UnFndUVVcHl2b2Y3TkdrTUFBQUFFWm1sc1pRQUFBQUFBQUFBR2MyaGhOVEV5QUFBQVV3QUFBQXR6YzJndFpXUXlOVFV4Ck9RQUFBRUN3UTZpTTNUaDcxeFpJSndjeVJVU25uZ01YbGZTVGdTYnNhdFA3Zk9wcCtzMWE2Z0pCUTgyMFRacHJ0V2gwcisKWXQ5am1HZWdVY25Bcnh1Vlk2ZzZZRAotLS0tLUVORCBTU0ggU0lHTkFUVVJFLS0tLS0K",
+                    signature: "LS0tLS1CRUdJTiBTU0ggU0lHTkFUVVJFLS0tLS0KVTFOSVUwbEhBQUFBQVFBQUFETUFBQUFMYzNOb0xXVmtNalUxTVRrQUFBQWd1S1hiSjdkTFFLaHEvMWFmbkwwQUhHVlNzSgp6UnFndUVVcHl2b2Y3TkdrTUFBQUFFWm1sc1pRQUFBQUFBQUFBR2MyaGhOVEV5QUFBQVV3QUFBQXR6YzJndFpXUXlOVFV4Ck9RQUFBRUF3bXpCZmprcTg4aXlCdmN3ZWsrWTJ6Sm0wYmlxd0t6RDBzYVN2OW1IYzg4eDI3UTI3N25QUkJCM1JQT1JzeUkKWFJ3RW16SEhJcXVLRU9ZeDQxcmZvSQotLS0tLUVORCBTU0ggU0lHTkFUVVJFLS0tLS0K",
                 },
             ),
             (),
@@ -217,13 +201,6 @@ pub fn owners_from_availability(
         .specialize_top_ref::<CalendarSecrecyPolicy>()
         .map(|policy| policy.owners().clone())
         .map_err(|err| anyhow!("failed to recover availability policy: {}", err))
-}
-
-pub fn rewrap_availability(
-    slots: Vec<Availability<Local>>,
-    availability: &ProtectedAvailability,
-) -> ProtectedAvailability {
-    PCon::new(slots, availability.policy().clone())
 }
 
 #[cfg(test)]
@@ -252,17 +229,35 @@ mod tests {
             "alice@example.com",
         );
 
-        let allowed = reveal(
-            RevealRoute::AvailabilityOutput,
-            &protected,
-            &BTreeSet::from([String::from("alice@example.com")]),
+        let allowed = protected.critical(
+            authorized_context(
+                RevealRoute::AvailabilityOutput,
+                &BTreeSet::from([String::from("alice@example.com")]),
+            ),
+            CriticalRegion::new(
+                |event: &Event, _| event.clone(),
+                Signature {
+                    username: "borvath",
+                    signature: "",
+                },
+            ),
+            (),
         );
         assert!(allowed.is_ok());
 
-        let denied = reveal(
-            RevealRoute::AvailabilityOutput,
-            &protected,
-            &BTreeSet::from([String::from("bob@example.com")]),
+        let denied = protected.critical(
+            authorized_context(
+                RevealRoute::AvailabilityOutput,
+                &BTreeSet::from([String::from("bob@example.com")]),
+            ),
+            CriticalRegion::new(
+                |event: &Event, _| event.clone(),
+                Signature {
+                    username: "borvath",
+                    signature: "",
+                },
+            ),
+            (),
         );
         assert!(denied.is_err());
     }

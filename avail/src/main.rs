@@ -99,12 +99,12 @@ async fn main() -> anyhow::Result<()> {
             };
 
             if !cli.create_hold_event {
-                commands::print_and_copy_protected_availability(&avails)?;
+                commands::publish_availability_output(&avails)?;
                 return Ok(());
             }
 
             commands::create_hold_events(db, &cfg, &avails, &progress).await?;
-            commands::print_and_copy_protected_availability(&avails)?;
+            commands::publish_availability_output(&avails)?;
         }
     }
 

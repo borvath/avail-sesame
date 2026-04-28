@@ -222,7 +222,10 @@ fn get_pcr_hash<'a>(tcx: TyCtxt, closure: &rustc_hir::Closure) -> String {
         .filter(|dep| 
             dep.clone() != tcx.crate_name(rustc_span::def_id::LOCAL_CRATE).to_string())
         .collect(); 
-    let dep_strings = compute_dep_strings_for_crates(&non_local_deps);
+    let mut dep_strings: Vec<_> = compute_dep_strings_for_crates(&non_local_deps)
+        .into_iter()
+        .collect();
+    dep_strings.sort_unstable_by(|left, right| left.0.cmp(&right.0).then(left.1.cmp(&right.1)));
 
     let mut src_hasher = Sha256::new();
     src.sort_unstable(); 
